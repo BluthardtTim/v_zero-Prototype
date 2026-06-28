@@ -41,14 +41,12 @@ body {
   gap: var(--spacing-4);
 }
 
-/* No ToolbarTop in this header, but the Figma reference (node 1:2944) still reserves a
-   large top gap above the headline regardless — its frame is 402x223 total. 146px is
+/* Figma reference node 87:593 — header frame is 402×143px total. 66px is
    solved against this app's own box model (header-slot's 64px + this header's own
-   12px bottom padding + 1px border) to land the generated header at that same 223px,
-   not a literal copy of Figma's own top-offset number (which assumes a different,
-   padding-less box model around its text). */
+   12px bottom padding + 1px border) to land the generated header at 143px total:
+   66 + 64 + 12 + 1 = 143. */
 .header--compact {
-  padding-top: 146px;
+  padding-top: 66px;
 }
 
 /* Suppresses pebble-header's own border-bottom while no header has been generated

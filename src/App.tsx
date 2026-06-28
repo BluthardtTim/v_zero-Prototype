@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import { Header, Button } from "./design-system"
 import { RenderNode, useUITree } from "./space/renderer"
 import type { GenResult } from "./space/types"
@@ -82,6 +82,11 @@ export function App() {
 
   const generated = !!spaceTree && !loadingSpace
   const showHome = !spaceTree
+
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (meta) meta.setAttribute("content", showHome ? "#191917" : "#ffffff")
+  }, [showHome])
 
   return (
     <>
