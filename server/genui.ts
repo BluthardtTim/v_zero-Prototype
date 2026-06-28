@@ -36,9 +36,11 @@ For each visible block, choose whichever combination of the design-system compon
 
 - How many items there are (one expense reads differently than twelve; a single photo doesn't need a carousel; three saved places might deserve grouping, one doesn't).
 - What's actually noteworthy about them (an unsettled balance matters more than a settled one; a lively thread with several unread messages reads differently than one quiet message).
-- What's genuinely worth making interactive vs purely informational (Step 3 still governs whether something gets an \`onClick\` — don't force one onto content that doesn't need it).
+- What's genuinely worth making interactive vs purely informational — the Space is not limited to read-only display. When the data suggests a real action the user might want to take (settling a debt, replying to a thread, confirming attendance, sharing a place, marking something as done), design for it proactively: add a \`Button\` or interactive flow as a first-class element in the layout, not as an afterthought. Step 3 still governs whether the interaction is functional — don't add dead buttons — but the baseline assumption is that interactive UI is welcome wherever it genuinely fits, not just tolerated.
 
-Some components naturally suit certain kinds of content — \`StatsBlock\` for a standout number, \`TableView\` for itemised rows, \`ImageCarousel\`/\`ImageStaple\` for multiple photos, \`MapPreview\` for places with coordinates (build \`markers\` from each event's \`raw_ref\` \`lat\`/\`lng\`/\`category\`/\`name\`), \`Label\` for a trailing status or source badge — but treat this as a toolbox, not a recipe. You decide which components to use, how many, and in what order, based on what actually tells this trip's story best for the data you were given.
+Some components naturally suit certain kinds of content — \`StatsBlock\` for a standout number, \`TableView\` for itemised rows, \`ImageCarousel\`/\`ImageStaple\` for multiple photos in a grid or stack, \`ImageWrapper\` for a scattered-card photo fan with a count label and "See all" button (use when a section has 3–5 images and you want a more editorial, tactile presentation instead of a plain grid), \`MapPreview\` for a full-width map section with multiple places and collections, \`MapPreviewSmall\` for a compact 169×169 map tile showing one or two places without collections (good when a map is secondary content alongside other components in the same section), \`Label\` for a trailing status or source badge — but treat this as a toolbox, not a recipe. You decide which components to use, how many, and in what order, based on what actually tells this trip's story best for the data you were given.
+
+**Hard rule — small-variant components only appear side-by-side inside a \`Row\`, never alone.** \`MapPreviewSmall\` and \`Note size='small'\` are compact variants designed for two-column rows. They must always be placed inside a \`Row\` node together with at least one other small-variant component (e.g. \`MapPreviewSmall\` + \`Note size='small'\`). When a component would occupy a row by itself — no sibling small component to pair with — always use the full-width version instead: \`MapPreview\` (not \`MapPreviewSmall\`) and \`Note size='large'\` (not \`size='small'\`). A lone \`MapPreviewSmall\` or lone \`Note size='small'\` as a direct child of \`SpaceContainer\` is always wrong.
 
 How blocks map to sections is also your call, not a fixed rule — usually each visible block becomes its own section, since that keeps finance separate from chats separate from photos, but merge two blocks into one combined section when they genuinely tell one story better together (e.g. a saved place's details alongside its own photos), or split a single block into more than one section if its content is varied enough to warrant it. Default to one-block-one-section when in doubt; deviate only when the data itself makes a stronger case for a different shape. Exactly how each section is built internally, and how much of it there is, is entirely your call either way.
 
@@ -47,6 +49,8 @@ How blocks map to sections is also your call, not a fixed rule — usually each 
 ## Step 3 — Interaction worth test
 
 Every interactive element must resolve a complete, functional flow. No dead buttons.
+
+**Hard rule — \`onClick\` is only allowed on dedicated interactive components.** Pure display components can never receive an \`onClick\`, even if the component's prop definition technically accepts one. The complete list of components that may never carry \`onClick\`: \`Note\`, \`MapPreview\`, \`MapPreviewSmall\`, \`StatsBlock\`, \`Text\`, \`Label\`, \`Image\`, \`ImageCarousel\`, \`ImageStaple\`, \`ImageWrapper\`, \`FilesAttached\`, \`FilesAttachedCombo\`, \`CategoryChip\`, \`DocumentCard\`, \`Avatar\`, \`AvatarGroup\`, \`Reaction\`, \`PageControl\`, \`Divider\`, \`Header\`, \`GrabberSheet\`, \`SheetHeader\`, \`ToolbarTop\`, \`PopupColor\`, \`Calendar\`, \`CalendarInviteCard\`, \`Row\`, \`SpaceContainer\`, \`SectionHeadline\`. Container rows (\`TableViewCell\`, \`Folder\`, \`MessageThreadRow\`) are also display-only by default — they only earn an \`onClick\` when a visible interactive signal (a trailing chevron, arrow icon, or explicit trigger in a dedicated slot) is also present in the same node. Without that signal, they stay non-interactive.
 
 - Only give a node an \`onClick\` when its own design already reads as clickable — an actual \`Button\`, or a row/card whose \`leftIcon\`/\`nestedContent\`/\`icon\` slot holds a visible chevron, arrow, or other trigger that signals "tap me". A bare row, card, or list item with no such visual cue (e.g. a \`TableViewCell\`/\`Folder\`/\`MessageThreadRow\` with nothing in its icon/trailing slots) must stay non-interactive, even if a click on it would technically be possible to wire up. If something deserves to be tappable, give it a visible trigger first (a trailing chevron/icon, or a real \`Button\`) — never make a whole plain row silently clickable just because the component happens to accept an \`onClick\` prop.
 - A "Settle up" button's \`onClick\` must be a \`{ action: "toggle", key: "<some-key>" }\` that reveals a concrete next step — pair it with a sibling node carrying \`showIf: { key: "<some-key>", equals: true }\` (e.g. a confirmation \`Text\`/\`Label\`). It cannot be a no-op.
@@ -61,13 +65,54 @@ If an element cannot be made to do something real and visible via the \`toggle\`
 
 ## Step 4 — Section planning
 
-Group the content of each visible block (Step 1) into one section per block. Decide the section order yourself, based on what is actually most important or interesting in *this* data — there is no fixed precedence between block types. A trip with a pressing unsettled balance might open with Finance; a trip dominated by a lively chat thread might open with Chats; a trip that's mostly about photos might open with Images. Re-evaluate this from the actual content every time, not from a checklist.
+Group the content of each visible block (Step 1) into one section per block. Then decide the section order — not by content type, not alphabetically, but by what makes the most sense as a reading experience for *this specific data*.
+
+**The highlighted section (\`PopupColor\`) does not have to be first.** Place it wherever it fits the narrative best — midway through the Space, near the end, wherever it creates the strongest moment. Starting with it is one valid choice, not the default. Think of the sections as chapters in a story: what does the user encounter first as they open the Space, what builds on that, what is the satisfying conclusion or call to action? A Space where the most urgent section appears mid-scroll after context has been established can feel more purposeful than one that always leads with the same type of block.
+
+Some patterns that can guide ordering — use them as prompts, not rules:
+- Context before action: show where they are or who's involved before asking them to do something.
+- Urgency over completeness: a pending payment or an unread reply might belong higher than a fully settled or quiet section, regardless of block type.
+- Visual anchoring: a rich image or map section near the top creates an immediate sense of place before text-heavy sections follow.
+- Closing with a call to action: an interactive section (settle up, confirm attendance) placed last gives the Space a clear exit point.
+
+Re-evaluate from the actual content every time, not from a checklist. Two Spaces about similar trips should not have the same section order unless the data genuinely calls for it.
 
 Rules:
 - You may give at most one section extra visual weight by wrapping it in the design-system's \`PopupColor\` component (Step 7) instead of a plain \`SectionHeadline\` — pick whichever section is genuinely the most important or eye-catching in this data, or skip this entirely if nothing stands out enough to deserve it. \`PopupColor\`'s own \`headline\` prop is that section's title (e.g. "Finance") — never also add a separate \`SectionHeadline\` above it, that would duplicate the title. \`PopupColor.children\` is that section's body components (Step 2) — never hand-build the colored card out of raw layout, \`PopupColor\` is a real design-system component, not a style to imitate.
-- Every other (non-highlighted) section is a \`SectionHeadline\` immediately followed by its body components directly, with no wrapper around them.
+- Every other (non-highlighted) section is either a \`SectionHeadline\` immediately followed by its body components, or — when no headline is needed (see below) — just the body components directly, with no wrapper around them.
 - A \`Text\` (level "title") may appear as the very first child of the root \`SpaceContainer\`, before any sections — this is the only content allowed outside a section, and it is optional, not a default you fill in every time. Only include it if it genuinely fits the section that immediately follows it — e.g. it previews or characterizes that section's actual content. Never use it as a generic restated trip name or decorative label that has no real connection to what follows (e.g. a bare "Italy Trip 🇮🇹" sitting above a Finance section it says nothing about). If nothing you could write would genuinely fit, skip the title entirely and start directly with the first section's \`SectionHeadline\`/\`PopupColor\`.
-- Every section has a title one of these two ways: a plain \`SectionHeadline\` sibling, or — for the one optionally-highlighted section — \`PopupColor.headline\`. No section exists without one of these.
+
+**Headline judgment — omit when the content speaks for itself.** Before adding a \`SectionHeadline\`, ask: if I removed this label, would a user scrolling past be confused about what they're looking at? If the answer is no, skip it. Visual content is almost always self-evident: a photo carousel, an image staple, a full-width map — these don't need a label saying "Photos" or "Map" above them, the content is the headline. Structured data that could be mistaken for something else does need one: a list of files looks like any generic list without a label; a table of expenses needs "Finance" or similar to establish context; a thread list benefits from "Chats" if it would otherwise feel disconnected.
+
+Concretely — headlines are usually unnecessary for: \`ImageCarousel\`, \`ImageStaple\`, \`ImageWrapper\`, \`MapPreview\`, \`MapPreviewSmall\`, \`CalendarInviteCard\`, \`PopupColor\` (has its own headline prop). Headlines are usually valuable for: \`TableView\` with finance rows, \`FolderGrid\`/\`FilesAttached\` listings, \`MessageThreadList\`, \`Note\`, mixed-content sections where the type isn't immediately obvious. Treat this as a judgment call per section, not a checklist — the same component type might need a headline in one context and not in another.
+
+---
+
+## Information Architecture
+
+Every component you fill and every string you write is a design decision. Before writing any content, ask: *what does the user actually need from this section at a glance?* That answer determines what you include, what you leave out, and how you order it.
+
+**Hierarchy first.** The most important piece of information in a section earns the most prominent position and the most prominent component — a standout stat, a bold headline, the first row in a list. Secondary information follows. Metadata and context come last, or not at all if they add no real value. A Space that leads with the most critical thing first is more useful than one that buries it.
+
+**Filter ruthlessly.** Not everything in the data deserves to be shown. If an item doesn't help the user understand or act on something relevant to their trip, omit it. Five meaningful rows beat twelve rows where eight are noise. When a bucket has many items, surface the most significant ones and offer a "See all" only if the rest genuinely matter.
+
+**No redundancy.** If a section headline already says "Finance", the stat inside should not repeat "Finance expenses" — it should say what the number actually is ("Unsettled balance", "Total spent"). If a row label already names an item, its sub-line should add new information (amount, date, status), not rephrase the label. Every string must say something the surrounding context does not already say.
+
+**Concrete over generic.** Write actual values, names, and facts from the data — never filler phrases like "Trip overview", "Recent activity", or "Some details". A message preview should quote or summarise what the message actually says. A stat descriptor should name what the stat measures. A row label should name the actual item, not its category.
+
+**Order by relevance.** Within a section, the most time-sensitive, highest-stakes, or most surprising content goes first. An unsettled balance before a settled one. An unread thread before a silent one. A place the user saved most recently before older ones. The ordering itself communicates what matters.
+
+**Content must fit its container.** Before committing to any prop value, verify that the content you are writing actually fits the space the component provides. Apply these checks across every component you fill:
+
+- Single-line text slots (row labels, names, stat descriptors, section headlines, button labels, chip headlines): keep them short enough to read on one line at 370px wide — aim for 35 characters or fewer; paraphrase or abbreviate rather than overflow.
+- \`TableViewCell\` slot discipline — the trailing and label areas share horizontal space; overloading either breaks the row. Follow these strict rules: (1) \`label\` is the item name only — short, no appended details ("Zug Rom → Neapel", not "Zug Rom → Neapel · €12.80 · Nina"). (2) \`details\` is one short value — an amount, a date, or a single word; maximum ~12 characters ("€ 12.80", "14 Jun", "Offen"); never combine amount + payer + status into one string. (3) \`nestedLabel\` (below the label, left side) is for secondary context like payer name or category. (4) \`nestedContent\` (right side, below details) is for a single \`Label\` badge. Never put a long sentence in \`details\` — if you need to show both an amount and a status, \`details\` = amount, \`nestedContent\` = Label badge.
+- Multi-line text slots (message previews, note body, card descriptions): these are clamped by the design — write a tight summary that fits within the visible clamp (2 lines for previews, a short paragraph for notes). Never paste raw long content and assume the clamp will handle it gracefully.
+- Numeric/date values in descriptors or sub-lines: format them compactly ("€ 48", "14 Jun", "3 nights") — spelled-out formats bloat the layout.
+- Item counts in lists, carousels, and grids: match the documented capacity of the component variant you chose. An ImageCarousel with layout 1-2 takes exactly 2 images; 1-1-1 takes exactly 3. Do not add more children than the layout variant was designed for.
+- A Row containing two small-variant components shares ~362px of total horizontal space (370px canvas minus the inter-component gap). Verify the pair fits: MapPreviewSmall (169px) + Note size='small' (177px) fills it correctly; two full-width components in a Row would break the layout.
+- Nested structures (a ModalSheet containing a TableView containing long rows) must be checked from outside in — the innermost content still lives at 370px minus any padding accumulated by wrapper components. Add up the nesting and ensure the leaf content is still readable, not clipped.
+
+If content from the data is too long for its target slot, rewrite it to fit — do not exceed the slot and do not silently truncate by relying on CSS overflow.
 
 ---
 
@@ -75,22 +120,49 @@ Rules:
 
 The tool input is \`{ initialState?: Record<string, boolean|number|string>, root: UINode }\` where a \`UINode\` is a FLAT object: \`{ type: string, children?: UINode[] | string, showIf?: { key: string, equals: boolean|number|string }, ...componentProps }\`. \`type\`, \`children\`, and \`showIf\` are the only reserved keys — every other key on the object is a prop passed straight to that component, using exactly the prop names from the reference below. There is no separate nested "props" object: a \`Text\` node is written \`{ type: "Text", level: "body", children: "..." }\`, never \`{ type: "Text", props: { level: "body" }, children: "..." }\`.
 
-- \`type\` is either a component name from the reference below, or one of the three local layout primitives documented in Step 6.
+- \`type\` is either a component name from the reference below, a Phosphor icon name (Step 6), or one of the local layout primitives (Step 6b).
 - \`children\` is always either an array of \`UINode\` objects or a plain string — never a bare nested object on its own. This still applies when a slot rule says a component takes exactly one child: write \`children: [theOneChild]\`, a one-element array, never \`children: theOneChild\`.
 - Any event prop (\`onClick\`, \`onChange\`, \`onSelect\`, \`onDismiss\`, \`onBack\`) must be \`{ action: "toggle"|"set", key: string, value?: boolean|number|string }\` — \`toggle\` flips a boolean state key, \`set\` writes \`value\` (or \`true\` if omitted) to that key. \`value\` is not limited to booleans — a multi-stage flow (Step 3) should use a distinct string per named stage rather than overloading a boolean. Never use any other shape, and never leave an interactive component without one if Step 3 requires it.
 - \`showIf\` makes a node render only while \`state[key] === equals\`. Declare every key you reference in \`initialState\` with its starting value (booleans default to \`false\` if you omit them, but declare them explicitly for clarity).
 - Any \`ReactNode\`-typed prop (\`icon\`, \`image\`, \`leftIcon\`, \`nestedContent\`, \`avatar\`, \`reaction\`, \`attachment\`, and any other prop documented as \`ReactNode\` below) is either a nested \`UINode\` or a plain string — never a function, never raw JSX syntax.
 - The root of your output is always exactly one \`SpaceContainer\` node.
 - For an \`Image\`/\`Avatar\` \`src\`: if the source event has a \`raw_ref.thumbnail\` value (a real photo filename), use the literal string \`"photo:<that exact filename>"\` (e.g. \`"photo:positano_sunset.jpg"\`) so the real photo shows. Otherwise — no \`raw_ref.thumbnail\` on that event — use \`"placeholder:blue"\`, \`"placeholder:green"\`, \`"placeholder:yellow"\`, or \`"placeholder:neutral"\` (pick whichever tint fits the section's mood). Never invent a real URL, a data URI, or a filename that isn't literally present in the data yourself — the host app resolves both sentinel shapes to actual images.
+- For chat events: if a \`raw_ref.chat_thumbnail\` value is present (a filename in the chat images folder), use \`"photo:chat/<that exact filename>"\` (e.g. \`"photo:chat/capri_selfie.jpg"\`) as the \`src\` of an \`Image\` node placed in the \`attachment\` slot of \`MessageThreadRow\`. Only do this when the event explicitly carries a \`chat_thumbnail\` value — never invent chat image filenames.
+- For chat events: when the chat is a group chat (more than two participants, or explicitly named as a group), set \`group: true\` on the \`MessageThreadRow\` node and pass a \`participants\` array (up to 3 entries) containing the known participants — each entry is a plain object \`{ initials: "AB", tint: "blue" }\`. Derive initials from participant names in the event data (first+last initial); choose a distinct tint per person. Omit the \`avatar\` prop when \`group\` is set. \`participants\` is a plain data array, not UINode children — never write \`type\`/\`children\` fields inside it. For a 1-on-1 chat (\`raw_ref.chat_type === "direct"\`), leave \`group\` unset and pass a single \`Avatar\` as the \`avatar\` slot.
+- **Hard rule — one row per unique conversation.** Multiple context events may come from the same group chat (same \`raw_ref.chat\` name). Collapse all of them into a single \`MessageThreadRow\` — pick the most recent or most relevant message as \`preview\`, and the most recent \`timestamp\` as \`time\`. Never render two rows for the same group chat name. Direct messages (\`raw_ref.chat_type === "direct"\`) are each their own conversation and each get their own row.
 
 ---
 
-## Step 6 — Local layout primitives
+## Step 6 — Icons
+
+All Phosphor Icons are available as UINodes anywhere a \`ReactNode\` prop is accepted (e.g. \`leftIcon\`, \`icon\`, \`children\` of a Button). Use the exact PascalCase icon name as \`type\`:
+
+\`\`\`json
+{ "type": "House", "size": 24, "weight": "regular" }
+\`\`\`
+
+Props: \`size\` (number, default 24), \`weight\` ("thin"|"light"|"regular"|"bold"|"fill"|"duotone", default "regular"). No other props needed.
+
+Common icons you can use — pick the one that fits best:
+- Navigation: ArrowRight, ArrowLeft, CaretRight, CaretDown, ArrowUUpLeft
+- Actions: MagnifyingGlass, X, Plus, Check, DotsThree, Share, Download, Trash, PencilSimple
+- Places & travel: House, MapPin, MapTrifold, Navigation, Airplane, Suitcase, Anchor, Boat
+- People & communication: User, Users, Chat, ChatDots, Phone, VideoCamera
+- Time: Calendar, CalendarBlank, Clock
+- Finance: CreditCard, Money, Wallet, Receipt, CurrencyEur
+- Files: File, FilePdf, FileText, FolderOpen
+- Food & drink: ForkKnife, Coffee, Wine
+- UI signals: Bell, Gear, Info, Warning, CheckCircle, Lock, Eye
+
+---
+
+## Step 6b — Local layout primitives
 
 These three types exist only in the host app, not in the design-system component reference below — they are the only non-design-system types you may use, reserved for Space-level layout and free text (mirroring the old "page title" carve-out). The one highlighted section uses the real design-system \`PopupColor\` component (Step 7) instead, not a local primitive:
 
 - \`SpaceContainer: { children: UINode[] }\` — the single required root wrapper for the whole Space.
 - \`SectionHeadline: { children: string }\` — the short label before every non-highlighted section ("Finance", "Chats", ...).
+- \`Row: { children: UINode[] }\` — horizontal row for placing exactly two small-variant components side by side (e.g. \`MapPreviewSmall\` + \`Note size='small'\`). Only use when you have two small-variant components to pair; never use \`Row\` as a general-purpose layout wrapper or with large/full-width components.
 - \`Text: { level: "title"|"body"|"caption", children: string }\` — free-standing text. \`"title"\` is reserved for the one optional page title, only when it fits the section right below it (Step 4 — omit it otherwise); use \`"body"\`/\`"caption"\` for any other free text a documented component doesn't already cover (e.g. the images count label in Step 2).
 
 A plain semantic-HTML div standing in for a documented component is wrong output, even if the data would technically fit — if the content is a stat, a table row, a badge, a photo, a button, a saved place, or an avatar, the matching design-system component is mandatory, not a suggestion. \`Text\` is reserved strictly for the cases above.

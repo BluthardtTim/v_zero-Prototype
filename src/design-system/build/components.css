@@ -236,6 +236,90 @@ em, i, cite, address, dfn, var, q, blockquote {
 }
 
 /* ============================================
+   Calendar
+   Figma: Calendar_Wrapper | pebble-calendar (node 2383:3906)
+   Props: days, events
+   ============================================ */
+.pebble-calendar {
+  background: var(--bg-surface-blank);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pebble-calendar__week {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+
+.pebble-calendar__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 40px;
+}
+
+.pebble-calendar__day-label {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-caption);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: 1;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.pebble-calendar__day-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--border-radius-circle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0.5px rgba(0, 0, 0, 0.25);
+}
+
+.pebble-calendar__day-circle--selected {
+  background: var(--neutral-black);
+}
+
+.pebble-calendar__day-number {
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: var(--typography-fontweight-medium);
+  line-height: 1;
+  color: var(--text-tertiary);
+  text-align: center;
+  letter-spacing: -0.18px;
+}
+
+.pebble-calendar__day-number--selected {
+  color: #ffffff;
+}
+
+.pebble-calendar__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--border-radius-circle);
+  background: transparent;
+}
+
+.pebble-calendar__dot--visible {
+  background: #74be8b;
+}
+
+.pebble-calendar__divider {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  width: 100%;
+}
+
+/* ============================================
    Calendar Invite Card
    Figma: CalendarInviteCard-attached | pebble-calendar_invite_card
    Props: state, title, datetime, icon, onAccept, onDecline, onJoin
@@ -821,6 +905,75 @@ em, i, cite, address, dfn, var, q, blockquote {
 }
 
 /* ============================================
+   ImageWrapper
+   Figma: Image-Wrapper | pebble-imagewrapper (node 78:677)
+   Props: count, label, onClick, children (3–5 Image nodes)
+   Inhalt: scattered photo-card stack + optional "count · label" caption + "See all" button
+   ============================================ */
+
+.pebble-imagewrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+/* Fixed 263×122 frame matching the Figma stack bounding box.
+   Cards are positioned absolutely within this frame. */
+.pebble-imagewrapper__stack {
+  position: relative;
+  height: 122px;
+  flex-shrink: 0;
+  margin: 0 auto;
+}
+
+.pebble-imagewrapper__card {
+  position: absolute;
+}
+
+/* Force every Image child to the standard 100px card size */
+.pebble-imagewrapper__card > .pebble-image {
+  width: 100px;
+  height: 100px;
+}
+
+/* Figma-derived absolute positions (center of each card's wrapper container,
+   offset back by 50px to get top-left of the 100px card): */
+.pebble-imagewrapper__card:nth-child(1) { left:   5px; top:  8px; transform: rotate(-5.54deg);  }
+.pebble-imagewrapper__card:nth-child(2) { left:  35px; top:  2px; transform: rotate(11.16deg);  }
+.pebble-imagewrapper__card:nth-child(3) { left:  66px; top: 15px; transform: rotate( 4.73deg);  }
+.pebble-imagewrapper__card:nth-child(4) { left: 125px; top:  6px; transform: rotate(-7.23deg);  }
+.pebble-imagewrapper__card:nth-child(5) { left: 158px; top: 17px; transform: rotate( 6.30deg);  }
+
+.pebble-imagewrapper__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.pebble-imagewrapper__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.pebble-imagewrapper__sep {
+  display: inline-block;
+  width: 2px;
+  height: 2px;
+  border-radius: var(--border-radius-circle);
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* ============================================
    Input
    Figma: Input | pebble-input
    Props: show icon, show close, state
@@ -1102,6 +1255,85 @@ em, i, cite, address, dfn, var, q, blockquote {
 }
 
 /* ============================================
+   Map preview – small (169×169 compact tile)
+   Figma: Map_small | pebble-mappreview-small
+   ============================================ */
+
+.pebble-mappreview-small {
+  position: relative;
+  width: 169px;
+  height: 169px;
+  border-radius: var(--spacing-6);
+  overflow: hidden;
+  border: 1px solid rgba(13, 13, 12, 0.1);
+  flex-shrink: 0;
+}
+
+.pebble-mappreview-small__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--neutral-100);
+}
+
+.pebble-mappreview-small__pins {
+  position: absolute;
+  z-index: 2;
+  left: 11px;
+  top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 2px;
+  border-radius: var(--border-radius-circle);
+  background: linear-gradient(180deg, #fffefa 0%, #ffffff 100%);
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.25);
+}
+
+.pebble-mappreview-small__pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--border-radius-circle);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.pebble-mappreview-small__footer {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 12px 12px;
+  background: linear-gradient(165.05deg, #fffefa 5.69%, #f8f8f1 99.17%);
+  display: flex;
+  flex-direction: column;
+}
+
+.pebble-mappreview-small__city {
+  font-size: 14px;
+  line-height: 20px;
+  font-family: var(--font);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pebble-mappreview-small__area {
+  font-size: 13px;
+  line-height: 18px;
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================
    Message-threathrow
    Figma: Message-threathrow | pebble-message-threathrow
    Props: name, time, preview, avatar, subtitle, unread, reaction, attachment, style
@@ -1131,6 +1363,23 @@ em, i, cite, address, dfn, var, q, blockquote {
   width: 48px;
   height: 48px;
 }
+
+/* Group chat avatar cluster — Figma node 2082:4305.
+   Three 24px Avatars (grouped=true, white border) overlapping inside a 48×48 circle. */
+.pebble-message-threathrow__group-image {
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius-circle);
+  overflow: hidden;
+}
+.pebble-message-threathrow__group-image .pebble-avatar {
+  position: absolute;
+}
+.pebble-message-threathrow__group-image .pebble-avatar:nth-child(1) { left: 7px; top: 7px; }
+.pebble-message-threathrow__group-image .pebble-avatar:nth-child(2) { left: 20px; top: 12px; }
+.pebble-message-threathrow__group-image .pebble-avatar:nth-child(3) { left: 7px; top: 18px; }
 
 .pebble-message-threathrow__main {
   flex: 1;
@@ -1260,6 +1509,7 @@ em, i, cite, address, dfn, var, q, blockquote {
   background: var(--bg-surface-overlay);
   display: flex;
   align-items: flex-end;
+  z-index: 9999;
 }
 
 /* ============================================
@@ -1277,6 +1527,7 @@ em, i, cite, address, dfn, var, q, blockquote {
   background: var(--bg-surface-overlay);
   display: flex;
   align-items: flex-end;
+  z-index: 9999;
 }
 
 /* ============================================
@@ -1836,6 +2087,10 @@ em, i, cite, address, dfn, var, q, blockquote {
   height: 40px;
   border-radius: var(--border-radius-circle);
 }
+.pebble-tableview-cell__icon svg {
+  display: block;
+  flex-shrink: 0;
+}
 .pebble-tableview-cell__text {
   display: flex;
   flex-direction: column;
@@ -1868,6 +2123,8 @@ em, i, cite, address, dfn, var, q, blockquote {
   align-items: flex-end;
   gap: var(--spacing-1);
   flex-shrink: 0;
+  max-width: 45%;
+  min-width: 0;
 }
 .pebble-tableview-cell__details {
   font-size: var(--typography-fontsize-body);
@@ -1876,6 +2133,9 @@ em, i, cite, address, dfn, var, q, blockquote {
   font-family: var(--font);
   color: var(--text-secondary);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* ============================================
@@ -2202,7 +2462,7 @@ em, i, cite, address, dfn, var, q, blockquote {
    ============================================ */
 
 .pebble-visual {
-  background: var(--neutral-black);
+  background: #fafaf6;
   height: 40px;
   width: 40px;
   border-radius: var(--border-radius-circle);
@@ -2210,4 +2470,184 @@ em, i, cite, address, dfn, var, q, blockquote {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.25), 0px 0px 1px 0px #e7eff5, inset 0px 1px 4px 0px rgba(255, 255, 255, 0.15);
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* ============================================
+   Note
+   Figma: Notes | pebble-note
+   Props: size, headline, body, items
+   ============================================ */
+
+.pebble-note {
+  background: var(--surface-accent-yellow);
+  padding: var(--spacing-2);
+  border-radius: var(--border-radius-l);
+  display: inline-flex;
+  align-items: stretch;
+}
+
+.pebble-note--size-large {
+  width: 346px;
+}
+
+.pebble-note--size-small {
+  width: 177px;
+  height: 177px;
+}
+
+.pebble-note__card {
+  flex: 1 0 0;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0px 0px 0.777px 0px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(154.95deg, #fdfdfd 5.69%, #f8f8f1 99.17%);
+  position: relative;
+}
+
+.pebble-note--size-large .pebble-note__card {
+  height: 196px;
+}
+
+.pebble-note--size-small .pebble-note__card {
+  height: 100%;
+}
+
+.pebble-note__header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: #ffffff;
+  border-bottom: 1px dashed var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-3) var(--spacing-2);
+}
+
+.pebble-note__label {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  letter-spacing: 0.24px;
+  color: var(--neutral-black);
+  white-space: nowrap;
+}
+
+.pebble-note__content {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  right: 0;
+  padding: var(--spacing-4);
+  display: flex;
+}
+
+.pebble-note--size-large .pebble-note__content {
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.pebble-note--size-small .pebble-note__content {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pebble-note__text-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  width: 100%;
+}
+
+.pebble-note__headline {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  font-weight: var(--typography-fontweight-medium);
+  color: var(--neutral-black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  margin: 0;
+}
+
+.pebble-note__body {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  font-weight: var(--typography-fontweight-regular);
+  color: var(--neutral-black);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  width: 100%;
+}
+
+.pebble-note--size-small .pebble-note__body {
+  height: 140px;
+}
+
+.pebble-note__item {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.pebble-note__item-checkbox {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background: var(--bg-surface-blank);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pebble-note__item-checkbox--checked::after {
+  content: '✓';
+  font-size: 10px;
+  line-height: 1;
+  color: var(--neutral-black);
+}
+
+.pebble-note__item-text {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  line-height: var(--typography-lineheight-body);
+  color: var(--text-primary);
+  flex: 1 0 0;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.pebble-note__fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.pebble-note--size-large .pebble-note__fade {
+  height: 46px;
+  background: linear-gradient(to top, #fbfcfa 0%, rgba(251, 252, 250, 0.8) 65%, rgba(251, 252, 250, 0) 100%);
+}
+
+.pebble-note--size-small .pebble-note__fade {
+  height: 62px;
+  background: linear-gradient(to top, #fbfcfa 0%, rgba(251, 252, 250, 0.8) 65%, rgba(251, 252, 250, 0) 100%);
 }

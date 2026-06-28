@@ -2,12 +2,8 @@ import { cloneElement, isValidElement, type ReactElement } from 'react';
 import { bem, cx } from '../../utils/bem';
 import { Avatar } from '../Avatar';
 import type { AvatarProps } from '../Avatar';
-import type { MessageThreadRowProps } from './MessageThreadRow.types';
+import type { GroupParticipant, MessageThreadRowProps } from './MessageThreadRow.types';
 
-// Figma's Message-threathrow always uses a single 48px Avatar (or an AvatarGroup
-// cluster for group chats, which manages its own consistent sizing already) - a
-// plain Avatar child is force-sized to 48 here so the row never renders at an
-// inconsistent size regardless of what size the caller passed.
 function normalizeAvatar(avatar: MessageThreadRowProps['avatar']) {
   if (isValidElement(avatar) && avatar.type === Avatar) {
     return cloneElement(avatar as ReactElement<AvatarProps>, { size: 48 });
@@ -15,10 +11,29 @@ function normalizeAvatar(avatar: MessageThreadRowProps['avatar']) {
   return avatar;
 }
 
+// Figma node 2082:4305 — three 24px grouped Avatars in a 48×48 circular frame.
+// Up to 3 participants are shown; missing slots render as generic placeholders.
+function GroupChatAvatar({ participants = [] }: { participants?: GroupParticipant[] }) {
+  const slots: GroupParticipant[] = [
+    participants[0] ?? {},
+    participants[1] ?? {},
+    participants[2] ?? {},
+  ];
+  return (
+    <span className="pebble-message-threathrow__group-image">
+      {slots.map((p, i) => (
+        <Avatar key={i} size={24} grouped initials={p.initials} tint={p.tint} />
+      ))}
+    </span>
+  );
+}
+
 export function MessageThreadRow({
   name,
   time,
   preview,
+  group,
+  participants,
   avatar,
   subtitle,
   unread,
@@ -30,7 +45,11 @@ export function MessageThreadRow({
 }: MessageThreadRowProps) {
   return (
     <div className={cx(bem('message-threathrow', { style }), className)} onClick={onClick}>
-      {avatar && <span className="pebble-message-threathrow__avatar">{normalizeAvatar(avatar)}</span>}
+      {group ? (
+        <GroupChatAvatar participants={participants} />
+      ) : avatar ? (
+        <span className="pebble-message-threathrow__avatar">{normalizeAvatar(avatar)}</span>
+      ) : null}
       <div className="pebble-message-threathrow__main">
         <div className="pebble-message-threathrow__header">
           <div className="pebble-message-threathrow__top">

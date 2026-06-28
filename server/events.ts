@@ -201,7 +201,8 @@ export const events: ContextEvent[] = [
       reply_from: "Felix Wagner",
       reply_message: "Wir zwei sind dabei!",
       timestamp: "2026-07-16T19:42:00",
-      unread: 2
+      unread: 2,
+      chat_thumbnail: "capri_selfie.jpg"
     }
   },
 
@@ -220,7 +221,8 @@ export const events: ContextEvent[] = [
       sender: "Mia Schulz",
       message: "Tisch ist reserviert, 20 Uhr bei Vincenzo 🍝",
       timestamp: "2026-07-15T14:10:00",
-      unread: 0
+      unread: 0,
+      chat_thumbnail: "dinner_view.jpg"
     }
   },
 
@@ -240,6 +242,80 @@ export const events: ContextEvent[] = [
       message: "Checkout morgen 10 Uhr nicht verschlafen 😅",
       timestamp: "2026-07-17T21:05:00",
       unread: 1
+    }
+  },
+
+  {
+    id: "chats_pompeii_plan",
+    type: "chats",
+    content: "Gruppenchat Italy Trip Lukas schlaegt Tagesausflug Pompeji vor alle sind dabei Abfahrt frueh morgens",
+    entities: {
+      people: ["Lukas Brenner", "Mia Schulz", "Nina Berger"],
+      places: ["Pompeji"],
+      dates: ["2026-07-16"]
+    },
+    raw_ref: {
+      type: "chat_message",
+      chat: "Italy Trip 🇮🇹",
+      sender: "Lukas Brenner",
+      message: "Pompeji morgen? Wäre mega — bin ab 9 Uhr ready 🏛️",
+      reply_from: "Mia Schulz",
+      reply_message: "Ja!! Ich bin so dabei",
+      timestamp: "2026-07-15T20:30:00",
+      unread: 0
+    }
+  },
+
+  {
+    id: "chats_dm_lukas_payment",
+    type: "chats",
+    content: "Direktnachricht Lukas Brenner Abrechnung Abendessen Positano 37 Euro noch offen bitte ueberweisen",
+    entities: {
+      people: ["Lukas Brenner"],
+      places: ["Positano"],
+      amounts: [{ value: 37.2, currency: "EUR" }]
+    },
+    raw_ref: {
+      type: "chat_message",
+      chat_type: "direct",
+      sender: "Lukas Brenner",
+      message: "Hey, hast du die Abrechnung schon gesehen? Schuldest mir noch € 37,20 fürs Abendessen 😊",
+      timestamp: "2026-07-17T10:15:00",
+      unread: 1
+    }
+  },
+
+  {
+    id: "chats_dm_jonas_bouldern",
+    type: "chats",
+    content: "Direktnachricht Jonas Mueller Bouldern morgen Abend einladen klettern Sport",
+    entities: {
+      people: ["Jonas Müller"]
+    },
+    raw_ref: {
+      type: "chat_message",
+      chat_type: "direct",
+      sender: "Jonas Müller",
+      message: "Wir gehen morgen Abend bouldern — kommst du mit? 🧗",
+      timestamp: "2026-07-17T18:45:00",
+      unread: 1
+    }
+  },
+
+  {
+    id: "chats_dm_mom",
+    type: "chats",
+    content: "Direktnachricht Mama Familie Urlaub anrufen wie laeuft es alles gut",
+    entities: {
+      people: ["Mama"]
+    },
+    raw_ref: {
+      type: "chat_message",
+      chat_type: "direct",
+      sender: "Mama",
+      message: "Wie läuft der Urlaub? Ruf mich kurz an wenn du Zeit hast 😊",
+      timestamp: "2026-07-16T16:20:00",
+      unread: 2
     }
   },
 

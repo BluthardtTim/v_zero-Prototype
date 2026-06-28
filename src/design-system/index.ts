@@ -8,6 +8,9 @@ export type { AvatarProps, AvatarGroupProps, AvatarSize, AvatarTint } from './co
 export { Button } from './components/Button';
 export type { ButtonProps } from './components/Button';
 
+export { Calendar } from './components/Calendar';
+export type { CalendarProps, CalendarDay, CalendarEvent } from './components/Calendar';
+
 export { CalendarInviteCard } from './components/CalendarInviteCard';
 export type { CalendarInviteCardProps, CalendarInviteCardState } from './components/CalendarInviteCard';
 
@@ -42,6 +45,9 @@ export { Header } from './components/Header';
 export type { HeaderProps } from './components/Header';
 
 export { Image } from './components/Image';
+
+export { ImageWrapper } from './components/ImageWrapper';
+export type { ImageWrapperProps } from './components/ImageWrapper';
 export type { ImageProps } from './components/Image';
 
 export { ImageCarousel } from './components/ImageCarousel';
@@ -56,8 +62,11 @@ export type { InputProps } from './components/Input';
 export { Label } from './components/Label';
 export type { LabelProps } from './components/Label';
 
-export { MapPreview } from './components/MapPreview';
-export type { MapPreviewProps, MapMarker, MapMarkerCategory, MapCollection } from './components/MapPreview';
+export { MapPreview, MapPreviewSmall } from './components/MapPreview';
+export type { MapPreviewProps, MapPreviewSmallProps, MapMarker, MapMarkerCategory, MapCollection } from './components/MapPreview';
+
+export { Note } from './components/Note';
+export type { NoteProps, NoteItem, NoteSize } from './components/Note';
 
 export { MessageThreadList } from './components/MessageThreadList';
 export type { MessageThreadListProps } from './components/MessageThreadList';

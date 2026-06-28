@@ -1,18 +1,29 @@
 import { useReducer, type ComponentType } from "react"
 import * as DS from "../design-system"
-import { SpaceContainer, SectionHeadline, Text, Headline } from "./primitives"
+import * as PhosphorIcons from "@phosphor-icons/react"
+import { SpaceContainer, SectionHeadline, Row, Text, Headline } from "./primitives"
 import { isUIAction, isUINode, type UIAction, type UINode, type UIState } from "./types"
 
 export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
+  // Phosphor Icons — every icon available as { type: "House", size: 24, weight: "regular" }
+  // forwardRef components are objects (not functions), so we accept both
+  ...Object.fromEntries(
+    Object.entries(PhosphorIcons).filter(([, v]) =>
+      typeof v === "function" ||
+      (typeof v === "object" && v !== null && typeof (v as any).render === "function")
+    )
+  ),
   // local Space-layout primitives — not part of the design system package
   SpaceContainer,
   SectionHeadline,
+  Row,
   Text,
   Headline,
 
   // design-system components
   Root: DS.Root,
   Avatar: DS.Avatar,
+  Calendar: DS.Calendar,
   AvatarGroup: DS.AvatarGroup,
   Button: DS.Button,
   CalendarInviteCard: DS.CalendarInviteCard,
@@ -31,9 +42,12 @@ export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
   Image: DS.Image,
   ImageCarousel: DS.ImageCarousel,
   ImageStaple: DS.ImageStaple,
+  ImageWrapper: DS.ImageWrapper,
   Input: DS.Input,
   Label: DS.Label,
   MapPreview: DS.MapPreview,
+  MapPreviewSmall: DS.MapPreviewSmall,
+  Note: DS.Note,
   MessageThreadList: DS.MessageThreadList,
   MessageThreadRow: DS.MessageThreadRow,
   ModalSheet: DS.ModalSheet,

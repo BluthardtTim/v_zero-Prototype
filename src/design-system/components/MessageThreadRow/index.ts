@@ -1,2 +1,2 @@
 export { MessageThreadRow } from './MessageThreadRow';
-export type { MessageThreadRowProps, MessageThreadRowStyle } from './MessageThreadRow.types';
+export type { MessageThreadRowProps, MessageThreadRowStyle, GroupParticipant } from './MessageThreadRow.types';

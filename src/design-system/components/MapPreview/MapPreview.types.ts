@@ -20,3 +20,10 @@ export interface MapPreviewProps {
   collections?: MapCollection[];
   className?: string;
 }
+
+export interface MapPreviewSmallProps {
+  city: string;
+  area?: string;
+  markers: MapMarker[];
+  className?: string;
+}

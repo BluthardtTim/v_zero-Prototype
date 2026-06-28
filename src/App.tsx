@@ -14,49 +14,47 @@ function HeaderView({ tree }: { tree: GenResult }) {
   return <RenderNode node={tree.root} state={state} dispatch={dispatch} />
 }
 
-// Feature flag: the dynamic AI-generated header sentence is disabled for now.
-// The backend (/api/generate-header, genheader.ts) and all header UI components
-// stay fully intact — flip this back to true to re-enable.
-const HEADER_GENERATION_ENABLED = false
+function HomeScreen({ onGenerate, loading }: { onGenerate: () => void; loading: boolean }) {
+  return (
+    <div className="home-screen">
+      <div className="home-screen__title">
+        <p className="home-screen__title-main">Temporary Spaces</p>
+        <p className="home-screen__title-sub">everything is silent</p>
+      </div>
+      <button
+        className={`home-screen__bubbles${loading ? " home-screen__bubbles--loading" : ""}`}
+        onClick={onGenerate}
+        disabled={loading}
+        aria-label="Generate Space"
+      >
+        <img src="/bubbles.png" alt="" draggable={false} />
+      </button>
+      {loading && <p className="home-screen__loading">Generating Space…</p>}
+    </div>
+  )
+}
 
 export function App() {
   const [spaceTree, setSpaceTree] = useState<GenResult | null>(null)
   const [headerTree, setHeaderTree] = useState<GenResult | null>(null)
   const [loadingSpace, setLoadingSpace] = useState(false)
-  const [loadingHeader, setLoadingHeader] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [generation, setGeneration] = useState(0)
   const [headerGeneration, setHeaderGeneration] = useState(0)
   const spaceSlotRef = useRef<HTMLDivElement>(null)
 
-  // Always fetches /api/generate-header in isolation — used both by the (currently
-  // disabled) production refresh icon and by the dev-only "Generate Header" button,
-  // so the header prompt can be iterated on without re-running the full Space generation.
-  async function generateHeaderOnly() {
-    setLoadingHeader(true)
-    try {
-      const response = await fetch("/api/generate-header", { method: "POST" })
-      if (!response.ok) throw new Error("Header generation failed")
-      const data = await response.json()
-      setHeaderTree(data.header_tree)
-      setHeaderGeneration(g => g + 1)
-    } catch (err) {
-      // The header is a decorative top section — the Space still works without it.
-      console.error("Header generation failed", err)
-    } finally {
-      setLoadingHeader(false)
-    }
-  }
-
-  function regenerateHeader() {
-    if (!HEADER_GENERATION_ENABLED) return
-    return generateHeaderOnly()
-  }
-
   async function generateSpace() {
     setLoadingSpace(true)
     setError(null)
-    regenerateHeader()
+
+    // Fire header generation in parallel — failure is non-fatal
+    fetch("/api/generate-header", { method: "POST" })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        setHeaderTree(data.header_tree)
+        setHeaderGeneration(g => g + 1)
+      })
+      .catch(() => console.error("Header generation failed"))
 
     try {
       const response = await fetch("/api/generate", { method: "POST" })
@@ -72,46 +70,49 @@ export function App() {
     }
   }
 
-  function restartSpace() {
+  function restartInteractions() {
     if (!spaceTree) return
     spaceSlotRef.current?.scrollTo({ top: 0, behavior: "instant" })
     setGeneration(g => g + 1)
   }
 
+  const generated = !!spaceTree && !loadingSpace
+  const showHome = !spaceTree
+
   return (
     <>
+      {/* Desktop dev controls — hidden on mobile via media query */}
       <div className="button-stack">
-        <Button size="large" style="primary" label="Generate Space" state={loadingSpace ? "loading" : "default"} onClick={generateSpace} />
-        <Button size="large" style="secondary" label="Restart" state={spaceTree ? "default" : "disabled"} onClick={restartSpace} />
-        <Button size="large" style="secondary" label="Generate Header" state={loadingHeader ? "loading" : "default"} onClick={generateHeaderOnly} />
+        {!generated && (
+          <Button size="large" style="primary" label="Generate Space" state={loadingSpace ? "loading" : "default"} onClick={generateSpace} />
+        )}
+        {generated && (
+          <Button size="large" style="secondary" label="Restart" onClick={restartInteractions} />
+        )}
       </div>
 
       <div className="device-frame">
-        <div className="space-slot" ref={spaceSlotRef}>
-          {/* Lives inside the scrollable slot (not pinned above it) so it scrolls away
-              with the rest of the content instead of staying fixed at the top. No
-              ToolbarTop/title — this is just the generated headline sentence. The
-              bottom border (pebble-header's default) is suppressed until a header has
-              actually been generated, so the empty/reserved slot stays fully invisible. */}
-          <Header className={`header--compact${headerTree ? "" : " header--no-border"}`}>
-            <div className="header-frame">
-              {/* Always reserves its fixed two-line height (App.css) so the header never
-                  shifts the layout below it once content pops in — empty/invisible until
-                  a header has actually been generated. */}
-              <div className="header-slot">
-                {headerTree && <HeaderView key={`header-${headerGeneration}`} tree={headerTree} />}
+        {showHome ? (
+          <HomeScreen onGenerate={generateSpace} loading={loadingSpace} />
+        ) : (
+          <div className="space-slot" ref={spaceSlotRef}>
+            <Header className={`header--compact${headerTree ? "" : " header--no-border"}`}>
+              <div className="header-frame">
+                <div className="header-slot">
+                  {headerTree && <HeaderView key={`header-${headerGeneration}`} tree={headerTree} />}
+                </div>
               </div>
-            </div>
-          </Header>
+            </Header>
 
-          {!spaceTree && !loadingSpace && !error && <div className="space-empty">No Space yet.</div>}
-          {loadingSpace && <div className="space-loading">Generating Space…</div>}
-          {error && <div className="space-error">{error}</div>}
-          {spaceTree && !loadingSpace && (
-            // spaceTree.root is always a SpaceContainer node already (see genui.ts Step 5) — no extra wrapper here.
-            <SpaceView key={`space-${generation}`} tree={spaceTree} />
-          )}
-        </div>
+            {error && <div className="space-error">{error}</div>}
+            {spaceTree && !loadingSpace && (
+              <>
+                <SpaceView key={`space-${generation}`} tree={spaceTree} />
+                <p className="space-ai-caption">This is an Emerging Space with AI generated content.<br />AI can make mistakes.</p>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </>
   )

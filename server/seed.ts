@@ -17,10 +17,20 @@ async function embed(text: string): Promise<number[]> {
 }
 
 async function seed() {
-  console.log(`Seeding ${events.length} events...`)
+  const filterIds = process.argv.slice(2)
+  const target = filterIds.length > 0
+    ? events.filter(e => filterIds.includes(e.id))
+    : events
 
-  for (let i = 0; i < events.length; i++) {
-    const event = events[i]
+  if (filterIds.length > 0) {
+    const missing = filterIds.filter(id => !events.find(e => e.id === id))
+    if (missing.length > 0) console.warn(`  ⚠ IDs not found in events.ts: ${missing.join(", ")}`)
+  }
+
+  console.log(`Seeding ${target.length} event(s)${filterIds.length > 0 ? ` (filtered from ${events.length})` : ""}...`)
+
+  for (let i = 0; i < target.length; i++) {
+    const event = target[i]
     console.log(`[${i + 1}/${events.length}] ${event.type} — ${event.id}`)
 
     const embedding = await embed(event.content)

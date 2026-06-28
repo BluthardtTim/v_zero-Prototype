@@ -9,7 +9,7 @@ const style: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   gap: "var(--spacing-8)",
-  padding: "var(--spacing-5)",
+  padding: "var(--spacing-8) var(--spacing-5) var(--spacing-5)",
   boxSizing: "border-box"
 }
 

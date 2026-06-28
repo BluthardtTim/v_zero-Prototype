@@ -30,7 +30,14 @@ Identify, internally:
 
 ## Step 2 — Header anatomy
 
-The header is exactly ONE layer: a single \`Headline\` node (the local primitive from Step 4) containing the sentence, split into a bold "focus" fragment and a lighter "context" fragment — each a \`Text\` node with \`level: "focus"\` or \`level: "context"\` — with an optional inline \`AvatarGroup\`/\`Avatar\`/\`Visual\` node wherever the sentence calls for one. There is no eyebrow, no subline, no label, no badge — only this one \`Headline\` node. Producing a second text block alongside it is forbidden.
+The header is exactly ONE layer: a single \`Headline\` node (the local primitive from Step 4) containing the sentence, split into a bold "focus" fragment and a lighter "context" fragment — each a \`Text\` node with \`level: "focus"\` or \`level: "context"\` — with at least one mandatory inline visual (see rule below). There is no eyebrow, no subline, no label, no badge — only this one \`Headline\` node. Producing a second text block alongside it is forbidden.
+
+**MANDATORY: every header MUST include at least one inline visual.** A purely text-only header is never acceptable. The visual must be one of:
+- \`AvatarGroup\` / \`Avatar\` (size: 24 only) — when specific people are central to the context
+- \`Visual\` with \`variant: 'emoji'\` and a single fitting emoji as \`children\` (e.g. \`"🎯"\`, \`"✈️"\`, \`"🍕"\`) — for themes, activities, or moods
+- \`Visual\` with \`variant: 'folder'\` (no \`children\`) — when the context is primarily about files, documents, or shared folders
+
+Choose the visual that fits most naturally into the sentence and never use more than one type at once. When people are present, prefer \`AvatarGroup\`/\`Avatar\`; when the context is about a topic or place without a clear person, prefer an emoji \`Visual\`; when it is about file or document sharing, use the folder \`Visual\`.
 
 Every node is a flat object — \`level\` (or any other prop) is a top-level key alongside \`type\` and \`children\`, e.g. \`{ "type": "Text", "level": "focus", "children": "Sarah's surprise dinner" }\`. Never nest props under a separate \`props\` object.
 
@@ -40,7 +47,7 @@ Every node is a flat object — \`level\` (or any other prop) is a top-level key
 
 The ENTIRE visible output is one sentence and nothing but that sentence. No title-plus-caption, no label chips, no extra words that aren't part of the sentence. Concatenate every visible word inside the \`Headline\`'s children, in reading order (focus and context fragments, interleaved with any inline avatar/visual node) — the result must read as exactly one grammatically complete, fluid, natural-language sentence with exactly one finite verb.
 
-- Any inline component (\`AvatarGroup\`, \`Avatar\`, \`Visual\`) should sit wherever in the sentence that reads naturally, as one of the \`Headline\`'s children alongside the \`Text\` fragments.
+- The mandatory inline visual (\`AvatarGroup\`, \`Avatar\`, or \`Visual\`) should sit wherever in the sentence that reads naturally, as one of the \`Headline\`'s children alongside the \`Text\` fragments.
 - **Whitespace is never automatic between children.** The renderer places \`Headline\`'s children directly adjacent with no gap of its own — each \`Text\` fragment's string must carry its own leading and/or trailing space exactly where normal prose needs one. Only the very first fragment never needs a leading space. Get this wrong and words/components visibly run together with no space.
 - **Never represent the same people twice.** An \`AvatarGroup\` already shows who is involved — if you use one, do NOT also spell out their names in text. Pick exactly one representation per group of people: either an \`AvatarGroup\` with no names around it, or names as plain text with no \`AvatarGroup\`. Spelling out names AND showing their avatars for the same group is the single most common cause of a sentence overflowing two lines — never do it.
 - **Any \`Avatar\`/\`AvatarGroup\` used inline here must use \`size: 24\`**, never 32/48/64 — that is the only size that fits the headline's 24px/32px text without looming over it or breaking the line height.
@@ -61,7 +68,7 @@ If a piece of information can't be folded into the one sentence grammatically, d
 
 ## Step 5 — Length budget: must fit in two rows, always
 
-The headline renders inside a 323px-wide container at 24px font-size with 32px line-height. It MUST wrap to at most TWO lines — never three or more. Budget no more than about 5 words / 28 characters of running text total, excluding any inline avatar group. An inline \`AvatarGroup\` costs real horizontal space too — count roughly 3 characters of width PER AVATAR inside it (a 3-avatar group ≈ 9 characters, not "a couple of words"), and a \`Visual\` costs roughly 3 characters — add that to the same budget, it is not free. If including every entity (all names, exact time, exact place) would push the sentence past two lines, you MUST cut hard — drop secondary names, drop the exact time or place (keep whichever matters more), use one inline component at most, and prefer short words. When in doubt, cut harder than feels natural — it is much better to under-fill than to overflow.
+The headline renders inside a 323px-wide container at 24px font-size with 32px line-height. It MUST wrap to at most TWO lines — never three or more. Budget no more than about 5 words / 28 characters of running text total, excluding any inline avatar group. An inline \`AvatarGroup\` costs real horizontal space too — count roughly 3 characters of width PER AVATAR inside it (a 3-avatar group ≈ 9 characters, not "a couple of words"), and a \`Visual\` (emoji or folder) costs roughly 3 characters — add that to the same budget, it is not free. If including every entity (all names, exact time, exact place) would push the sentence past two lines, you MUST cut hard — drop secondary names, drop the exact time or place (keep whichever matters more), use one inline component at most, and prefer short words. When in doubt, cut harder than feels natural — it is much better to under-fill than to overflow.
 
 ---
 
