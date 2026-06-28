@@ -1,0 +1,121 @@
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  position: relative;
+  background: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: var(--font);
+}
+
+.device-frame {
+  position: relative;
+  width: 402px;
+  height: 750px;
+  background: var(--bg-surface-blank);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* pebble-ds's ModalSheetOverlayFull is position:fixed (a true full-viewport takeover —
+   correct for a real full-width app). Inside this prototype's small device-frame mock,
+   that would blow out to cover the whole browser window instead of just the mock phone,
+   so it's scoped down to the frame here rather than changed in the shared component. */
+.device-frame .pebble-modal_sheet-overlay-full {
+  position: absolute;
+}
+
+.header-frame {
+  width: 100%;
+  background: var(--bg-surface-blank);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-4);
+}
+
+/* No ToolbarTop in this header, but the Figma reference (node 1:2944) still reserves a
+   large top gap above the headline regardless — its frame is 402x223 total. 146px is
+   solved against this app's own box model (header-slot's 64px + this header's own
+   12px bottom padding + 1px border) to land the generated header at that same 223px,
+   not a literal copy of Figma's own top-offset number (which assumes a different,
+   padding-less box model around its text). */
+.header--compact {
+  padding-top: 146px;
+}
+
+/* Suppresses pebble-header's own border-bottom while no header has been generated
+   yet, so the reserved (empty) slot stays fully invisible. */
+.header--no-border {
+  border-bottom: none;
+}
+
+.header-slot {
+  width: 323px;
+  max-width: 100%;
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  /* Fixed, not max — reserves the same two-line-tall slot before/after generation so
+     the rest of the header never shifts when content pops in. Also clips a model
+     overshoot past its two-line length budget. Two lines at Headline's own lineheight
+     (--typography-lineheight-body, matching its updated tighter row height) plus this
+     slot's own padding — no extra gap, a single wrapped paragraph has none between lines. */
+  height: calc(var(--typography-lineheight-body) * 2 + var(--spacing-3) * 2);
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Inline visuals/avatar-groups mid-sentence must match the 24px/32px headline
+   line-height to sit on the text baseline instead of looming over the prose. */
+.space-headline .pebble-visual {
+  width: 24px;
+  height: 24px;
+}
+.space-headline .pebble-avatar-group,
+.space-headline .pebble-visual {
+  vertical-align: middle;
+}
+
+.button-stack {
+  position: fixed;
+  top: var(--spacing-5);
+  left: var(--spacing-5);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.space-slot {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.space-empty,
+.space-loading,
+.space-error {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8);
+  text-align: center;
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  color: var(--text-secondary);
+}

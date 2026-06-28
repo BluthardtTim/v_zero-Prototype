@@ -1,0 +1,17 @@
+/* ABC Diatype Variable - Regular (100-499) */
+@font-face {
+  font-family: "ABC Diatype Variable Unlicensed Trial";
+  src: url("./ABCDiatypeVariable-Regular.woff2") format("woff2");
+  font-weight: 100 499;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ABC Diatype Variable - Medium (500-900) */
+@font-face {
+  font-family: "ABC Diatype Variable Unlicensed Trial";
+  src: url("./ABCDiatypeVariable-Medium.woff2") format("woff2");
+  font-weight: 500 900;
+  font-style: normal;
+  font-display: swap;
+}

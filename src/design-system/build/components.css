@@ -1,0 +1,2213 @@
+/* ============================================
+   RESET
+   Nur Regular/Medium in normal-style sind als @font-face geladen (fonts.css).
+   ============================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+em, i, cite, address, dfn, var, q, blockquote {
+  font-style: normal;
+}
+
+/* ============================================
+   ROOT CONTAINER
+   Begrenzt jede generierte Karte auf die Pebble-Breite.
+   ============================================ */
+
+.pebble-root {
+  font-family: var(--font);
+  color: var(--text-primary);
+  width: 100%;
+  max-width: 402px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   Avatar-group
+   Figma: Avatar-group | pebble-avatar-group
+   Props: amount, size
+   ============================================ */
+
+.pebble-avatar-group {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Amount: jeder weitere Avatar ueberlappt um 50% des Avatar-Durchmessers (per Size-Klasse).
+   Klassen muessen trotzdem existieren, damit das Modell sie pro Anzahl setzen kann. */
+.pebble-avatar-group--amount-2,
+.pebble-avatar-group--amount-3,
+.pebble-avatar-group--amount-4 {
+  /* Layout uebernimmt die Base-Klasse, hier nur Existenz-Marker fuer Konsistenz */
+}
+
+/* Size: Ueberlappung ist die Haelfte der jeweiligen Avatar-Groesse */
+.pebble-avatar-group--size-24 > .pebble-avatar:not(:first-child) { margin-left: calc(-1 * var(--spacing-7) / 2); }
+.pebble-avatar-group--size-32 > .pebble-avatar:not(:first-child) { margin-left: calc(-1 * var(--spacing-8) / 2); }
+.pebble-avatar-group--size-48 > .pebble-avatar:not(:first-child) { margin-left: calc(-1 * var(--spacing-10) / 2); }
+.pebble-avatar-group--size-64 > .pebble-avatar:not(:first-child) { margin-left: calc(-1 * var(--spacing-12) / 2); }
+
+/* ============================================
+   Avatar
+   Figma: Avatar | pebble-avatar
+   Props: size, variant, grouped
+   ============================================ */
+
+.pebble-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--border-radius-circle);
+  background: var(--neutral-off-white);
+  box-shadow: 0px 0px 0.5px rgba(13, 13, 12, 0.25);
+  overflow: hidden;
+}
+
+.pebble-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Grouped: weisser Rand wenn Teil einer Avatar-group */
+.pebble-avatar--grouped-true {
+  border: 2px solid var(--bg-surface-blank);
+}
+
+/* Size */
+.pebble-avatar--size-24 { height: var(--spacing-7); width: var(--spacing-7); }
+.pebble-avatar--size-32 { height: var(--spacing-8); width: var(--spacing-8); }
+.pebble-avatar--size-48 { height: var(--spacing-10); width: var(--spacing-10); }
+.pebble-avatar--size-64 { height: var(--spacing-12); width: var(--spacing-12); }
+
+/* Initials: rendered instead of the icon fallback when no src is given.
+   Font-size scales with the avatar's own size modifier. */
+.pebble-avatar__initials {
+  font-family: var(--font);
+  font-weight: var(--typography-fontweight-semibold);
+  line-height: 1;
+  color: var(--text-primary);
+  user-select: none;
+}
+.pebble-avatar--size-24 .pebble-avatar__initials { font-size: 10px; }
+.pebble-avatar--size-32 .pebble-avatar__initials { font-size: 12px; }
+.pebble-avatar--size-48 .pebble-avatar__initials { font-size: 16px; }
+.pebble-avatar--size-64 .pebble-avatar__initials { font-size: 20px; }
+
+/* Tint: soft-colored circle background with the matching vivid color on the initials,
+   same soft/vivid pairing already used by Label's tinted variants. */
+.pebble-avatar--tint-red    { background: var(--color-red-soft); }
+.pebble-avatar--tint-red    .pebble-avatar__initials { color: var(--color-red-vivid); }
+.pebble-avatar--tint-yellow { background: var(--color-yellow-soft); }
+.pebble-avatar--tint-yellow .pebble-avatar__initials { color: var(--color-yellow-vivid); }
+.pebble-avatar--tint-green  { background: var(--color-green-soft); }
+.pebble-avatar--tint-green  .pebble-avatar__initials { color: var(--color-green-vivid); }
+.pebble-avatar--tint-blue   { background: var(--color-blue-soft); }
+.pebble-avatar--tint-blue   .pebble-avatar__initials { color: var(--color-blue-vivid); }
+
+/* ============================================
+   BUTTON
+   Figma: BUTTON | pebble-button
+   Props: size, style, type, state, label
+   Inhalt: label wird als HTML-Text-Inhalt des <button> Elements befuellt
+   ============================================ */
+
+.pebble-button {
+  /* Reset Browser-Defaults */
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: none;
+  margin: 0;
+
+  /* Layout: Breite folgt dem Inhalt, kein fixer Wert */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  width: auto;
+
+  /* Shape */
+  border-radius: var(--border-radius-circle);
+
+  /* Text */
+  font-family: var(--font);
+  white-space: nowrap;
+  text-decoration: none;
+
+  /* Behaviour */
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+/* Size */
+.pebble-button--size-large {
+  height: var(--spacing-10);
+  padding: var(--spacing-4) var(--spacing-6);
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-secondary);
+}
+.pebble-button--size-small {
+  height: var(--spacing-9);
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-secondary);
+}
+
+/* Style */
+.pebble-button--style-primary {
+  background: var(--color-component-button-primary-bg);
+  color: var(--color-component-button-primary-label);
+}
+.pebble-button--style-secondary {
+  color: var(--color-component-button-secondary-label);
+  border: 1.5px solid var(--border-subtle);
+}
+.pebble-button--style-tertiary {
+  background: var(--color-component-button-tertiary-bg);
+  color: var(--color-component-button-tertiary-label);
+}
+.pebble-button--style-destructive {
+  background: var(--color-component-button-destructive-bg);
+  color: var(--color-component-button-destructive-label);
+}
+.pebble-button--style-link {
+  background: transparent;
+  color: var(--color-component-button-ghost-label);
+  padding: 0;
+  height: auto;
+}
+
+/* Type: text-icon braucht gap zum Icon, icon-only wird quadratisch */
+.pebble-button--type-text {
+  /* keine Sonderbehandlung, gap/padding erben von Base + Size */
+}
+.pebble-button--type-text-icon {
+  /* gap erbt von .pebble-button Base */
+}
+.pebble-button--type-icon {
+  padding: 0;
+  aspect-ratio: 1 / 1;
+}
+.pebble-button--size-large.pebble-button--type-icon { width: var(--spacing-10); }
+.pebble-button--size-small.pebble-button--type-icon { width: var(--spacing-9); }
+
+/* State: default ist der visuelle Ruhezustand, keine eigenen Overrides noetig
+   ausser den von Style bereits gesetzten Farben - Klasse muss trotzdem existieren
+   damit das Modell sie konsistent setzen kann */
+.pebble-button--state-default {
+  opacity: 1;
+}
+.pebble-button--state-disabled {
+  background: var(--color-component-button-primary-bg-disabled);
+  color: var(--color-component-button-primary-label-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.pebble-button--style-secondary.pebble-button--state-disabled {
+  color: var(--color-component-button-secondary-label-disabled);
+}
+.pebble-button--style-tertiary.pebble-button--state-disabled {
+  background: var(--color-component-button-tertiary-bg-disabled);
+  color: var(--color-component-button-tertiary-label-disabled);
+}
+.pebble-button--state-loading {
+  opacity: 0.6;
+  cursor: wait;
+  pointer-events: none;
+}
+
+/* Interaktions-Zustaende */
+.pebble-button:hover:not(.pebble-button--state-disabled):not(.pebble-button--state-loading) {
+  opacity: 0.82;
+}
+.pebble-button:active:not(.pebble-button--state-disabled):not(.pebble-button--state-loading) {
+  opacity: 0.65;
+  transform: scale(0.98);
+}
+.pebble-button:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Calendar Invite Card
+   Figma: CalendarInviteCard-attached | pebble-calendar_invite_card
+   Props: state, title, datetime, icon, onAccept, onDecline, onJoin
+   Inhalt: title/datetime sind Textinhalt
+   ============================================ */
+
+.pebble-calendar_invite_card {
+  width: 100%;
+  max-width: 310px;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  background: var(--bg-surface-blank);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-m);
+}
+.pebble-calendar_invite_card--state-join {
+  align-items: center;
+}
+
+.pebble-calendar_invite_card__icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--border-radius-circle);
+  overflow: hidden;
+  background: var(--neutral-off-white);
+  box-shadow: 0px 0px 1px rgba(13, 13, 12, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pebble-calendar_invite_card__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+.pebble-calendar_invite_card--state-join .pebble-calendar_invite_card__main {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+}
+
+.pebble-calendar_invite_card__info {
+  display: flex;
+  flex-direction: column;
+}
+.pebble-calendar_invite_card__title {
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pebble-calendar_invite_card__datetime {
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  letter-spacing: 0.24px;
+}
+
+.pebble-calendar_invite_card__actions {
+  display: flex;
+  gap: var(--spacing-2);
+  width: 100%;
+}
+.pebble-calendar_invite_card__action {
+  flex: 1;
+}
+
+/* ============================================
+   Category Chip
+   Figma: Category Chip | pebble-category_chip
+   Props: headline, label, size
+   Inhalt: headline/label sind Textinhalt, keine eigene Klasse
+   ============================================ */
+
+.pebble-category_chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-5);
+}
+
+.pebble-category_chip__swatch {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--border-radius-xl);
+  box-shadow: 0px 0px 1px rgba(13, 13, 12, 0.25);
+  background: var(--neutral-100);
+}
+
+.pebble-category_chip__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.pebble-category_chip__headline {
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--neutral-black);
+}
+.pebble-category_chip__label {
+  font-size: var(--typography-fontsize-caption);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+}
+
+/* Size: feste Breite, Swatch bleibt durch aspect-ratio quadratisch */
+.pebble-category_chip--size-small { width: 81px; }
+.pebble-category_chip--size-big   { width: 178px; }
+
+/* ============================================
+   Category Chip_List
+   Figma: Category Chip_List | pebble-category_chip_list
+   Props: headline
+   ============================================ */
+
+.pebble-category_chip_list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: var(--spacing-6);
+}
+
+/* Headline: nur ein Spacing-Unterschied, keine feste Hoehe noetig */
+.pebble-category_chip_list--headline-true  { gap: var(--spacing-4); }
+.pebble-category_chip_list--headline-false { gap: var(--spacing-2); }
+
+/* ============================================
+   Checkbox
+   Figma: Checkbox | pebble-checkbox
+   Props: checked, label
+   Inhalt: label steht als Geschwister-<span> neben der Box, siehe Referenz
+   ============================================ */
+
+.pebble-checkbox {
+  height: var(--spacing-8);
+  width: var(--spacing-8);
+  flex-shrink: 0;
+  border-radius: var(--border-radius-s);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-surface-blank);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Checked: Figma behaelt weissen Hintergrund + border-subtle bei, nur ein
+   Haekchen-Glyph erscheint — kein schwarzer Fuellzustand wie zuvor. */
+.pebble-checkbox--checked::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid var(--neutral-black);
+  border-bottom: 2px solid var(--neutral-black);
+  transform: rotate(-45deg) translateY(-1px);
+}
+
+/* ============================================
+   Context-Menue
+   Figma: Context-Menue | pebble-context-menue
+   Props: (keine in Figma definiert)
+   Scope: chrome
+   ============================================ */
+
+.pebble-context-menue {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 248px;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--border-radius-l);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ============================================
+   Devider
+   Figma: Devider | pebble-devider
+   Props: (keine in Figma definiert)
+   ============================================ */
+
+.pebble-devider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  border: none;
+  background: var(--border-subtle);
+  margin: 0;
+}
+
+/* ============================================
+   Document Card
+   Figma: Document Card | pebble-document_card
+   Props: variant, discription, description
+   Inhalt: description ist Textinhalt, keine eigene Klasse
+   ============================================ */
+
+.pebble-document_card {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: var(--spacing-4);
+  border-radius: var(--border-radius-xl);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-blank);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Variant/Discription: reine Existenz-Marker, Layout ist in allen Faellen
+   identisch (Visual oben, Text unten, durch justify-content gespreizt) */
+.pebble-document_card--variant-image { }
+.pebble-document_card--discription-true { }
+.pebble-document_card--discription-false { }
+
+/* ============================================
+   Files-Attached
+   Figma: Files-Attached | pebble-files_attached
+   Props: files (Datenarray: name/size/icon), size
+   Inhalt: files ist ein reines Datenarray, keine UINode-Kinder. Ab 3 Dateien
+   bei size=big wird nur die erste Datei sichtbar gerendert, mit einem
+   dekorativen Stapel-Effekt dahinter (::before/::after).
+   ============================================ */
+
+.pebble-files_attached {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+}
+.pebble-files_attached--size-small {
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.pebble-files_attached__item {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  background: var(--bg-surface-blank);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-m);
+  padding: var(--spacing-4);
+}
+.pebble-files_attached--size-small .pebble-files_attached__item {
+  flex: none;
+  border-radius: var(--border-radius-s);
+  padding: var(--spacing-2) var(--spacing-4);
+}
+
+.pebble-files_attached__item--stacked::before,
+.pebble-files_attached__item--stacked::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 56px;
+  border-radius: var(--border-radius-m);
+  z-index: -1;
+}
+.pebble-files_attached__item--stacked::before {
+  width: 92%;
+  top: -6px;
+  background: #ebebe8;
+}
+.pebble-files_attached__item--stacked::after {
+  width: 84%;
+  top: -11px;
+  background: #d9d9d6;
+}
+
+.pebble-files_attached__icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--border-radius-circle);
+  overflow: hidden;
+  background: var(--neutral-off-white);
+  box-shadow: 0px 0px 1px rgba(13, 13, 12, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pebble-files_attached--size-small .pebble-files_attached__icon {
+  width: 16px;
+  height: 16px;
+}
+
+.pebble-files_attached__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pebble-files_attached__name {
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pebble-files_attached__size {
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  letter-spacing: 0.24px;
+}
+
+/* ============================================
+   Files-Attached-combo
+   Figma: Files-Attached-combo | pebble-files_attached_combo
+   Props: headline, files (Datenarray: name/size/icon)
+   Inhalt: headline ist Textinhalt, files wird an eine innere FilesAttached
+   (size=small) Component weitergegeben.
+   ============================================ */
+
+.pebble-files_attached_combo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-m);
+  background: linear-gradient(180deg, #fffefa 0%, #ffffff 100%);
+}
+
+.pebble-files_attached_combo__headline {
+  width: 100%;
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   Folder-Grid
+   Figma: Folder-Grid | pebble-folder-grid
+   Props: type
+   ============================================ */
+
+.pebble-folder-grid {
+  display: grid;
+  width: 100%;
+  gap: var(--spacing-3);
+}
+
+/* Type: Anzahl Spalten statt fixer Pixelbreite */
+.pebble-folder-grid--type-small-list {
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+}
+.pebble-folder-grid--type-big-list {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+/* ============================================
+   Folder
+   Figma: Folder | pebble-folder
+   Props: discription, starred, size
+   ============================================ */
+
+.pebble-folder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+  width: 100%;
+}
+.pebble-folder__icon {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pebble-folder__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+}
+.pebble-folder__star {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: #f4e54c;
+}
+.pebble-folder__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  white-space: nowrap;
+}
+.pebble-folder__name {
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--neutral-black);
+}
+.pebble-folder__description {
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+}
+
+/* Size: feste Breite statt aspect-ratio, Icon-Slot zentriert sich darin */
+.pebble-folder--size-small { width: 123px; }
+.pebble-folder--size-big   { width: 171px; }
+
+/* ============================================
+   Grabber - Sheet
+   Figma: Grabber - Sheet | pebble-grabber_-_sheet
+   Props: (keine in Figma definiert)
+   Scope: chrome
+   ============================================ */
+
+.pebble-grabber_-_sheet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--spacing-4);
+}
+
+.pebble-grabber_-_sheet::before {
+  content: "";
+  width: 48px;
+  height: 4px;
+  border-radius: var(--border-radius-circle);
+  background: var(--border-subtle);
+}
+
+/* ============================================
+   Header
+   Figma: Header | pebble-header
+   Props: (keine in Figma definiert)
+   Scope: chrome
+   ============================================ */
+
+.pebble-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: var(--bg-surface-blank);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--spacing-12) 0 var(--spacing-4);
+  gap: var(--spacing-4);
+}
+
+/* ============================================
+   Image-Carousell
+   Figma: Image-Carousell | pebble-image-carousell
+   Props: layout
+   Inhalt: enthaelt pebble-image Kinder, Layout steuert das Grid
+   ============================================ */
+
+/* Every Image is a fixed size (see .pebble-image--size-* below) regardless of which
+   component hosts it, so cells must not stretch them — flex-wrap lets fixed-size
+   tiles flow naturally instead of a stretch-to-fill CSS Grid track. */
+.pebble-image-carousell {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: var(--spacing-3);
+}
+
+/* Layout: classes must still exist for the model to set consistently, but with every
+   Image fixed at the same size there is no longer a distinct per-layout track shape
+   to apply — the shared flex-wrap above already arranges any count consistently. */
+.pebble-image-carousell--layout-1-2,
+.pebble-image-carousell--layout-1-1-1,
+.pebble-image-carousell--layout-layout3 {
+  /* Layout uebernimmt die Base-Klasse, hier nur Existenz-Marker fuer Konsistenz */
+}
+
+/* ============================================
+   Image-Staple
+   Figma: Image-Staple | pebble-image-staple
+   Props: amount, button
+   Hinweis: ueberlappende Bilder, Breite ergibt sich aus Anzahl via CSS statt
+   krummer Figma-Pixelwerte. Jedes weitere Bild ueberlappt um spacing-7.
+   ============================================ */
+
+.pebble-image-staple {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.pebble-image-staple > .pebble-image:not(:first-child) {
+  margin-left: calc(-1 * var(--spacing-10));
+}
+
+/* Scattered-photo look: each card gets a slightly different tilt, cycling through a
+   curated set of angles within the Figma reference's observed range (-8deg..+9deg)
+   so a stack never looks perfectly aligned. CSS-only (not Math.random()) since
+   ImageStaple's children arrive pre-built from the renderer and can't be re-styled
+   via React props — later cards paint over earlier ones (DOM order), matching Figma. */
+.pebble-image-staple > .pebble-image:nth-child(6n+1) { transform: rotate(-6deg); }
+.pebble-image-staple > .pebble-image:nth-child(6n+2) { transform: rotate(9deg); }
+.pebble-image-staple > .pebble-image:nth-child(6n+3) { transform: rotate(-4deg); }
+.pebble-image-staple > .pebble-image:nth-child(6n+4) { transform: rotate(7deg); }
+.pebble-image-staple > .pebble-image:nth-child(6n+5) { transform: rotate(-8deg); }
+.pebble-image-staple > .pebble-image:nth-child(6n+6) { transform: rotate(5deg); }
+
+/* Amount: Klassen muessen existieren, Ueberlappung kommt einheitlich aus der
+   :not(:first-child) Regel oben, unabhaengig von der konkreten Anzahl */
+.pebble-image-staple--amount-default,
+.pebble-image-staple--amount-3,
+.pebble-image-staple--amount-4,
+.pebble-image-staple--amount-amount4 {
+  display: inline-flex;
+}
+
+/* ============================================
+   Image
+   Figma: Image | pebble-image
+   Props: size, state, avatar
+   Hinweis: gerahmte "Polaroid"-Karte (weisser Rand + Schatten) als Standard-Look.
+   .pebble-image__photo ist das eigentliche <img>, eingerueckt um spacing-2.
+   ============================================ */
+
+.pebble-image {
+  display: block;
+  box-sizing: border-box;
+  background: var(--bg-surface-blank);
+  border-radius: 15px;
+  box-shadow: 0px 0px 2px rgba(13, 13, 12, 0.25);
+  padding: var(--spacing-2);
+}
+
+.pebble-image__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius-m);
+}
+
+/* Size: all variants render at the same 100×100px so standalone images are
+   visually consistent regardless of which size value the model passes. */
+.pebble-image--size-default,
+.pebble-image--size-medium,
+.pebble-image--size-big     { width: 100px; height: 100px; flex-shrink: 0; }
+
+/* Avatar variant: rund statt Polaroid-Rahmen */
+.pebble-image--avatar-true {
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  border-radius: var(--border-radius-circle);
+}
+.pebble-image--avatar-true .pebble-image__photo {
+  border-radius: var(--border-radius-circle);
+}
+
+/* ============================================
+   Input
+   Figma: Input | pebble-input
+   Props: show icon, show close, state
+   Inhalt: Placeholder/Value ueber value="" bzw. placeholder="" Attribut
+   ============================================ */
+
+.pebble-input {
+  width: 100%;
+  height: 50px;
+  padding: 0 var(--spacing-5);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--border-radius-circle);
+  font-size: var(--typography-fontsize-body);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-body);
+  font-family: var(--font);
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+/* Show icon / Show close: reservieren Platz, Icon selbst wird als Inhalt gerendert */
+.pebble-input--show-icon-true {
+  padding-left: var(--spacing-3);
+}
+.pebble-input--show-close-true {
+  padding-right: var(--spacing-3);
+}
+
+/* State */
+.pebble-input--state-active {
+  color: var(--neutral-black);
+  border-color: var(--border-selected);
+}
+.pebble-input--state-filled {
+  color: var(--neutral-black);
+}
+.pebble-input--state-placeholder {
+  color: var(--neutral-400);
+}
+.pebble-input--state-disrubted {
+  color: var(--neutral-400);
+  background: var(--neutral-100);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.pebble-input::placeholder {
+  color: var(--neutral-400);
+}
+
+/* ============================================
+   Label
+   Figma: Label | pebble-label
+   Props: label, disabled, tinted, size
+
+   PFLICHT-STRUKTUR:
+
+   Ohne Dot (size-small oder kein Dot):
+   <span class="pebble-label pebble-label--size-small pebble-label--tinted-green">Label</span>
+
+   Mit Dot (immer bei size-big):
+   <span class="pebble-label pebble-label--size-big pebble-label--tinted-white">
+     <span class="pebble-label__dot"></span>
+     Label
+   </span>
+
+   Disabled:
+   <span class="pebble-label pebble-label--size-big pebble-label--tinted-white pebble-label--disabled-true">
+     <span class="pebble-label__dot"></span>
+     Label
+   </span>
+
+   HINWEIS: .pebble-label__dot IMMER und NUR bei size-big rendern.
+   ============================================ */
+
+.pebble-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-circle);
+  font-size: var(--typography-fontsize-caption);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  letter-spacing: 0.24px;
+  white-space: nowrap;
+  width: fit-content;
+  filter: drop-shadow(0px 0px 0.5px rgba(0, 0, 0, 0.25));
+}
+
+/* Size: big hat mehr Padding und 8px Gap fuer den Dot,
+   small hat kein Gap und weniger Padding */
+.pebble-label--size-big {
+  padding: var(--spacing-3) var(--spacing-5);
+  gap: var(--spacing-3);
+}
+.pebble-label--size-small {
+  padding: var(--spacing-2) var(--spacing-4);
+  gap: 0;
+}
+
+/* Dot: immer 6px Kreis, nur bei size-big als .pebble-label__dot rendern */
+.pebble-label__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--border-radius-circle);
+  flex-shrink: 0;
+  background: var(--pebble-label-dot-color);
+}
+
+/* Tinted-white: surface-primary Gradient, schwarzer Text, gruener Dot */
+.pebble-label--tinted-white {
+  background: var(--surface-primary);
+  color: var(--text-primary);
+  --pebble-label-dot-color: var(--color-green-vivid);
+}
+
+/* Tinted-green: vivid-gruen gefuellt, weisser Text, off-white Dot */
+.pebble-label--tinted-green {
+  background: var(--color-green-vivid);
+  color: var(--neutral-white);
+  --pebble-label-dot-color: var(--neutral-off-white);
+}
+
+/* Tinted-blue: soft-blau gefuellt, vivid-blau Text, off-white Dot */
+.pebble-label--tinted-blue {
+  background: var(--color-blue-soft);
+  color: var(--color-blue-vivid);
+  --pebble-label-dot-color: var(--neutral-off-white);
+}
+
+/* Disabled: Text-Farbe auf disabled-Token, Hintergrundfarbe bleibt
+   (Figma zeigt dieselbe Hintergrundfarbe, nur Text wird ausgeblendet) */
+.pebble-label--disabled-true {
+  color: var(--text-disabled);
+  pointer-events: none;
+}
+.pebble-label--disabled-true .pebble-label__dot {
+  opacity: 0.3;
+}
+
+/* ============================================
+   MapPreview
+   Figma: "Prototyping Screens" file, node 39:670 — minimal frosted-glass map card.
+   Real interactive Leaflet map, CartoDB Positron tiles (clean/minimal, no API key
+   required) instead of the busier default OSM style. Controls float directly on
+   the map (frosted-glass pill + circles) rather than sitting in an opaque bar.
+   Props: city, area, markers, collections
+   ============================================ */
+
+.pebble-mappreview {
+  position: relative;
+  width: 100%;
+  height: 224px;
+  border-radius: var(--border-radius-xl);
+  overflow: hidden;
+}
+
+.pebble-mappreview__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--neutral-100);
+}
+
+.pebble-mappreview__collections {
+  position: absolute;
+  z-index: 2;
+  left: var(--spacing-2);
+  top: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  max-width: 60%;
+}
+
+.pebble-mappreview__chip {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-1) var(--spacing-4) var(--spacing-1) var(--spacing-1);
+  border-radius: var(--border-radius-m);
+  background: linear-gradient(180deg, #fffefa 0%, #ffffff 100%);
+  box-shadow: 0px 0px 1px rgba(13, 13, 12, 0.25);
+}
+
+.pebble-mappreview__chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--border-radius-circle);
+  font-size: 13px;
+}
+
+.pebble-mappreview__chip-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pebble-mappreview__chip-label {
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  color: var(--neutral-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pebble-mappreview__chip-meta {
+  font-size: 10px;
+  line-height: 12px;
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+/* Floating frosted-glass pill, bottom-left — mirrors the Figma reference's "search"
+   pill shape exactly — plain text, no icon or button chrome inside it. The whole
+   pill is the tap target (it's a <button>), like a search bar is, rather than a
+   separate trailing button. No zoom control or other floating chrome on the map. */
+.pebble-mappreview__location {
+  position: absolute;
+  z-index: 2;
+  left: var(--spacing-3);
+  bottom: var(--spacing-3);
+  max-width: calc(100% - 2 * var(--spacing-3));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--border-radius-circle);
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  /* Button reset */
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  cursor: pointer;
+}
+.pebble-mappreview__city {
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.pebble-mappreview__area {
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Required tile attribution, shrunk to a quiet corner note instead of Leaflet's
+   default full-size bar so it doesn't visually compete with the location pill
+   sharing that same bottom-left corner. */
+.pebble-mappreview .leaflet-control-attribution {
+  font-size: 9px;
+  line-height: 1.4;
+  padding: 1px var(--spacing-2);
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(13, 13, 12, 0.45);
+  border-top-right-radius: var(--border-radius-xs);
+}
+
+/* ============================================
+   Message-threathrow
+   Figma: Message-threathrow | pebble-message-threathrow
+   Props: name, time, preview, avatar, subtitle, unread, reaction, attachment, style
+   Inhalt: name/time/preview/subtitle sind Textinhalt. avatar/reaction/attachment
+   sind freie ReactNode-Slots (z.B. Avatar, Reaction, CalendarInviteCard,
+   FilesAttached, FilesAttachedCombo). style=list blendet subtitle/reaction/
+   attachment-typische Mehrzeiligkeit aus (kompakteres Header-Layout).
+   ============================================ */
+
+.pebble-message-threathrow {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+  padding-top: var(--spacing-4);
+}
+
+.pebble-message-threathrow__avatar {
+  flex-shrink: 0;
+}
+/* Figma always shows a single 48px Avatar here - forced via specificity (2 classes
+   beats Avatar's own 1-class --size-N modifier) so it stays consistent regardless of
+   which size prop was passed in, including when none was passed at all. Scoped with
+   a direct-child selector so an AvatarGroup cluster (group chats) keeps its own
+   internal sizing untouched. */
+.pebble-message-threathrow__avatar > .pebble-avatar {
+  width: 48px;
+  height: 48px;
+}
+
+.pebble-message-threathrow__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.pebble-message-threathrow__header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+.pebble-message-threathrow--style-list .pebble-message-threathrow__header {
+  gap: 0;
+}
+
+.pebble-message-threathrow__top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+}
+
+.pebble-message-threathrow__identity {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pebble-message-threathrow__name {
+  font-size: var(--typography-fontsize-body-large);
+  font-weight: var(--typography-fontweight-medium);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--neutral-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pebble-message-threathrow__subtitle {
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  color: var(--text-secondary);
+  letter-spacing: 0.24px;
+}
+
+.pebble-message-threathrow__meta {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+.pebble-message-threathrow__time {
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  letter-spacing: 0.24px;
+  white-space: nowrap;
+}
+.pebble-message-threathrow__dot {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--border-radius-circle);
+  background: var(--color-blue-vivid);
+}
+
+.pebble-message-threathrow__preview {
+  margin: 0;
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pebble-message-threathrow__reaction {
+  display: flex;
+}
+
+.pebble-message-threathrow__attachment {
+  width: 100%;
+}
+
+.pebble-message-threathrow__divider {
+  width: 100%;
+  height: 1px;
+  flex-shrink: 0;
+  background: var(--border-subtle);
+}
+
+/* ============================================
+   Message-threatlist
+   Figma: Message-threatlist | pebble-message-threatlist
+   Props: (keine in Figma definiert)
+   Inhalt: enthaelt mehrere pebble-message-threathrow Kinder. Jede Row bringt
+   ihr eigenes padding-top und den Trenner am Ende bereits mit, der Wrapper
+   braucht daher selbst keinen gap/divider.
+   ============================================ */
+
+.pebble-message-threatlist {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+   Modal sheet-overlay-full
+   Figma: Modal sheet-overlay-full | pebble-modal_sheet-overlay-full
+   Props: (keine in Figma definiert)
+   Scope: chrome
+   ============================================ */
+
+.pebble-modal_sheet-overlay-full {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-surface-overlay);
+  display: flex;
+  align-items: flex-end;
+}
+
+/* ============================================
+   Modal sheet-overlay
+   Figma: Modal sheet-overlay | pebble-modal_sheet-overlay
+   Props: (keine in Figma definiert)
+   Scope: chrome
+   ============================================ */
+
+.pebble-modal_sheet-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-surface-overlay);
+  display: flex;
+  align-items: flex-end;
+}
+
+/* ============================================
+   Modal sheet
+   Figma: Modal sheet | pebble-modal_sheet
+   Props: (keine in Figma definiert)
+   Scope: chrome
+   ============================================ */
+
+.pebble-modal_sheet {
+  width: 100%;
+  max-width: 402px;
+  min-height: 192px;
+  background: var(--bg-surface-blank);
+  border-radius: var(--border-radius-l) var(--border-radius-l) 0 0;
+  padding: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+/* ============================================
+   Page control
+   Figma: Page control | pebble-page_control
+   Props: amount, selection
+   Inhalt: generiert amount viele .pebble-page_control__dot Kinder
+   ============================================ */
+
+.pebble-page_control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-4);
+}
+
+.pebble-page_control__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--border-radius-circle);
+  background: var(--neutral-300);
+}
+
+.pebble-page_control__dot--active {
+  background: var(--neutral-black);
+}
+
+/* ============================================
+   Pop-up Color
+   Figma: Pop-up Color | pebble-popup_color
+   Props: surface, headline, onDismiss
+   Inhalt: children sind der weisse Content-Slot, headline ist Textinhalt
+   ============================================ */
+
+.pebble-popup_color {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-3);
+  border-radius: var(--border-radius-xl);
+}
+
+.pebble-popup_color--surface-blue   { background: var(--surface-accent-blue); }
+.pebble-popup_color--surface-green  { background: var(--surface-accent-green); }
+.pebble-popup_color--surface-yellow { background: var(--surface-accent-yellow); }
+
+.pebble-popup_color__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-3) var(--spacing-5);
+}
+
+.pebble-popup_color__headline {
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-secondary);
+}
+
+.pebble-popup_color__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius-circle);
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+.pebble-popup_color__dismiss::after {
+  content: "";
+  width: 12px;
+  height: 2px;
+  border-radius: var(--border-radius-circle);
+  background: var(--neutral-black);
+}
+
+.pebble-popup_color__content {
+  flex: 1;
+  min-height: 120px;
+  background: var(--surface-primary);
+  border-radius: var(--border-radius-l);
+  box-shadow: 0px 0px 1px rgba(13, 13, 12, 0.25);
+  padding: var(--spacing-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+/* ============================================
+   Radio
+   Figma: Radio | pebble-radio
+   Props: selected, label
+   Inhalt: label steht als Geschwister-<span> neben dem Kreis
+   ============================================ */
+
+.pebble-radio {
+  height: var(--spacing-8);
+  width: var(--spacing-8);
+  flex-shrink: 0;
+  border-radius: var(--border-radius-circle);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-surface-blank);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+/* Selected: ganzer Kreis fuellt sich gruen (--color-green-vivid), weisser
+   Punkt in der Mitte. Kein schwarzer Ring wie bei Checkbox/Toggle, Radio ist
+   bewusst die einzige Komponente mit Akzentfarbe statt Neutral-Schwarz. Der
+   Rahmen bleibt border-subtle, auch im selected-Zustand. */
+.pebble-radio--selected-true {
+  background: var(--color-green-vivid);
+}
+.pebble-radio--selected-true::after {
+  content: "";
+  width: var(--spacing-5);
+  height: var(--spacing-5);
+  border-radius: var(--border-radius-circle);
+  background: var(--neutral-white);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
+}
+.pebble-radio--selected-false {
+}
+
+/* ============================================
+   Reaction
+   Figma: Reaction | pebble-reaction
+   Props: emojis (string[]), onClick
+   Inhalt: leeres emojis-Array rendert den "+" Add-Zustand, sonst werden die
+   Emojis als Textinhalt nebeneinander gerendert.
+   ============================================ */
+
+.pebble-reaction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  width: fit-content;
+  gap: var(--spacing-2);
+  height: 28px;
+  min-width: 28px;
+  padding: var(--spacing-1);
+  border: none;
+  border-radius: var(--border-radius-circle);
+  background: var(--neutral-off-white);
+  box-shadow: 0px 0px 0.5px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.pebble-reaction__add {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+.pebble-reaction__add::before,
+.pebble-reaction__add::after {
+  content: "";
+  position: absolute;
+  background: var(--neutral-black);
+}
+.pebble-reaction__add::before {
+  left: 50%;
+  top: 3px;
+  bottom: 3px;
+  width: 2px;
+  transform: translateX(-50%);
+}
+.pebble-reaction__add::after {
+  top: 50%;
+  left: 3px;
+  right: 3px;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.pebble-reaction__emoji {
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  padding: 0 2px;
+}
+
+/* ============================================
+   SegmentedPicker-option
+   Figma: SegmentedPicker-option | pebble-segmentedpicker-option
+   Props: selected, icon, label
+   Inhalt: label ist Textinhalt
+   ============================================ */
+
+.pebble-segmentedpicker-option {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1);
+  height: var(--spacing-8);
+  border-radius: var(--border-radius-circle);
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-medium);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--neutral-black);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+/* Selected */
+.pebble-segmentedpicker-option--selected-true {
+  background: var(--neutral-white);
+  box-shadow: 0px 1px 1px rgba(13, 13, 12, 0.05), inset 0px -1px 0px rgba(13, 13, 12, 0.1);
+}
+.pebble-segmentedpicker-option--selected-false {
+  background: transparent;
+}
+
+/* Icon: nur Existenz-Marker, Icon selbst kommt als Inhalt (z.B. <svg> vor dem Label) */
+.pebble-segmentedpicker-option--icon-true,
+.pebble-segmentedpicker-option--icon-false {
+  /* gap zum Icon erbt von Base-Klasse */
+}
+
+/* ============================================
+   SegmentedPicker
+   Figma: SegmentedPicker | pebble-segmentedpicker
+   Props: icons, options
+   Inhalt: enthaelt mehrere .pebble-segmentedpicker-option Kinder
+   ============================================ */
+
+.pebble-segmentedpicker {
+  background: var(--neutral-off-white);
+  width: 100%;
+  height: 36px;
+  padding: var(--spacing-1);
+  border-radius: var(--border-radius-circle);
+  display: flex;
+  align-items: center;
+}
+
+/* ============================================
+   SelectionButton
+   Figma: SelectionButton | pebble-selectionbutton
+   Props: discriptor, checked, state, label
+   Inhalt: discriptor/label sind Textinhalt
+   ============================================ */
+
+.pebble-selectionbutton {
+  width: 100%;
+  min-height: 68px;
+  padding: var(--spacing-4);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  cursor: pointer;
+}
+
+.pebble-selectionbutton__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  min-width: 0;
+}
+.pebble-selectionbutton__label {
+  font-size: var(--typography-fontsize-body);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-body);
+  font-family: var(--font);
+  color: var(--text-primary);
+}
+.pebble-selectionbutton__discriptor {
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+}
+
+/* Checked: Selektion wird ausschliesslich am verschachtelten .pebble-checkbox
+   angezeigt (Haekchen-Glyph), kein Rahmenwechsel am Row-Container. */
+.pebble-selectionbutton--checked {
+}
+.pebble-selectionbutton--state-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ============================================
+   Sheet header
+   Figma: Sheet header | pebble-sheet_header
+   Props: discription, draggeable
+   Inhalt: discription ist Textinhalt
+   Scope: chrome
+   ============================================ */
+
+.pebble-sheet_header {
+  width: 100%;
+  background: var(--bg-surface-blank);
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-l) var(--border-radius-l) 0 0;
+  padding: var(--spacing-3) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+.pebble-sheet_header > span {
+  font-size: var(--typography-fontsize-h4);
+  font-weight: var(--typography-fontweight-semibold);
+  line-height: var(--typography-lineheight-h4);
+  font-family: var(--font);
+  color: var(--text-primary);
+  text-align: center;
+}
+
+/* ============================================
+   Slider
+   Figma: Slider | pebble-slider
+   Props: property 1, icon, label
+   Inhalt: label ist Textinhalt
+   ============================================ */
+
+.pebble-slider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  width: 100%;
+}
+
+.pebble-slider__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius-circle);
+}
+
+.pebble-slider input[type="range"] {
+  flex: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  height: var(--spacing-5);
+  background: var(--neutral-off-white);
+  border-radius: var(--border-radius-circle);
+  outline: none;
+}
+.pebble-slider input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--border-radius-circle);
+  background: var(--neutral-white);
+  box-shadow: 0px 0px 1px rgba(13, 13, 12, 0.25);
+  cursor: pointer;
+}
+.pebble-slider input[type="range"]::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--border-radius-circle);
+  background: var(--neutral-white);
+  box-shadow: 0px 0px 1px rgba(13, 13, 12, 0.25);
+  cursor: pointer;
+}
+.pebble-slider input[type="range"]::-moz-range-track {
+  height: var(--spacing-5);
+  background: var(--neutral-off-white);
+  border-radius: var(--border-radius-circle);
+}
+
+/* ============================================
+   Stats Block
+   Figma: Stats Block | pebble-stats_block
+   Props: stats, discriptor, variant
+   Inhalt: stats/discriptor sind Textinhalt
+   ============================================ */
+
+.pebble-stats_block {
+  width: 100%;
+  height: 120px;
+  padding: var(--spacing-4);
+  border-radius: var(--border-radius-m);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-blank);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Erstes Kind ist immer die grosse Stat-Zahl, zweites immer der Discriptor —
+   die Typografie haengt an der Position, nicht an der Variant-Klasse. */
+.pebble-stats_block > span:first-child {
+  font-size: var(--typography-fontsize-h2);
+  font-weight: var(--typography-fontweight-semibold);
+  line-height: var(--typography-lineheight-h2);
+  font-family: var(--font);
+  color: var(--neutral-black);
+}
+.pebble-stats_block > span:last-child {
+  font-size: var(--typography-fontsize-body);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-body);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+}
+
+/* Variant: reiner Existenz-Marker, Layout-Reihenfolge ist in beiden Faellen identisch */
+.pebble-stats_block--variant-top {
+}
+
+/* ============================================
+   Tab_Bar_Selected
+   Figma: Tab_Bar_Selected | pebble-tab_bar_selected
+   Props: selected, label
+   Inhalt: label ist Textinhalt (Icon-Beschriftung)
+   Scope: chrome
+   ============================================ */
+
+.pebble-tab_bar_selected {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+  flex-shrink: 0;
+  border-radius: var(--border-radius-circle);
+}
+
+/* Selected: nur der aktive Tab bekommt die off-white Flaeche, unselected ist transparent */
+.pebble-tab_bar_selected--selected-true  { background: var(--neutral-off-white); }
+.pebble-tab_bar_selected--selected-false { background: transparent; }
+
+/* ============================================
+   Tabbar
+   Figma: Tabbar | pebble-tabbar
+   Props: amount
+   Inhalt: ein .pebble-tabbar__pill Wrapper mit mehreren .pebble-tab_bar_selected Kindern
+   Scope: chrome
+   ============================================ */
+
+.pebble-tabbar {
+  background: linear-gradient(
+    to top,
+    rgba(245, 245, 245, 0.85) 46.334%,
+    rgba(245, 245, 245, 0.75) 77.224%,
+    rgba(255, 255, 255, 0) 101.64%
+  );
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-8) var(--spacing-7);
+}
+
+.pebble-tabbar__pill {
+  background: var(--bg-surface-blank);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-circle);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+}
+
+/* ============================================
+   TableView-cell-menue
+   Figma: TableView-cell-menue | pebble-tableview-cell-menue
+   Props: state, label
+   Inhalt: label ist Textinhalt
+   ============================================ */
+
+.pebble-tableview-cell-menue {
+  width: 100%;
+  height: var(--spacing-10);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-3);
+}
+
+/* State */
+.pebble-tableview-cell-menue--state-label {
+  color: var(--neutral-black);
+  font-size: var(--typography-fontsize-caption);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+}
+
+/* ============================================
+   TableView-cell
+   Figma: TableView-cell | pebble-tableview-cell
+   Props: left icon, label, nested label, nested content, details, variant
+   Inhalt: label/nested label/details sind Textinhalt
+   ============================================ */
+
+.pebble-tableview-cell {
+  width: 100%;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2) 0;
+  border-bottom: 1px dashed var(--border-subtle);
+}
+
+.pebble-tableview-cell:last-child {
+  border-bottom: none;
+}
+
+.pebble-tableview-cell__main {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.pebble-tableview-cell__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius-circle);
+}
+.pebble-tableview-cell__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  min-width: 0;
+}
+.pebble-tableview-cell__label {
+  font-size: var(--typography-fontsize-body);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-body);
+  font-family: var(--font);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pebble-tableview-cell__nested-label {
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pebble-tableview-cell__trailing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-1);
+  flex-shrink: 0;
+}
+.pebble-tableview-cell__details {
+  font-size: var(--typography-fontsize-body);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-body);
+  font-family: var(--font);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* ============================================
+   TableView
+   Figma: TableView | pebble-tableview
+   Props: discription, cell amount
+   Inhalt: enthaelt mehrere .pebble-tableview-cell Kinder, discription ist Textinhalt
+   ============================================ */
+
+.pebble-tableview {
+  width: 100%;
+  border-radius: var(--border-radius-m);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Discription: eigener Textblock oberhalb der Cells */
+.pebble-tableview__description {
+  font-size: 15px;
+  font-weight: var(--typography-fontweight-regular);
+  line-height: 1.4;
+  font-family: var(--font);
+  color: var(--text-secondary);
+  padding: var(--spacing-3) var(--spacing-4) 0;
+}
+.pebble-tableview--discription-true .pebble-tableview__description {
+  display: block;
+}
+.pebble-tableview--discription-false .pebble-tableview__description {
+  display: none;
+}
+
+/* Cell amount: reiner Existenz-Marker, Hoehe ergibt sich automatisch aus der
+   Anzahl gerenderter .pebble-tableview-cell Kinder statt fixer px-Werte */
+.pebble-tableview--cell-amount-two,
+.pebble-tableview--cell-amount-three,
+.pebble-tableview--cell-amount-more-then-3 {
+  height: auto;
+}
+
+/* ============================================
+   Toggle
+   Figma: Toggle | pebble-toggle
+   Props: active, label
+   Inhalt: label steht als Geschwister-<span> neben dem Schalter, gleiches Muster wie Checkbox/Radio
+   ============================================ */
+
+.pebble-toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 31px;
+  width: 51px;
+  background: var(--neutral-200);
+  border-radius: var(--border-radius-circle);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border: none;
+  padding: 0;
+}
+.pebble-toggle::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 25px;
+  height: 25px;
+  border-radius: var(--border-radius-circle);
+  background: var(--neutral-white);
+  transition: transform 0.2s ease;
+}
+
+/* Active: einzige Modifier-Klasse fuer den Zustand, folgt dem --prop-value Muster
+   des restlichen Systems (ersetzt das vorherige doppelte --checked/--active-true).
+   --active-false ist ein reiner Existenz-Marker, der Ruhezustand kommt bereits aus der Base-Klasse. */
+.pebble-toggle--active-true {
+  background: var(--neutral-black);
+}
+.pebble-toggle--active-true::after {
+  transform: translateX(20px);
+}
+.pebble-toggle--active-false {
+  background: var(--neutral-200);
+}
+
+/* ============================================
+   ToggleButton
+   Figma: ToggleButton | pebble-togglebutton
+   Props: value, discription, trailing, state, selected
+
+   PFLICHT-STRUKTUR — immer exakt so verwenden:
+
+   <div class="pebble-togglebutton pebble-togglebutton--selected-false">
+     <div class="pebble-togglebutton__main">
+       <div class="pebble-radio pebble-radio--selected-false"></div>
+       <div class="pebble-togglebutton__content">
+         <span class="pebble-togglebutton__value">Titel</span>
+         <span class="pebble-togglebutton__discription">Beschreibung</span>
+       </div>
+     </div>
+   </div>
+
+   Mit optionalem Trailing-Label rechts:
+
+   <div class="pebble-togglebutton pebble-togglebutton--selected-true">
+     <div class="pebble-togglebutton__main">
+       <div class="pebble-radio pebble-radio--selected-true"></div>
+       <div class="pebble-togglebutton__content">
+         <span class="pebble-togglebutton__value">Titel</span>
+         <span class="pebble-togglebutton__discription">Beschreibung</span>
+       </div>
+     </div>
+     <span class="pebble-togglebutton__trailing">label</span>
+   </div>
+
+   HINWEIS: .pebble-radio ist PFLICHT und IMMER das allererste Kind in
+   .pebble-togglebutton__main — ausnahmslos, auch ohne Trailing-Label oder
+   Description. Ein .pebble-togglebutton ohne .pebble-radio-Kind ist falsch.
+   KEIN .pebble-toggle (Switch) verwenden. selected-true/false auf
+   .pebble-togglebutton und seinem .pebble-radio-Kind muss immer identisch
+   sein — die Auswahl wird ausschliesslich ueber die Radio-Fuellfarbe
+   angezeigt, NICHT ueber einen Rahmen am Togglebutton selbst.
+   ============================================ */
+
+.pebble-togglebutton {
+  width: 100%;
+  min-height: 68px;
+  padding: var(--spacing-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  border-radius: 0;
+  cursor: pointer;
+}
+
+/* Linke Gruppe: Radio + Content gehoeren visuell zusammen und duerfen nicht
+   durch das space-between der Base-Klasse auseinandergezogen werden. */
+.pebble-togglebutton__main {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  min-width: 0;
+}
+
+.pebble-togglebutton__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  min-width: 0;
+}
+.pebble-togglebutton__value {
+  font-size: var(--typography-fontsize-body);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-body);
+  font-family: var(--font);
+  color: var(--neutral-black);
+}
+.pebble-togglebutton__discription {
+  font-size: var(--typography-fontsize-caption);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-caption);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+}
+
+/* Trailing: optionaler Text ganz rechts (Figma-Prop "state": Label/tag).
+   Nur rendern, wenn das Modell tatsaechlich einen rechten Hinweistext braucht. */
+.pebble-togglebutton__trailing {
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pebble-togglebutton__main > .pebble-radio {
+  flex-shrink: 0;
+}
+
+/* Selection ist ausschliesslich am verschachtelten .pebble-radio sichtbar
+   (Fuellfarbe), nicht am Togglebutton selbst — daher keine Border-Regeln
+   hier. Klassen existieren trotzdem fuer Konsistenz mit dem Radio-State. */
+.pebble-togglebutton--selected-true {
+}
+.pebble-togglebutton--selected-false {
+}
+/* State: default ist der visuelle Ruhezustand, Klasse existiert trotzdem fuer
+   Konsistenz mit pebble-button--state-default */
+.pebble-togglebutton--state-default {
+  opacity: 1;
+}
+.pebble-togglebutton--state-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ============================================
+   ToggleList
+   Figma: ToggleList | pebble-togglelist
+   Props: headline, amount
+
+   PFLICHT-STRUKTUR:
+
+   <div class="pebble-togglelist pebble-togglelist--amount-3 pebble-togglelist--headline-true">
+     <span class="pebble-togglelist__headline">Überschrift</span>
+     <div class="pebble-togglebutton pebble-togglebutton--selected-true">
+       <div class="pebble-togglebutton__main">
+         <div class="pebble-radio pebble-radio--selected-true"></div>
+         <div class="pebble-togglebutton__content">
+           <span class="pebble-togglebutton__value">Option 1</span>
+           <span class="pebble-togglebutton__discription">Beschreibung</span>
+         </div>
+       </div>
+     </div>
+     <div class="pebble-togglebutton pebble-togglebutton--selected-false">
+       <div class="pebble-togglebutton__main">
+         <div class="pebble-radio pebble-radio--selected-false"></div>
+         <div class="pebble-togglebutton__content">
+           <span class="pebble-togglebutton__value">Option 2</span>
+           <span class="pebble-togglebutton__discription">Beschreibung</span>
+         </div>
+       </div>
+     </div>
+     <div class="pebble-togglebutton pebble-togglebutton--selected-false">
+       <div class="pebble-togglebutton__main">
+         <div class="pebble-radio pebble-radio--selected-false"></div>
+         <div class="pebble-togglebutton__content">
+           <span class="pebble-togglebutton__value">Option 3</span>
+         </div>
+       </div>
+     </div>
+   </div>
+
+   amount entspricht der Anzahl der .pebble-togglebutton Kinder.
+   Immer nur ein .pebble-togglebutton--selected-true gleichzeitig.
+   ============================================ */
+
+.pebble-togglelist {
+  width: 100%;
+  border-radius: var(--border-radius-l);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pebble-togglelist > .pebble-togglebutton {
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: 0;
+}
+.pebble-togglelist > .pebble-togglebutton:last-child {
+  border-bottom: none;
+}
+
+/* Amount: reiner Existenz-Marker. Hoehe ergibt sich automatisch aus
+   der Anzahl gerenderter .pebble-togglebutton Kinder statt fixer px-Werte. */
+.pebble-togglelist--amount-2,
+.pebble-togglelist--amount-3,
+.pebble-togglelist--amount-4 {
+  height: auto;
+}
+
+/* Headline: optionaler Textblock, wird als erstes Kind vor den Buttons gerendert */
+.pebble-togglelist__headline {
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-semibold);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-primary);
+  padding: var(--spacing-3) var(--spacing-4) var(--spacing-1);
+}
+.pebble-togglelist--headline-true .pebble-togglelist__headline {
+  display: block;
+}
+.pebble-togglelist--headline-false .pebble-togglelist__headline {
+  display: none;
+}
+
+/* ============================================
+   Toolbar - Top
+   Figma: Toolbar - Top | pebble-toolbar_-_top
+   Props: icon, back
+   Scope: chrome
+   ============================================ */
+
+.pebble-toolbar_-_top {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4) var(--spacing-5);
+  min-height: 72px;
+}
+
+/* Icon / Back: reine Existenz-Marker, das jeweilige Element (Icon-Button oder
+   Zurueck-Button) wird als Kind innerhalb der Toolbar gerendert */
+.pebble-toolbar_-_top--icon-true,
+.pebble-toolbar_-_top--back-true {
+}
+
+/* Title: immer zentriert ueber der vollen Toolbar-Breite, unabhaengig von der
+   Breite der flankierenden Back-/Icon-Elemente */
+.pebble-toolbar_-_top__title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-regular);
+  line-height: var(--typography-lineheight-secondary);
+  font-family: var(--font);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* ============================================
+   Visual
+   Figma: Visual | pebble-visual
+   Props: variant
+   ============================================ */
+
+.pebble-visual {
+  background: var(--neutral-black);
+  height: 40px;
+  width: 40px;
+  border-radius: var(--border-radius-circle);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
