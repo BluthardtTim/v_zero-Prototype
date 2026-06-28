@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/generate.ts": { "maxDuration": 60 },
+    "api/generate-header.ts": { "maxDuration": 30 }
+  }
+}

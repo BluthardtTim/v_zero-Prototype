@@ -21,15 +21,19 @@ function HomeScreen({ onGenerate, loading }: { onGenerate: () => void; loading: 
         <p className="home-screen__title-main">Temporary Spaces</p>
         <p className="home-screen__title-sub">everything is silent</p>
       </div>
-      <button
-        className={`home-screen__bubbles${loading ? " home-screen__bubbles--loading" : ""}`}
-        onClick={onGenerate}
-        disabled={loading}
-        aria-label="Generate Space"
-      >
-        <img src="/bubbles.png" alt="" draggable={false} />
-      </button>
-      {loading && <p className="home-screen__loading">Generating Space…</p>}
+      <div className="home-screen__center">
+        <button
+          className={`home-screen__bubbles${loading ? " home-screen__bubbles--loading" : ""}`}
+          onClick={onGenerate}
+          disabled={loading}
+          aria-label="Generate Space"
+        >
+          <img src="/bubbles.png" alt="" draggable={false} />
+        </button>
+      </div>
+      <p className={`home-screen__loading${loading ? " home-screen__loading--visible" : ""}`}>
+        Generating Space…
+      </p>
     </div>
   )
 }

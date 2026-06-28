@@ -99,8 +99,27 @@ body {
 }
 
 @media (max-width: 500px) {
+  body {
+    background: #191917;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-height: 100dvh;
+  }
+
   .button-stack {
     display: none;
+  }
+
+  .device-frame {
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+  }
+
+  /* keep space content clear of status bar and home indicator */
+  .space-slot {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
@@ -120,13 +139,15 @@ body {
   inset: 0;
   background: linear-gradient(163.32deg, #2c2b27 1.77%, #191917 98.35%);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .home-screen__title {
-  position: absolute;
-  top: 108px;
-  left: 0;
+  flex-shrink: 0;
   width: 100%;
+  padding-top: calc(108px + env(safe-area-inset-top));
   text-align: center;
 }
 
@@ -150,10 +171,16 @@ body {
   white-space: nowrap;
 }
 
+/* Takes all remaining space and keeps the bubbles centered within it */
+.home-screen__center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .home-screen__bubbles {
-  position: absolute;
-  left: 87px;
-  top: 340px;
   width: 228px;
   height: 219px;
   padding: 0;
@@ -161,6 +188,7 @@ body {
   border: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
+  flex-shrink: 0;
 }
 
 .home-screen__bubbles img {
@@ -181,17 +209,22 @@ body {
 }
 
 .home-screen__loading {
-  position: absolute;
-  bottom: 80px;
-  left: 0;
+  flex-shrink: 0;
   width: 100%;
   margin: 0;
+  padding-bottom: calc(48px + env(safe-area-inset-bottom));
   text-align: center;
   font-family: var(--font);
   font-size: var(--typography-fontsize-caption);
   font-weight: var(--typography-fontweight-regular);
   line-height: var(--typography-lineheight-caption);
   color: rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.home-screen__loading--visible {
+  opacity: 1;
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
