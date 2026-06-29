@@ -760,7 +760,8 @@ export const events: ContextEvent[] = [
     entities: {},
     raw_ref: {
       type: "sketch",
-      title: "Grundriss EG — Konzeptskizze"
+      title: "Grundriss EG — Konzeptskizze",
+      thumbnail: "project_sketch_grundriss.jpg"
     }
   },
   {
@@ -809,6 +810,357 @@ export const events: ContextEvent[] = [
       role: "Tragwerksplaner",
       phone: "+49 89 3321 7700",
       email: "berger@tragwerk-muenchen.de"
+    }
+  },
+
+  // ── PROJEKT SCAPE — Besucherpavillon Landschaft ───────────────────
+
+  // Files
+  {
+    id: "scape_file_grundrisse",
+    type: "files",
+    content: "Grundrisse Erdgeschoss Scape Pavillon v2 Naturlandschaft Aussichtsplattform Entwurf Karin Vogel",
+    entities: { people: ["Karin Vogel"] },
+    raw_ref: {
+      type: "file",
+      name: "Grundrisse_Scape_Pavillon_v2.pdf",
+      format: "PDF",
+      size: "5.1 MB",
+      modified: "2026-07-16",
+      author: "Karin Vogel"
+    }
+  },
+  {
+    id: "scape_file_konstruktion",
+    type: "files",
+    content: "Konstruktionsdetails Scape Holzstahlverbund Tragwerk Stuetzen Auskragung Thomas Weiss Statik",
+    entities: { people: ["Thomas Weiß"] },
+    raw_ref: {
+      type: "file",
+      name: "Konstruktionsdetails_Scape_v1.pdf",
+      format: "PDF",
+      size: "3.4 MB",
+      modified: "2026-07-14",
+      author: "Thomas Weiß"
+    }
+  },
+  {
+    id: "scape_file_lv",
+    type: "files",
+    content: "Leistungsverzeichnis Scape Innenausbau Baubeschreibung Materialspezifikation Kostenplanung",
+    entities: {},
+    raw_ref: {
+      type: "file",
+      name: "LV_Scape_Innenausbau.pdf",
+      format: "PDF",
+      size: "0.9 MB",
+      modified: "2026-07-11"
+    }
+  },
+  {
+    id: "scape_file_baugenehmigung",
+    type: "files",
+    content: "Bauantrag Baugenehmigung Scape Pavillon Landkreis Ravensburg Naturschutz Einreichung",
+    entities: { places: ["Ravensburg"] },
+    raw_ref: {
+      type: "file",
+      name: "Bauantrag_Scape_Entwurf.pdf",
+      format: "PDF",
+      size: "4.8 MB",
+      modified: "2026-07-18"
+    }
+  },
+
+  // Articles
+  {
+    id: "scape_article_holz_landschaft",
+    type: "articles",
+    content: "Holzarchitektur Landschaft Integration Naturmaterialien Laerche unbehandelt Aussichtsplattform Nachhaltigkeit",
+    entities: {},
+    raw_ref: {
+      type: "saved_article",
+      title: "Holz in der Landschaftsarchitektur — Entwurfsstrategien",
+      source: "Bauwelt",
+      saved: "2026-07-07"
+    }
+  },
+  {
+    id: "scape_article_naturschutz",
+    type: "articles",
+    content: "Naturschutzrecht Bauen Schutzgebiete Eingriff Ausgleich Bebauungsplan Sondernutzung Genehmigung",
+    entities: {},
+    raw_ref: {
+      type: "saved_article",
+      title: "Bauen im Naturschutzgebiet — Rechtliche Rahmenbedingungen",
+      source: "DAB online",
+      saved: "2026-07-03"
+    }
+  },
+  {
+    id: "scape_article_pavillon",
+    type: "articles",
+    content: "Pavillonarchitektur Freiraumgestaltung Schwellenraum Innen Aussen Landschaftspavillon Cortenstahl",
+    entities: {},
+    raw_ref: {
+      type: "saved_article",
+      title: "Der Pavillon als Schwellenraum",
+      source: "Architectural Review",
+      saved: "2026-07-10"
+    }
+  },
+
+  // Notes
+  {
+    id: "scape_note_client_meeting",
+    type: "notes",
+    content: "Kundengespräch Lenz Stiftung Protokoll Aussichtsplattform Materialwahl Laerche Cortenstahl Barrierefreiheit",
+    entities: { people: ["Prof. Dr. Anna Lenz"] },
+    raw_ref: {
+      type: "note",
+      title: "Protokoll — Kundengespräch Lenz Stiftung",
+      body: "Prof. Lenz wünscht maximale Offenheit zum Landschaftsraum. Materialien: unbehandeltes Holz (Lärche), Cortenstahl, kein Sichtbeton (zu industriell). Aussichtsplattform muss barrierefrei erreichbar sein.",
+      modified: "2026-07-15"
+    }
+  },
+  {
+    id: "scape_note_revision",
+    type: "notes",
+    content: "Revision Entwurf Scape Checkliste Plattformbreite Stützenabstand Windlast Barrierefreiheit Ostrampe",
+    entities: { people: ["Thomas Weiß"] },
+    raw_ref: {
+      type: "note",
+      title: "Revision v2 — Offene Punkte",
+      body: "Plattformbreite von 4,20 auf 5,00 m erhöhen (Barrierefreiheit). Stützenabstand mit Thomas prüfen (Windlast). Zugang Ost: Rampe statt Treppe einzeichnen.",
+      modified: "2026-07-17"
+    }
+  },
+  {
+    id: "scape_note_todo",
+    type: "notes",
+    content: "Bauantrag Scape Checkliste Unterlagen Lageplan Naturschutz Statik Ausgleich Landkreis Ravensburg",
+    entities: { places: ["Ravensburg"] },
+    raw_ref: {
+      type: "note",
+      title: "Bauantrag Scape — Einreichungs-Checkliste",
+      body: "Unterlagen für die Einreichung beim Landkreis Ravensburg.",
+      checklist: [
+        { label: "Lageplan M 1:200 aktualisiert", done: true },
+        { label: "Naturschutzrechtliche Prüfung", done: true },
+        { label: "Statiknachweis Thomas Weiß", done: false },
+        { label: "Ausgleichsmaßnahmen dokumentieren", done: false },
+        { label: "Einreichung Landkreis Ravensburg", done: false }
+      ],
+      modified: "2026-07-18"
+    }
+  },
+
+  // Chats
+  {
+    id: "scape_chat_team_platform",
+    type: "chats",
+    content: "Projekt Scape Gruppe Karin Grundriss v2 hochgeladen Plattform verbreitert Ostrampe Barrierefreiheit",
+    entities: { people: ["Karin Vogel"] },
+    raw_ref: {
+      type: "chat_message",
+      chat: "Projekt Scape 🌿",
+      chat_type: "group",
+      sender: "Karin Vogel",
+      participants: ["Karin Vogel", "Thomas Weiß"],
+      participants_avatars: { "Thomas Weiß": "thomas.jpg" },
+      message: "Grundriss v2 ist online — Plattform jetzt 5 m breit, Ostrampe eingetragen 👍",
+      timestamp: "2026-07-17T13:15:00Z",
+      unread: true
+    }
+  },
+  {
+    id: "scape_chat_team_deadline",
+    type: "chats",
+    content: "Projekt Scape Gruppe Bauantrag Deadline Montag Thomas Statik Windlast Abgabe Ravensburg",
+    entities: { places: ["Ravensburg"] },
+    raw_ref: {
+      type: "chat_message",
+      chat: "Projekt Scape 🌿",
+      chat_type: "group",
+      sender: "Thomas Weiß",
+      sender_avatar: "thomas.jpg",
+      participants: ["Karin Vogel", "Thomas Weiß"],
+      participants_avatars: { "Thomas Weiß": "thomas.jpg" },
+      message: "Statik inklusive Windlastnachweise bis 2026-07-20 fertig — für Abgabe am 2026-07-22 kein Problem.",
+      timestamp: "2026-07-17T09:48:00Z",
+      unread: false
+    }
+  },
+  {
+    id: "scape_chat_dm_thomas_wind",
+    type: "chats",
+    content: "Thomas Weiss Statiker Windlast Stuetzen Cortenstahl Verbindung gelenkig biegesteif Detail Rueckfrage",
+    entities: { people: ["Thomas Weiß"] },
+    raw_ref: {
+      type: "chat_message",
+      chat_type: "direct",
+      sender: "Thomas Weiß",
+      sender_avatar: "thomas.jpg",
+      message: "Kurze Frage: Soll die Cortenstahl-Stütze gelenkig oder biegesteif angeschlossen werden? Macht bei der Windlast einen Unterschied.",
+      timestamp: "2026-07-16T15:30:00Z",
+      unread: true
+    }
+  },
+  {
+    id: "scape_chat_client_material",
+    type: "chats",
+    content: "Prof Lenz Klientin Materialentscheidung Laerche naturverwitternd unbehandelt Praesentation Atelier",
+    entities: { people: ["Prof. Dr. Anna Lenz"] },
+    raw_ref: {
+      type: "chat_message",
+      chat_type: "direct",
+      sender: "Prof. Dr. Anna Lenz",
+      message: "Bezüglich Holzart: Wir tendieren zur Lärche — naturverwitternd, ohne Behandlung. Kann man das beim Montagstermin (2026-07-21) nochmal konkret zeigen?",
+      timestamp: "2026-07-17T17:22:00Z",
+      unread: true
+    }
+  },
+  {
+    id: "scape_chat_dm_karin",
+    type: "chats",
+    content: "Karin Vogel Bepflanzungsplan Scape Mähfläche Wildblumen Naturzone Pflanzliste Naturschutzunterlagen",
+    entities: { people: ["Karin Vogel"] },
+    raw_ref: {
+      type: "chat_message",
+      chat_type: "direct",
+      sender: "Karin Vogel",
+      message: "Bepflanzungsplan ist fast fertig. Soll die Mähfläche um den Pavillon 3 m oder 5 m breit sein? Für die Naturschutzunterlagen brauche ich das noch.",
+      timestamp: "2026-07-16T10:05:00Z",
+      unread: false
+    }
+  },
+
+  // Calendar
+  {
+    id: "scape_calendar_client_presentation",
+    type: "calendar",
+    content: "Praesentation Lenz Stiftung Entwurf Material Laerche Cortenstahl Pavillon Atelier Montag",
+    entities: { people: ["Prof. Dr. Anna Lenz"], dates: ["2026-07-21T10:00"] },
+    raw_ref: {
+      type: "calendar_event",
+      title: "Präsentation — Entwurf & Materialien Scape",
+      date: "2026-07-21",
+      time: "10:00",
+      location: "Atelier",
+      attendees: ["Prof. Dr. Anna Lenz"]
+    }
+  },
+  {
+    id: "scape_calendar_site_visit",
+    type: "calendar",
+    content: "Ortsbegehung Standort Scape Hügel Ravensburg Karin Thomas Windmessung Gelaendeaufnahme",
+    entities: { people: ["Karin Vogel", "Thomas Weiß"], places: ["Ravensburg"], dates: ["2026-07-19T08:30"] },
+    raw_ref: {
+      type: "calendar_event",
+      title: "Ortsbegehung — Standort Scape",
+      date: "2026-07-19",
+      time: "08:30",
+      location: "Hügel bei Ravensburg",
+      attendees: ["Karin Vogel", "Thomas Weiß"]
+    }
+  },
+  {
+    id: "scape_calendar_permit_deadline",
+    type: "calendar",
+    content: "Bauantrag Scape Abgabe Landkreis Ravensburg Frist Einreichung Naturschutz Montag",
+    entities: { places: ["Ravensburg"], dates: ["2026-07-22"] },
+    raw_ref: {
+      type: "calendar_event",
+      title: "Bauantrag Scape — Abgabe Landkreis",
+      date: "2026-07-22",
+      location: "Landkreis Ravensburg",
+      attendees: []
+    }
+  },
+
+  // Sketches / Images
+  {
+    id: "scape_sketch_lageplan",
+    type: "images",
+    content: "Handskizze Lageplan Scape Pavillon Hügel Gelaende Zugang Rampe Aussichtsrichtung Konzept",
+    entities: {},
+    raw_ref: {
+      type: "sketch",
+      title: "Lageplan — Konzeptskizze Standort",
+      thumbnail: "scape_sketch_lageplan.jpg"
+    }
+  },
+  {
+    id: "scape_sketch_perspektive",
+    type: "images",
+    content: "Skizze Perspektive Scape Pavillon Laerche Cortenstahl Landschaft Auskragung Aussichtsplattform Entwurf",
+    entities: {},
+    raw_ref: {
+      type: "sketch",
+      title: "Perspektive — Pavillonstruktur"
+    }
+  },
+  {
+    id: "scape_sketch_schnitt",
+    type: "images",
+    content: "Querschnitt Scape Pavillon Gelaende Bodenprofil Stuetzen Auskragung Raumhoehe Konstruktion Laerche",
+    entities: {},
+    raw_ref: {
+      type: "sketch",
+      title: "Schnitt B-B — Längsschnitt Pavillon"
+    }
+  },
+  {
+    id: "scape_photo_site",
+    type: "images",
+    content: "Foto Standort Scape Hügel Ravensburg Landschaft Panorama Weitsicht Ortsbegehung",
+    entities: { places: ["Ravensburg"] },
+    raw_ref: {
+      type: "photo",
+      title: "Standortfoto — Hügel Ravensburg",
+      date: "2026-07-10",
+      location: "Hügel bei Ravensburg",
+      thumbnail: "scape_site_panorama.jpg"
+    }
+  },
+
+  // Contacts
+  {
+    id: "scape_contact_client",
+    type: "contacts",
+    content: "Prof Dr Anna Lenz Lenz Stiftung Auftraggeberin Direktorin Kontakt Telefon Email",
+    entities: { people: ["Prof. Dr. Anna Lenz"] },
+    raw_ref: {
+      type: "contact",
+      name: "Prof. Dr. Anna Lenz",
+      role: "Direktorin — Lenz Stiftung",
+      phone: "+49 751 3345 7820",
+      email: "a.lenz@lenz-stiftung.de"
+    }
+  },
+  {
+    id: "scape_contact_engineer",
+    type: "contacts",
+    content: "Thomas Weiss Tragwerksplaner Statiker Ingenieur Büro Kontakt Ravensburg Windlast Holzstahlbau",
+    entities: { people: ["Thomas Weiß"] },
+    raw_ref: {
+      type: "contact",
+      name: "Thomas Weiß",
+      role: "Tragwerksplaner",
+      phone: "+49 751 9876 200",
+      email: "weiss@tragwerk-rv.de"
+    }
+  },
+  {
+    id: "scape_contact_landscape",
+    type: "contacts",
+    content: "Karin Vogel Landschaftsarchitektin Büro Kontakt Bepflanzung Aussenraum Naturzone Wildblumen",
+    entities: { people: ["Karin Vogel"] },
+    raw_ref: {
+      type: "contact",
+      name: "Karin Vogel",
+      role: "Landschaftsarchitektin",
+      phone: "+49 751 6634 990",
+      email: "karin.vogel@freiraum-buero.de"
     }
   }
 ]

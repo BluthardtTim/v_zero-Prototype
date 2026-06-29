@@ -127,9 +127,14 @@ function resolveValue(value: unknown, state: UIState, dispatch: Dispatch, keyHin
     return <RenderNode key={keyHint} node={value} state={state} dispatch={dispatch} />
   }
   if (Array.isArray(value)) {
-    return value.map((item, index) =>
-      isUINode(item) ? <RenderNode key={index} node={item} state={state} dispatch={dispatch} /> : item
-    )
+    return value.map((item, index) => {
+      if (isUINode(item)) return <RenderNode key={index} node={item} state={state} dispatch={dispatch} />
+      // resolve sentinel src values inside plain data objects (e.g. group chat participants)
+      if (item && typeof item === "object" && "src" in item && typeof (item as Record<string, unknown>).src === "string") {
+        return { ...item, src: resolveValue((item as Record<string, unknown>).src, state, dispatch, "src") }
+      }
+      return item
+    })
   }
   return value
 }

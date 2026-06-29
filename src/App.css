@@ -139,17 +139,6 @@ body {
   overflow: hidden;
 }
 
-/* Upper-left glow — approximates Figma Shadow asset (node 88:620).
-   Inset percentages match the Figma frame: top 9.5%, right 62.49%, bottom 86.45%, left -12.42% */
-.home-screen__shadow {
-  position: absolute;
-  top: 9.5%;
-  right: 62.49%;
-  bottom: 86.45%;
-  left: -12.42%;
-  background: radial-gradient(ellipse at 60% 40%, rgba(160, 200, 140, 0.10) 0%, transparent 70%);
-  pointer-events: none;
-}
 
 .home-screen__title {
   position: absolute;

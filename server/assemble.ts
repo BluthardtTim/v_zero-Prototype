@@ -24,11 +24,11 @@ export async function assembleContext(query: string): Promise<ContextBlob> {
   const queryEmbedding = await embed(query)
   console.log(`Embedding generated (${queryEmbedding.length} dims)`)
 
-  const allMatches = await searchContext(queryEmbedding, 0.35, 12)
+  const allMatches = await searchContext(queryEmbedding, 0.28, 25)
 
-  // Dynamischer Cutoff: alles was mehr als 30% unter Top-Score liegt raus
+  // Dynamic cutoff: keep events at 50%+ of the top score (tested to separate project vs noise cleanly)
   const topScore = allMatches[0]?.similarity ?? 0
-  const cutoff   = topScore * 0.70
+  const cutoff   = topScore * 0.50
   const matches  = allMatches.filter(m => m.similarity >= cutoff)
 
   console.log(`Found ${allMatches.length} raw matches, ${matches.length} after cutoff (top: ${topScore.toFixed(3)}, cutoff: ${cutoff.toFixed(3)})`)

@@ -27,9 +27,6 @@ function HomeScreen({
 }) {
   return (
     <div className="home-screen">
-      {/* Decorative shadow glow — upper-left, matches Figma node 88:620 */}
-      <div className="home-screen__shadow" aria-hidden />
-
       <div className="home-screen__title">
         <p className="home-screen__title-main">Temporary Spaces</p>
         <p className="home-screen__title-sub">everything is silent</p>

@@ -78,9 +78,20 @@ If a piece of information can't be folded into the one sentence grammatically, d
 
 ---
 
-## Step 5 — Length budget: must fit in two rows, always
+## Step 5 — Length budget: exactly two rows, always
 
-The headline renders inside a 323px-wide container at 24px font-size with 32px line-height. It MUST wrap to at most TWO lines — never three or more. Budget no more than about 5 words / 28 characters of running text total, excluding any inline avatar group. An inline \`AvatarGroup\` costs real horizontal space too — count roughly 3 characters of width PER AVATAR inside it (a 3-avatar group ≈ 9 characters, not "a couple of words"), and a \`Visual\` (emoji or folder) costs roughly 3 characters — add that to the same budget, it is not free. If including every entity (all names, exact time, exact place) would push the sentence past two lines, you MUST cut hard — drop secondary names, drop the exact time or place (keep whichever matters more), use one inline component at most, and prefer short words. When in doubt, cut harder than feels natural — it is much better to under-fill than to overflow.
+The headline renders inside a 323px-wide container at 24px font-size with 32px line-height. At this size roughly 22 characters of text fit on a single line. The output MUST fill EXACTLY TWO lines — not one, not three or more. Both failures are equally wrong:
+
+- **Too short (one line):** the header looks sparse and wastes its visual weight. If the sentence fits on one line, it is not long enough — expand it.
+- **Too long (three or more lines):** the header overflows its allocated space. Cut hard until it fits two.
+
+**Two-line target zone: 25–44 characters of combined running text.** Count the concatenated string of all \`Text\` fragment children (with their spacing). This is the window that reliably wraps to exactly two lines.
+
+An inline \`AvatarGroup\` or \`Visual\` also consumes horizontal space — count roughly 3 characters of width PER AVATAR (a 3-avatar group ≈ 9 characters) and 3 characters for a \`Visual\` — deduct that from the upper end of the budget when you include one.
+
+**If the sentence is too short** (would read on one line): add a qualifying phrase, include a second meaningful detail (a place, a person, a descriptor), or rephrase with slightly more words — anything that genuinely fills the sentence rather than padding it arbitrarily.
+
+**If the sentence is too long** (would overflow to three lines): drop secondary names, drop the exact time or place (keep whichever matters more), use at most one inline component, and prefer short words.
 
 ---
 
@@ -92,7 +103,9 @@ ${PEBBLE_COMPONENT_REFERENCE}
 
 ${PEBBLE_SLOT_RULES}
 
-For any \`Avatar\`/\`AvatarGroup\` \`src\`, since there are no real photos available, always use the literal string \`"placeholder:blue"\`, \`"placeholder:green"\`, \`"placeholder:yellow"\`, or \`"placeholder:neutral"\` — never invent a real URL or a data URI yourself.
+**When the blob includes an \`avatars\` map, build the sentence around the people listed in that map.** Those are the people with real profile photos — choosing to feature someone NOT in the map means you cannot show a real avatar and must fall back to a coloured initial, which is always the weaker output. If the entities list people both inside and outside the map, write the sentence to feature the ones inside it.
+
+For any \`Avatar\` \`src\`: if the person's name appears as a key in the \`avatars\` map, you MUST use \`"avatar:<filename>"\` (e.g. \`"avatar:mia.jpg"\`) as the \`src\`. For any person not present in the map — or when the blob has no \`avatars\` field — omit \`src\` entirely and use \`initials\` + \`tint\` instead. Never invent a filename not listed in the map, never use a raw URL or data URI.
 
 ---
 
