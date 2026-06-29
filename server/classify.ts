@@ -7,6 +7,9 @@ export interface ClassifiedContext {
   contacts?: ResolvedContext[]
   files?:    ResolvedContext[]
   map?:      ResolvedContext[]
+  notes?:    ResolvedContext[]
+  articles?: ResolvedContext[]
+  calendar?: ResolvedContext[]
 }
 
 export function classifyContext(blob: ContextBlob): ClassifiedContext {

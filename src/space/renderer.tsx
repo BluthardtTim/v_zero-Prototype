@@ -119,6 +119,10 @@ function resolveValue(value: unknown, state: UIState, dispatch: Dispatch, keyHin
   if (keyHint === "src" && typeof value === "string" && value.startsWith("photo:")) {
     return `/images/${value.slice("photo:".length)}`
   }
+  // Profile photos placed in public/images/chat/ — served as /images/chat/<filename>
+  if (keyHint === "src" && typeof value === "string" && value.startsWith("avatar:")) {
+    return `/images/chat/${value.slice("avatar:".length)}`
+  }
   if (isUINode(value)) {
     return <RenderNode key={keyHint} node={value} state={state} dispatch={dispatch} />
   }

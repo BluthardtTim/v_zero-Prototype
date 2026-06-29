@@ -1,4 +1,4 @@
-export type EventType = "finance" | "images" | "chats" | "contacts" | "files" | "map"
+export type EventType = "finance" | "images" | "chats" | "contacts" | "files" | "map" | "notes" | "articles" | "calendar"
 
 export interface ContextEvent {
   id: string
@@ -197,6 +197,8 @@ export const events: ContextEvent[] = [
       type: "chat_message",
       chat: "Italy Trip 🇮🇹",
       sender: "Nina Berger",
+      sender_avatar: "nina.jpg",
+      participants_avatars: { "Mia Schulz": "mia.jpg", "Lukas Brenner": "lukas.jpg", "Nina Berger": "nina.jpg", "Felix Wagner": "felix.jpg", "Ben Richter": "ben.jpg" },
       message: "Wer kommt morgen mit zur Bootstour nach Capri?",
       reply_from: "Felix Wagner",
       reply_message: "Wir zwei sind dabei!",
@@ -219,6 +221,8 @@ export const events: ContextEvent[] = [
       type: "chat_message",
       chat: "Italy Trip 🇮🇹",
       sender: "Mia Schulz",
+      sender_avatar: "mia.jpg",
+      participants_avatars: { "Mia Schulz": "mia.jpg", "Lukas Brenner": "lukas.jpg", "Nina Berger": "nina.jpg", "Felix Wagner": "felix.jpg", "Ben Richter": "ben.jpg" },
       message: "Tisch ist reserviert, 20 Uhr bei Vincenzo 🍝",
       timestamp: "2026-07-15T14:10:00",
       unread: 0,
@@ -239,6 +243,8 @@ export const events: ContextEvent[] = [
       type: "chat_message",
       chat: "Italy Trip 🇮🇹",
       sender: "Ben Richter",
+      sender_avatar: "ben.jpg",
+      participants_avatars: { "Mia Schulz": "mia.jpg", "Lukas Brenner": "lukas.jpg", "Nina Berger": "nina.jpg", "Felix Wagner": "felix.jpg", "Ben Richter": "ben.jpg" },
       message: "Checkout morgen 10 Uhr nicht verschlafen 😅",
       timestamp: "2026-07-17T21:05:00",
       unread: 1
@@ -258,6 +264,8 @@ export const events: ContextEvent[] = [
       type: "chat_message",
       chat: "Italy Trip 🇮🇹",
       sender: "Lukas Brenner",
+      sender_avatar: "lukas.jpg",
+      participants_avatars: { "Mia Schulz": "mia.jpg", "Lukas Brenner": "lukas.jpg", "Nina Berger": "nina.jpg", "Felix Wagner": "felix.jpg", "Ben Richter": "ben.jpg" },
       message: "Pompeji morgen? Wäre mega — bin ab 9 Uhr ready 🏛️",
       reply_from: "Mia Schulz",
       reply_message: "Ja!! Ich bin so dabei",
@@ -279,6 +287,7 @@ export const events: ContextEvent[] = [
       type: "chat_message",
       chat_type: "direct",
       sender: "Lukas Brenner",
+      sender_avatar: "lukas.jpg",
       message: "Hey, hast du die Abrechnung schon gesehen? Schuldest mir noch € 37,20 fürs Abendessen 😊",
       timestamp: "2026-07-17T10:15:00",
       unread: 1
@@ -296,6 +305,7 @@ export const events: ContextEvent[] = [
       type: "chat_message",
       chat_type: "direct",
       sender: "Jonas Müller",
+      sender_avatar: "jonas.jpg",
       message: "Wir gehen morgen Abend bouldern — kommst du mit? 🧗",
       timestamp: "2026-07-17T18:45:00",
       unread: 1
@@ -313,6 +323,7 @@ export const events: ContextEvent[] = [
       type: "chat_message",
       chat_type: "direct",
       sender: "Mama",
+      sender_avatar: "mama.jpg",
       message: "Wie läuft der Urlaub? Ruf mich kurz an wenn du Zeit hast 😊",
       timestamp: "2026-07-16T16:20:00",
       unread: 2
@@ -479,6 +490,325 @@ export const events: ContextEvent[] = [
       city: "Positano",
       lat: 40.6293,
       lng: 14.4838
+    }
+  },
+
+  // ── HAUS HOFFMANN — architect project ───────────────────────────────
+
+  // Files
+  {
+    id: "project_file_bauplan",
+    type: "files",
+    content: "Grundrisse EG OG Hoffmann v3 Bauplaene Einfamilienhaus Starnberg Architekt Lisa",
+    entities: { people: ["Lisa Kraft"] },
+    raw_ref: {
+      type: "file",
+      name: "Grundrisse_EG_OG_Hoffmann_v3.pdf",
+      format: "PDF",
+      size: "4.2 MB",
+      modified: "2026-07-14",
+      author: "Lisa Kraft"
+    }
+  },
+  {
+    id: "project_file_lv",
+    type: "files",
+    content: "Leistungsverzeichnis Rohbau Hoffmann Baubeschreibung Materialspezifikation Kostenplanung",
+    entities: {},
+    raw_ref: {
+      type: "file",
+      name: "LV_Hoffmann_Rohbau.pdf",
+      format: "PDF",
+      size: "1.1 MB",
+      modified: "2026-07-10"
+    }
+  },
+  {
+    id: "project_file_fassade",
+    type: "files",
+    content: "Ansichten Fassade Hoffmann Suedfassade Nordfassade Einfamilienhaus Klinker",
+    entities: {},
+    raw_ref: {
+      type: "file",
+      name: "Ansichten_Hoffmann_v2.pdf",
+      format: "PDF",
+      size: "2.8 MB",
+      modified: "2026-07-12"
+    }
+  },
+  {
+    id: "project_file_baugenehmigung",
+    type: "files",
+    content: "Bauantrag Baugenehmigung Einfamilienhaus Hoffmann Starnberg Gemeinde Einreichung",
+    entities: { places: ["Starnberg"] },
+    raw_ref: {
+      type: "file",
+      name: "Bauantrag_Hoffmann_Entwurf.pdf",
+      format: "PDF",
+      size: "3.6 MB",
+      modified: "2026-07-16"
+    }
+  },
+
+  // Articles
+  {
+    id: "project_article_passive",
+    type: "articles",
+    content: "Passivhaus Standards Daemmung Waermebruecken U-Wert Energieeffizienz Gebaeudehuelle",
+    entities: {},
+    raw_ref: {
+      type: "saved_article",
+      title: "Passivhaus — Dämmlösungen im Vergleich",
+      source: "Detail Magazin",
+      saved: "2026-07-08"
+    }
+  },
+  {
+    id: "project_article_holzbau",
+    type: "articles",
+    content: "Holzrahmenbau Massivholz Konstruktion Statik moderne Holzhaeuser Einfamilienhaus Neubau",
+    entities: {},
+    raw_ref: {
+      type: "saved_article",
+      title: "Moderner Holzrahmenbau — Konstruktionsprinzipien",
+      source: "DAB online",
+      saved: "2026-07-05"
+    }
+  },
+  {
+    id: "project_article_foerderung",
+    type: "articles",
+    content: "KfW Foerderung Energieeffizientes Bauen Wohngebaeude Zuschuss Kredit Neubau",
+    entities: {},
+    raw_ref: {
+      type: "saved_article",
+      title: "KfW 261 — Förderkredit Neubau",
+      source: "KfW.de",
+      saved: "2026-07-11"
+    }
+  },
+
+  // Notes
+  {
+    id: "project_note_client_meeting",
+    type: "notes",
+    content: "Kundengespräch Hoffmann Protokoll Maria Fenster Sued Wohnzimmer Klaus Dachterrasse Wuensche Klinker",
+    entities: { people: ["Klaus Hoffmann", "Maria Hoffmann"] },
+    raw_ref: {
+      type: "note",
+      title: "Protokoll — Kundengespräch Hoffmann",
+      body: "Maria: Südfenster Wohnzimmer vergrößern (mind. 2,40 m). Klaus fragt nach Machbarkeit Dachterrasse über Garage. Klinker-Fassade bevorzugt, Farbton noch offen.",
+      modified: "2026-07-15"
+    }
+  },
+  {
+    id: "project_note_revision",
+    type: "notes",
+    content: "Design Revision Checkliste Treppenbreite Kellertiefe Stefan Grundriss Aenderungen Nordfenster",
+    entities: { people: ["Stefan Berger"] },
+    raw_ref: {
+      type: "note",
+      title: "Revision v3 — Offene Punkte",
+      body: "Treppenbreite auf 1,20 m anpassen. Kellertiefe mit Stefan klären (Hanggrundstück). Nordfenster OG: Lüftungsflügel eintragen.",
+      modified: "2026-07-17"
+    }
+  },
+  {
+    id: "project_note_todo",
+    type: "notes",
+    content: "Bauantrag Einreichung Checkliste Unterlagen Lageplan Statik Baubeschreibung Gemeinde Starnberg",
+    entities: { places: ["Starnberg"] },
+    raw_ref: {
+      type: "note",
+      title: "Bauantrag — Einreichungs-Checkliste",
+      body: "Alle Unterlagen für die Einreichung beim Bauamt Starnberg.",
+      checklist: [
+        { label: "Lageplan M 1:500 aktual.", done: true },
+        { label: "Baubeschreibung finalisieren", done: true },
+        { label: "Statiknachweis Stefan", done: false },
+        { label: "Wärmebrückennachweis", done: false },
+        { label: "Einreichung Gemeinde Starnberg", done: false }
+      ],
+      modified: "2026-07-18"
+    }
+  },
+
+  // Chats
+  {
+    id: "project_chat_team_floor_plan",
+    type: "chats",
+    content: "Projekt Hoffmann Gruppe Lisa Grundriss Version 3 hochgeladen Aenderungen Suedseite Treppenbreite",
+    entities: { people: ["Lisa Kraft"] },
+    raw_ref: {
+      type: "chat_message",
+      chat: "Projekt Hoffmann 🏠",
+      chat_type: "group",
+      sender: "Lisa Kraft",
+      participants: ["Lisa Kraft", "Stefan Berger"],
+      message: "Habe gerade v3 der Grundrisse hochgeladen — das Südfenster im Wohnzimmer ist jetzt auf 2,40 m, und ich hab die Treppe schon angepasst 👍",
+      timestamp: "2026-07-17T11:23:00Z",
+      unread: true
+    }
+  },
+  {
+    id: "project_chat_team_schedule",
+    type: "chats",
+    content: "Projekt Hoffmann Gruppe Bauantrag Deadline Freitag Zeitplan Einreichung Stefan Statik Mittwoch",
+    entities: {},
+    raw_ref: {
+      type: "chat_message",
+      chat: "Projekt Hoffmann 🏠",
+      chat_type: "group",
+      sender: "Stefan Berger",
+      participants: ["Lisa Kraft", "Stefan Berger"],
+      message: "Statiknachweis ist bis Mittwoch fertig, damit ihr Freitag noch einreichen könnt.",
+      timestamp: "2026-07-16T14:52:00Z",
+      unread: false
+    }
+  },
+  {
+    id: "project_chat_stefan_foundation",
+    type: "chats",
+    content: "Stefan Berger Tragwerksplaner Gruendung Tiefe Hanggrundstück Streifenfundament Keller Bodengutachten",
+    entities: { people: ["Stefan Berger"] },
+    raw_ref: {
+      type: "chat_message",
+      chat_type: "direct",
+      sender: "Stefan Berger",
+      message: "Habe das Bodengutachten ausgewertet. Wir gehen auf 1,80 m Gründungstiefe, Hangseite braucht Streifenfundament. Keller ist kein Problem.",
+      timestamp: "2026-07-15T09:10:00Z",
+      unread: false
+    }
+  },
+  {
+    id: "project_chat_client_facade",
+    type: "chats",
+    content: "Klaus Hoffmann Klient Fassade Material Klinker Sandton Entscheidung Wunsch Donnerstagstermin",
+    entities: { people: ["Klaus Hoffmann"] },
+    raw_ref: {
+      type: "chat_message",
+      chat_type: "direct",
+      sender: "Klaus Hoffmann",
+      message: "Wir haben nochmal überlegt — Klinker soll es sein, am liebsten in einem warmen Sandton. Kann man das beim Donnerstagstermin zeigen?",
+      timestamp: "2026-07-16T18:34:00Z",
+      unread: true
+    }
+  },
+  {
+    id: "project_chat_lisa_dm",
+    type: "chats",
+    content: "Lisa Kraft Fenster Nordfassade Lüftungsflügel Detail Zeichnung Schnitt Abstimmung",
+    entities: { people: ["Lisa Kraft"] },
+    raw_ref: {
+      type: "chat_message",
+      chat_type: "direct",
+      sender: "Lisa Kraft",
+      message: "Sollen die Nordfenster OG alle Lüftungsflügel bekommen oder nur die Badezimmer? Detail fehlt noch im Schnitt.",
+      timestamp: "2026-07-17T08:45:00Z",
+      unread: true
+    }
+  },
+
+  // Calendar
+  {
+    id: "project_calendar_client_presentation",
+    type: "calendar",
+    content: "Kundenpräsentation Hoffmann Donnerstag Fassade Optionen Besprechung Atelier Klaus Maria",
+    entities: { people: ["Klaus Hoffmann", "Maria Hoffmann"], dates: ["2026-07-24T14:00"] },
+    raw_ref: {
+      type: "calendar_event",
+      title: "Präsentation — Fassadenoptionen",
+      date: "2026-07-24",
+      time: "14:00",
+      location: "Atelier",
+      attendees: ["Klaus Hoffmann", "Maria Hoffmann"]
+    }
+  },
+  {
+    id: "project_calendar_site_visit",
+    type: "calendar",
+    content: "Ortsbegehung Baustelle Starnberg Stefan Hanggrundstück Montag Gruendung",
+    entities: { people: ["Stefan Berger"], places: ["Starnberg"], dates: ["2026-07-21T09:00"] },
+    raw_ref: {
+      type: "calendar_event",
+      title: "Ortsbegehung — Grundstück Starnberg",
+      date: "2026-07-21",
+      time: "09:00",
+      location: "Grundstück Starnberg",
+      attendees: ["Stefan Berger"]
+    }
+  },
+  {
+    id: "project_calendar_permit_deadline",
+    type: "calendar",
+    content: "Bauantrag Einreichung Deadline Freitag Gemeinde Starnberg Abgabe Frist Baugenehmigung",
+    entities: { places: ["Starnberg"], dates: ["2026-07-25"] },
+    raw_ref: {
+      type: "calendar_event",
+      title: "Bauantrag — Abgabe Gemeinde",
+      date: "2026-07-25",
+      location: "Gemeinde Starnberg",
+      attendees: []
+    }
+  },
+
+  // Sketches / Images
+  {
+    id: "project_sketch_grundriss",
+    type: "images",
+    content: "Handskizze Grundriss Erdgeschoss Raumaufteilung Wohnzimmer Kueche Schlafzimmer Konzept",
+    entities: {},
+    raw_ref: {
+      type: "sketch",
+      title: "Grundriss EG — Konzeptskizze"
+    }
+  },
+  {
+    id: "project_sketch_fassade",
+    type: "images",
+    content: "Skizze Suedansicht Fassade Klinker Fensteranordnung Dachneigung Entwurf Ansicht",
+    entities: {},
+    raw_ref: {
+      type: "sketch",
+      title: "Südansicht — Fassadenskizze"
+    }
+  },
+  {
+    id: "project_sketch_schnitt",
+    type: "images",
+    content: "Querschnitt Schnitt Gebaeude Dachstuhl Keller Hanggrundstück Raumhoehen Konstruktion",
+    entities: {},
+    raw_ref: {
+      type: "sketch",
+      title: "Schnitt A-A — Querschnitt"
+    }
+  },
+
+  // Contacts
+  {
+    id: "project_contact_hoffmann",
+    type: "contacts",
+    content: "Klaus Hoffmann Bauherr Auftraggeber Klient Starnberg Kontakt Telefon",
+    entities: { people: ["Klaus Hoffmann"] },
+    raw_ref: {
+      type: "contact",
+      name: "Klaus Hoffmann",
+      role: "Bauherr",
+      phone: "+49 8151 4521 88",
+      email: "k.hoffmann@example.de"
+    }
+  },
+  {
+    id: "project_contact_stefan",
+    type: "contacts",
+    content: "Stefan Berger Tragwerksplaner Statiker Ingenieur Kontakt Muenchen Buero",
+    entities: { people: ["Stefan Berger"] },
+    raw_ref: {
+      type: "contact",
+      name: "Stefan Berger",
+      role: "Tragwerksplaner",
+      phone: "+49 89 3321 7700",
+      email: "berger@tragwerk-muenchen.de"
     }
   }
 ]

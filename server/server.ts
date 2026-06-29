@@ -8,9 +8,6 @@ import { generateHeader } from "./genheader"
 
 const port = Number(process.env.PORT) || 8787
 
-const HARDCODED_CONTEXT_QUERY = "Italy Trip summer group of friends"
-const HARDCODED_HEADER_CONTEXT_ID = "italy-trip"
-
 function sendJson(res: import("http").ServerResponse, status: number, payload: unknown): void {
   const body = JSON.stringify(payload)
   res.writeHead(status, {
@@ -54,6 +51,15 @@ async function captureLogs<T>(run: () => Promise<T>): Promise<{ result: T; outpu
   }
 }
 
+function readBody(req: import("http").IncomingMessage): Promise<Record<string, unknown>> {
+  return new Promise(resolve => {
+    let data = ""
+    req.on("data", (chunk: Buffer) => { data += chunk.toString() })
+    req.on("end", () => { try { resolve(JSON.parse(data)) } catch { resolve({}) } })
+    req.on("error", () => resolve({}))
+  })
+}
+
 const server = createServer(async (req, res) => {
   const method = req.method || "GET"
 
@@ -61,11 +67,14 @@ const server = createServer(async (req, res) => {
     const url = new URL(req.url || "/", `http://${req.headers.host}`)
 
     if (url.pathname === "/api/generate" && method === "POST") {
+      const body = await readBody(req)
+      const spaceId = typeof body.spaceId === "string" ? body.spaceId : "italy-trip"
+      const ctx = contexts.find(c => c.id === spaceId) ?? contexts[0]
+
       const captured = await captureLogs(async () => {
-        const blob = await assembleContext(HARDCODED_CONTEXT_QUERY)
+        const blob = await assembleContext(ctx.searchQuery)
         const classified = classifyContext(blob)
-        const result = await generateUI(classified)
-        return result
+        return generateUI(classified)
       })
 
       sendJson(res, 200, {
@@ -77,9 +86,12 @@ const server = createServer(async (req, res) => {
     }
 
     if (url.pathname === "/api/generate-header" && method === "POST") {
-      const headerContext = contexts.find(c => c.id === HARDCODED_HEADER_CONTEXT_ID)
+      const body = await readBody(req)
+      const spaceId = typeof body.spaceId === "string" ? body.spaceId : "italy-trip"
+      const headerContext = contexts.find(c => c.id === spaceId)
+
       if (!headerContext) {
-        sendJson(res, 500, { error: `Unknown header context: ${HARDCODED_HEADER_CONTEXT_ID}` })
+        sendJson(res, 500, { error: `Unknown header context: ${spaceId}` })
         return
       }
 

@@ -18,6 +18,18 @@ function buildSystemPrompt(): string {
 
 ---
 
+## Core principle — Long-term context
+
+The headline is the permanent title of this Space. It is generated once and never regenerated — it must remain accurate and meaningful across the entire lifespan of the Space, regardless of how the situation evolves.
+
+**The headline names what the Space IS, not what is happening right now.** It describes the topic, the project, the occasion — a durable identity, not a momentary status update.
+
+**Never reference time-relative details** that will become stale or wrong as time passes: no deadlines ("due Friday"), no countdowns ("3 days away"), no recency signals ("just received", "new update"), no meeting times ("presentation at 14:00"). These are transient facts that belong inside the Space, not in its title.
+
+**Anchor on people, place, and topic.** These are the elements that stay true: who is involved, where it happens, what it is about. A headline built on these will still describe the Space correctly in six months.
+
+---
+
 ## Step 1 — Context distillation
 
 Identify, internally:

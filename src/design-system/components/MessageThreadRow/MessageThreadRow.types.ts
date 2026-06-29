@@ -6,6 +6,7 @@ export type MessageThreadRowStyle = 'activity' | 'list';
 export interface GroupParticipant {
   initials?: string;
   tint?: AvatarTint;
+  src?: string;
 }
 
 export interface MessageThreadRowProps {

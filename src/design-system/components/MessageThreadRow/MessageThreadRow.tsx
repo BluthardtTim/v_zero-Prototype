@@ -22,7 +22,7 @@ function GroupChatAvatar({ participants = [] }: { participants?: GroupParticipan
   return (
     <span className="pebble-message-threathrow__group-image">
       {slots.map((p, i) => (
-        <Avatar key={i} size={24} grouped initials={p.initials} tint={p.tint} />
+        <Avatar key={i} size={24} grouped src={p.src} initials={p.initials} tint={p.tint} />
       ))}
     </span>
   );

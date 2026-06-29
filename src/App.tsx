@@ -14,110 +14,186 @@ function HeaderView({ tree }: { tree: GenResult }) {
   return <RenderNode node={tree.root} state={state} dispatch={dispatch} />
 }
 
-function HomeScreen({ onGenerate, loading }: { onGenerate: () => void; loading: boolean }) {
+function HomeScreen({
+  onGenerateTop,
+  onGenerateBottom,
+  topLoading,
+  bottomLoading,
+}: {
+  onGenerateTop: () => void
+  onGenerateBottom: () => void
+  topLoading: boolean
+  bottomLoading: boolean
+}) {
   return (
     <div className="home-screen">
+      {/* Decorative shadow glow — upper-left, matches Figma node 88:620 */}
+      <div className="home-screen__shadow" aria-hidden />
+
       <div className="home-screen__title">
         <p className="home-screen__title-main">Temporary Spaces</p>
         <p className="home-screen__title-sub">everything is silent</p>
       </div>
-      <div className="home-screen__center">
-        <button
-          className={`home-screen__bubbles${loading ? " home-screen__bubbles--loading" : ""}`}
-          onClick={onGenerate}
-          disabled={loading}
-          aria-label="Generate Space"
-        >
-          <img src="/bubbles.png" alt="" draggable={false} />
-        </button>
-      </div>
-      <p className={`home-screen__loading${loading ? " home-screen__loading--visible" : ""}`}>
-        Generating Space…
-      </p>
+
+      {/* Top blob — Italy Trip (Figma node 88:646) */}
+      <button
+        className={`home-screen__blob home-screen__blob--top${topLoading ? " home-screen__blob--loading" : ""}`}
+        onClick={onGenerateTop}
+        disabled={topLoading || bottomLoading}
+        aria-label="Open Italy Trip Space"
+      >
+        <img src="/bubbles.png" alt="" draggable={false} />
+      </button>
+
+      {/* Bottom blob — Haus Hoffmann (Figma node 88:686) */}
+      <button
+        className={`home-screen__blob home-screen__blob--bottom${bottomLoading ? " home-screen__blob--loading" : ""}`}
+        onClick={onGenerateBottom}
+        disabled={topLoading || bottomLoading}
+        aria-label="Open Haus Hoffmann Space"
+      >
+        <img src="/bubbles.png" alt="" draggable={false} />
+      </button>
+
+      {(topLoading || bottomLoading) && (
+        <p className="home-screen__loading">Generating Space…</p>
+      )}
     </div>
   )
 }
 
+interface SpaceSlot {
+  spaceTree: GenResult | null
+  headerTree: GenResult | null
+  loading: boolean
+  generation: number
+}
+
+const EMPTY_SLOT: SpaceSlot = { spaceTree: null, headerTree: null, loading: false, generation: 0 }
+
 export function App() {
-  const [spaceTree, setSpaceTree] = useState<GenResult | null>(null)
-  const [headerTree, setHeaderTree] = useState<GenResult | null>(null)
-  const [loadingSpace, setLoadingSpace] = useState(false)
+  const [topSpace, setTopSpace] = useState<SpaceSlot>(EMPTY_SLOT)
+  const [bottomSpace, setBottomSpace] = useState<SpaceSlot>(EMPTY_SLOT)
+  const [activeSpace, setActiveSpace] = useState<"top" | "bottom" | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [generation, setGeneration] = useState(0)
-  const [headerGeneration, setHeaderGeneration] = useState(0)
   const spaceSlotRef = useRef<HTMLDivElement>(null)
 
-  async function generateSpace() {
-    setLoadingSpace(true)
-    setError(null)
-
-    // Fire header generation in parallel — failure is non-fatal
-    fetch("/api/generate-header", { method: "POST" })
-      .then(r => r.ok ? r.json() : Promise.reject())
-      .then(data => {
-        setHeaderTree(data.header_tree)
-        setHeaderGeneration(g => g + 1)
-      })
-      .catch(() => console.error("Header generation failed"))
-
-    try {
-      const response = await fetch("/api/generate", { method: "POST" })
-      if (!response.ok) throw new Error("Generation failed")
-      const data = await response.json()
-      setSpaceTree(data.space_tree)
-      setGeneration(g => g + 1)
-    } catch (err) {
-      console.error("Space generation failed", err)
-      setError("Space could not be generated.")
-    } finally {
-      setLoadingSpace(false)
-    }
-  }
-
-  function restartInteractions() {
-    if (!spaceTree) return
-    spaceSlotRef.current?.scrollTo({ top: 0, behavior: "instant" })
-    setGeneration(g => g + 1)
-  }
-
-  const generated = !!spaceTree && !loadingSpace
-  const showHome = !spaceTree
+  const showHome = activeSpace === null
+  const currentSlot = activeSpace === "top" ? topSpace : activeSpace === "bottom" ? bottomSpace : null
 
   useEffect(() => {
     const meta = document.querySelector('meta[name="theme-color"]')
     if (meta) meta.setAttribute("content", showHome ? "#191917" : "#ffffff")
   }, [showHome])
 
+  async function generateSpace(slot: "top" | "bottom") {
+    const spaceId = slot === "top" ? "italy-trip" : "haus-hoffmann"
+    const setState = slot === "top" ? setTopSpace : setBottomSpace
+    const existing = slot === "top" ? topSpace : bottomSpace
+
+    // Already generated — just navigate to it
+    if (existing.spaceTree) {
+      setActiveSpace(slot)
+      return
+    }
+
+    setState(s => ({ ...s, loading: true }))
+    setError(null)
+
+    // Fire header generation in parallel — failure is non-fatal
+    fetch("/api/generate-header", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ spaceId }),
+    })
+      .then(r => (r.ok ? r.json() : Promise.reject()))
+      .then(data => setState(s => ({ ...s, headerTree: data.header_tree, generation: s.generation + 1 })))
+      .catch(() => console.error("Header generation failed"))
+
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ spaceId }),
+      })
+      if (!response.ok) throw new Error("Generation failed")
+      const data = await response.json()
+      setState(s => ({ ...s, spaceTree: data.space_tree, generation: s.generation + 1, loading: false }))
+      setActiveSpace(slot)
+    } catch (err) {
+      console.error("Space generation failed", err)
+      setError("Space could not be generated.")
+      setState(s => ({ ...s, loading: false }))
+    }
+  }
+
+  function goHome() {
+    spaceSlotRef.current?.scrollTo({ top: 0, behavior: "instant" })
+    setActiveSpace(null)
+  }
+
   return (
     <>
       {/* Desktop dev controls — hidden on mobile via media query */}
       <div className="button-stack">
-        {!generated && (
-          <Button size="large" style="primary" label="Generate Space" state={loadingSpace ? "loading" : "default"} onClick={generateSpace} />
-        )}
-        {generated && (
-          <Button size="large" style="secondary" label="Restart" onClick={restartInteractions} />
+        {showHome ? (
+          <>
+            <Button
+              size="large"
+              style="primary"
+              label="Italy Trip"
+              state={topSpace.loading ? "loading" : "default"}
+              onClick={() => generateSpace("top")}
+            />
+            <Button
+              size="large"
+              style="primary"
+              label="Haus Hoffmann"
+              state={bottomSpace.loading ? "loading" : "default"}
+              onClick={() => generateSpace("bottom")}
+            />
+          </>
+        ) : (
+          <Button size="large" style="secondary" label="Back to Home" onClick={goHome} />
         )}
       </div>
 
       <div className="device-frame">
         {showHome ? (
-          <HomeScreen onGenerate={generateSpace} loading={loadingSpace} />
+          <HomeScreen
+            onGenerateTop={() => generateSpace("top")}
+            onGenerateBottom={() => generateSpace("bottom")}
+            topLoading={topSpace.loading}
+            bottomLoading={bottomSpace.loading}
+          />
         ) : (
           <div className="space-slot" ref={spaceSlotRef}>
-            <Header className={`header--compact${headerTree ? "" : " header--no-border"}`}>
+            <Header className={`header--compact${currentSlot?.headerTree ? "" : " header--no-border"}`}>
               <div className="header-frame">
                 <div className="header-slot">
-                  {headerTree && <HeaderView key={`header-${headerGeneration}`} tree={headerTree} />}
+                  {currentSlot?.headerTree && (
+                    <HeaderView
+                      key={`header-${activeSpace}-${currentSlot.generation}`}
+                      tree={currentSlot.headerTree}
+                    />
+                  )}
                 </div>
               </div>
             </Header>
 
             {error && <div className="space-error">{error}</div>}
-            {spaceTree && !loadingSpace && (
+            {currentSlot?.loading && <div className="space-loading">Generating Space…</div>}
+            {currentSlot?.spaceTree && !currentSlot.loading && (
               <>
-                <SpaceView key={`space-${generation}`} tree={spaceTree} />
-                <p className="space-ai-caption">This is an Emerging Space with AI generated content.<br />AI can make mistakes.</p>
+                <SpaceView
+                  key={`space-${activeSpace}-${currentSlot.generation}`}
+                  tree={currentSlot.spaceTree}
+                />
+                <p className="space-ai-caption">
+                  This is an Emerging Space with AI generated content.
+                  <br />
+                  AI can make mistakes.
+                </p>
               </>
             )}
           </div>

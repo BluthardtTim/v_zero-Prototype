@@ -137,15 +137,25 @@ body {
   inset: 0;
   background: linear-gradient(163.32deg, #2c2b27 1.77%, #191917 98.35%);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+}
+
+/* Upper-left glow — approximates Figma Shadow asset (node 88:620).
+   Inset percentages match the Figma frame: top 9.5%, right 62.49%, bottom 86.45%, left -12.42% */
+.home-screen__shadow {
+  position: absolute;
+  top: 9.5%;
+  right: 62.49%;
+  bottom: 86.45%;
+  left: -12.42%;
+  background: radial-gradient(ellipse at 60% 40%, rgba(160, 200, 140, 0.10) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .home-screen__title {
-  flex-shrink: 0;
+  position: absolute;
+  top: calc(108px + env(safe-area-inset-top));
+  left: 0;
   width: 100%;
-  padding-top: calc(108px + env(safe-area-inset-top));
   text-align: center;
 }
 
@@ -169,60 +179,69 @@ body {
   white-space: nowrap;
 }
 
-/* Takes all remaining space and keeps the bubbles centered within it */
-.home-screen__center {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.home-screen__bubbles {
-  width: 228px;
-  height: 219px;
+/* Shared blob base — both clusters use the same position/size from Figma */
+.home-screen__blob {
+  position: absolute;
+  left: calc(25% + 10.5px);
+  width: 180px;
+  height: 173px;
   padding: 0;
   background: none;
   border: none;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-  flex-shrink: 0;
 }
 
-.home-screen__bubbles img {
+.home-screen__blob img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
   user-select: none;
+  -webkit-user-drag: none;
 }
 
-.home-screen__bubbles--loading {
-  animation: home-bubbles-pulse 1.4s ease-in-out infinite;
+/* Top blob — Figma node 88:646, top: 270px */
+.home-screen__blob--top {
+  top: calc(270px + env(safe-area-inset-top));
+  cursor: pointer;
+  transition: opacity 0.15s ease;
 }
 
-@keyframes home-bubbles-pulse {
+.home-screen__blob--top:active {
+  opacity: 0.7;
+}
+
+/* Bottom blob — Figma node 88:686, top: 541px — Haus Hoffmann Space */
+.home-screen__blob--bottom {
+  top: calc(541px + env(safe-area-inset-top));
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.home-screen__blob--bottom:active {
+  opacity: 0.7;
+}
+
+.home-screen__blob--loading {
+  animation: home-blob-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes home-blob-pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50%       { opacity: 0.4; }
 }
 
 .home-screen__loading {
-  flex-shrink: 0;
+  position: absolute;
+  top: calc(460px + env(safe-area-inset-top));
+  left: 0;
   width: 100%;
   margin: 0;
-  padding-bottom: calc(48px + env(safe-area-inset-bottom));
   text-align: center;
   font-family: var(--font);
   font-size: var(--typography-fontsize-caption);
   font-weight: var(--typography-fontweight-regular);
   line-height: var(--typography-lineheight-caption);
   color: rgba(255, 255, 255, 0.4);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.home-screen__loading--visible {
-  opacity: 1;
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
