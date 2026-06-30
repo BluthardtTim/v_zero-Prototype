@@ -2,6 +2,7 @@ import { useReducer, type ComponentType } from "react"
 import * as DS from "../design-system"
 import * as PhosphorIcons from "@phosphor-icons/react"
 import { SpaceContainer, SectionHeadline, Row, Text, Headline } from "./primitives"
+import { ChatScreen } from "../screens"
 import { isUIAction, isUINode, type UIAction, type UINode, type UIState } from "./types"
 
 export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
@@ -72,7 +73,10 @@ export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
   ToggleButton: DS.ToggleButton,
   ToggleList: DS.ToggleList,
   ToolbarTop: DS.ToolbarTop,
-  Visual: DS.Visual
+  Visual: DS.Visual,
+
+  // prebuilt screens
+  ChatScreen,
 }
 
 type Dispatch = (action: UIAction) => void
@@ -129,9 +133,23 @@ function resolveValue(value: unknown, state: UIState, dispatch: Dispatch, keyHin
   if (Array.isArray(value)) {
     return value.map((item, index) => {
       if (isUINode(item)) return <RenderNode key={index} node={item} state={state} dispatch={dispatch} />
-      // resolve sentinel src values inside plain data objects (e.g. group chat participants)
-      if (item && typeof item === "object" && "src" in item && typeof (item as Record<string, unknown>).src === "string") {
-        return { ...item, src: resolveValue((item as Record<string, unknown>).src, state, dispatch, "src") }
+      // Resolve special values inside plain data objects (e.g. avatar src sentinels, icon UINodes)
+      if (item && typeof item === "object" && !Array.isArray(item)) {
+        const obj = item as Record<string, unknown>
+        let changed = false
+        const resolved: Record<string, unknown> = {}
+        for (const [k, v] of Object.entries(obj)) {
+          if (k === "src" && typeof v === "string") {
+            resolved[k] = resolveValue(v, state, dispatch, "src")
+            changed = true
+          } else if (isUINode(v)) {
+            resolved[k] = <RenderNode key={k} node={v as UINode} state={state} dispatch={dispatch} />
+            changed = true
+          } else {
+            resolved[k] = v
+          }
+        }
+        return changed ? resolved : item
       }
       return item
     })

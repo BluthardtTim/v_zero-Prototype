@@ -644,7 +644,9 @@ export const events: ContextEvent[] = [
       chat: "Projekt Hoffmann 🏠",
       chat_type: "group",
       sender: "Lisa Kraft",
+      sender_avatar: "lisa.jpg",
       participants: ["Lisa Kraft", "Stefan Berger"],
+      participants_avatars: { "Lisa Kraft": "lisa.jpg", "Stefan Berger": "stefan.jpg" },
       message: "Habe gerade v3 der Grundrisse hochgeladen — das Südfenster im Wohnzimmer ist jetzt auf 2,40 m, und ich hab die Treppe schon angepasst 👍",
       timestamp: "2026-07-17T11:23:00Z",
       unread: true
@@ -660,7 +662,9 @@ export const events: ContextEvent[] = [
       chat: "Projekt Hoffmann 🏠",
       chat_type: "group",
       sender: "Stefan Berger",
+      sender_avatar: "stefan.jpg",
       participants: ["Lisa Kraft", "Stefan Berger"],
+      participants_avatars: { "Lisa Kraft": "lisa.jpg", "Stefan Berger": "stefan.jpg" },
       message: "Statiknachweis ist bis Mittwoch fertig, damit ihr Freitag noch einreichen könnt.",
       timestamp: "2026-07-16T14:52:00Z",
       unread: false
@@ -675,6 +679,7 @@ export const events: ContextEvent[] = [
       type: "chat_message",
       chat_type: "direct",
       sender: "Stefan Berger",
+      sender_avatar: "stefan.jpg",
       message: "Habe das Bodengutachten ausgewertet. Wir gehen auf 1,80 m Gründungstiefe, Hangseite braucht Streifenfundament. Keller ist kein Problem.",
       timestamp: "2026-07-15T09:10:00Z",
       unread: false
@@ -689,6 +694,7 @@ export const events: ContextEvent[] = [
       type: "chat_message",
       chat_type: "direct",
       sender: "Klaus Hoffmann",
+      sender_avatar: "klaus.jpg",
       message: "Wir haben nochmal überlegt — Klinker soll es sein, am liebsten in einem warmen Sandton. Kann man das beim Donnerstagstermin zeigen?",
       timestamp: "2026-07-16T18:34:00Z",
       unread: true
@@ -703,6 +709,7 @@ export const events: ContextEvent[] = [
       type: "chat_message",
       chat_type: "direct",
       sender: "Lisa Kraft",
+      sender_avatar: "lisa.jpg",
       message: "Sollen die Nordfenster OG alle Lüftungsflügel bekommen oder nur die Badezimmer? Detail fehlt noch im Schnitt.",
       timestamp: "2026-07-17T08:45:00Z",
       unread: true

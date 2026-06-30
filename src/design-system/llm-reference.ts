@@ -159,6 +159,12 @@ MapPreview.markers und MapPreview.collections sind reine Datenarrays (Objekte mi
 bzw. label/category/meta), keine UINode-Kinder - niemals mit type/children-Feldern schreiben, niemals
 als "children" Prop uebergeben.
 
+Hard rule — MapPreview.markers darf niemals leer sein. Jede MapPreview muss mindestens einen
+eigenstaendigen Marker (lat/lng) enthalten, der als Einzelpunkt auf der Karte erscheint und nicht
+Teil einer collection ist. Collections sind rein visuelle Chip-Labels ohne Koordinaten — sie ersetzen
+keinen Marker. Wenn nur eine allgemeine Location (kein exakter Ort) bekannt ist, setze einen
+repraesentativen Marker auf den Stadtzentrum oder das bekannteste Wahrzeichen des Ortes.
+
 FilesAttached.files und FilesAttachedCombo.files sind reine Datenarrays (Objekte mit name/size/icon),
 keine UINode-Kinder - niemals mit type/children-Feldern schreiben.
 

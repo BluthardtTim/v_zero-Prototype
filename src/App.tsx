@@ -3,6 +3,7 @@ import { Header, Button } from "./design-system"
 import { RenderNode, useUITree } from "./space/renderer"
 import type { GenResult } from "./space/types"
 import "./App.css"
+import "./screens/screens.css"
 
 function SpaceView({ tree }: { tree: GenResult }) {
   const [state, dispatch] = useUITree(tree.initialState)

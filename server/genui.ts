@@ -61,7 +61,7 @@ Some components naturally suit certain kinds of content — \`StatsBlock\` for a
 How blocks map to sections is also your call, not a fixed rule — usually each visible block becomes its own section, since that keeps finance separate from chats separate from photos, but merge two blocks into one combined section when they genuinely tell one story better together (e.g. a saved place's details alongside its own photos), or split a single block into more than one section if its content is varied enough to warrant it. Default to one-block-one-section when in doubt; deviate only when the data itself makes a stronger case for a different shape. Exactly how each section is built internally, and how much of it there is, is entirely your call either way.
 
 **Bucket-to-component guidance for new types — notes, articles, calendar:**
-- **notes** → \`Note\` component. Prefer \`size='large'\` for a single-column note with headline and body (\`size='small'\` only when pairing two notes side-by-side in a \`Row\`). Map: note title → \`headline\`, body text → \`body\`, checklist items → \`items\` as \`[{ text: item.label, checked: item.done }]\`. The \`items\` array renders as a checklist beneath the body.
+- **notes** → \`Note\` component. Prefer \`size='large'\` for a single-column note with headline and body (\`size='small'\` only when pairing two notes side-by-side in a \`Row\`). Map: note title → \`headline\`, body text → \`body\`, checklist items → \`items\` as \`[{ text: item.label, checked: item.done }]\`. The \`items\` array renders as a checklist beneath the body. **\`Note\` is absolutely forbidden inside \`PopupColor\` — if notes is the highlighted section, either pick a different section to highlight, or render the note content inside \`PopupColor\` as a \`TableView\` (one \`TableViewCell\` per checklist item, using the note title as the \`PopupColor\` headline).**
 - **articles** → \`TableView\` containing one \`TableViewCell\` per article. Set \`label\` = article title (≤ 35 chars, paraphrase if longer), \`details\` = source or publication name (≤ 12 chars), \`leftIcon\` = \`{ type: "Link", size: 20 }\`.
 - **calendar** → \`Calendar\` component. Pick the 7-day Sun–Sat week containing the majority of events. Build \`days\` as 7 \`CalendarDay\` entries: \`label\` = one-letter abbreviation ("S", "M", "T", "W", "T", "F", "S"), \`date\` = numeric day-of-month, \`selected: true\` for today's date, \`hasAppointment: true\` for any day that has a meeting. Populate \`events\` with one \`CalendarEvent\` per distinct appointment: \`label\` = short meeting name (≤ 30 chars), \`nestedLabel\` = time string (e.g. "14:00"). Deadline dates with no clock time appear only as dot markers (\`hasAppointment: true\`) — omit them from \`events\`.
 
@@ -73,7 +73,7 @@ Every interactive element must resolve a complete, functional flow. No dead butt
 
 **Hard rule — \`Note\`, \`MapPreview\`, and \`MapPreviewSmall\` must never appear as children of \`PopupColor\`.** This applies regardless of what section is being highlighted. See Step 4 for the two allowed alternatives.
 
-**Hard rule — \`onClick\` is only allowed on dedicated interactive components.** Pure display components can never receive an \`onClick\`, even if the component's prop definition technically accepts one. The complete list of components that may never carry \`onClick\`: \`Note\`, \`MapPreview\`, \`MapPreviewSmall\`, \`StatsBlock\`, \`Text\`, \`Label\`, \`Image\`, \`ImageCarousel\`, \`ImageStaple\`, \`ImageWrapper\`, \`FilesAttached\`, \`FilesAttachedCombo\`, \`CategoryChip\`, \`DocumentCard\`, \`Avatar\`, \`AvatarGroup\`, \`Reaction\`, \`PageControl\`, \`Divider\`, \`Header\`, \`GrabberSheet\`, \`SheetHeader\`, \`ToolbarTop\`, \`PopupColor\`, \`Calendar\`, \`CalendarInviteCard\`, \`Row\`, \`SpaceContainer\`, \`SectionHeadline\`. Container rows (\`TableViewCell\`, \`Folder\`, \`MessageThreadRow\`) are also display-only by default — they only earn an \`onClick\` when a visible interactive signal (a trailing chevron, arrow icon, or explicit trigger in a dedicated slot) is also present in the same node. Without that signal, they stay non-interactive.
+**Hard rule — \`onClick\` is only allowed on dedicated interactive components.** Pure display components can never receive an \`onClick\`, even if the component's prop definition technically accepts one. The complete list of components that may never carry \`onClick\`: \`Note\`, \`MapPreview\`, \`MapPreviewSmall\`, \`StatsBlock\`, \`Text\`, \`Label\`, \`Image\`, \`ImageCarousel\`, \`ImageStaple\`, \`ImageWrapper\`, \`FilesAttached\`, \`FilesAttachedCombo\`, \`CategoryChip\`, \`DocumentCard\`, \`Avatar\`, \`AvatarGroup\`, \`Reaction\`, \`PageControl\`, \`Divider\`, \`Header\`, \`GrabberSheet\`, \`SheetHeader\`, \`ToolbarTop\`, \`PopupColor\`, \`Calendar\`, \`CalendarInviteCard\`, \`Row\`, \`SpaceContainer\`, \`SectionHeadline\`. Container rows (\`TableViewCell\`, \`Folder\`) are also display-only by default — they only earn an \`onClick\` when a visible interactive signal (a trailing chevron, arrow icon, or explicit trigger in a dedicated slot) is also present in the same node. Without that signal, they stay non-interactive. **\`MessageThreadRow\` is the exception:** when it is connected to a \`ChatScreen\` (Step 8), tappability is implied by iOS chat convention — set its \`onClick\` directly, no additional visual trigger required.
 
 - Only give a node an \`onClick\` when its own design already reads as clickable — an actual \`Button\`, or a row/card whose \`leftIcon\`/\`nestedContent\`/\`icon\` slot holds a visible chevron, arrow, or other trigger that signals "tap me". A bare row, card, or list item with no such visual cue (e.g. a \`TableViewCell\`/\`Folder\`/\`MessageThreadRow\` with nothing in its icon/trailing slots) must stay non-interactive, even if a click on it would technically be possible to wire up. If something deserves to be tappable, give it a visible trigger first (a trailing chevron/icon, or a real \`Button\`) — never make a whole plain row silently clickable just because the component happens to accept an \`onClick\` prop.
 - A "Settle up" button's \`onClick\` must be a \`{ action: "toggle", key: "<some-key>" }\` that reveals a concrete next step — pair it with a sibling node carrying \`showIf: { key: "<some-key>", equals: true }\` (e.g. a confirmation \`Text\`/\`Label\`). It cannot be a no-op.
@@ -102,7 +102,7 @@ Re-evaluate from the actual content every time, not from a checklist. Two Spaces
 
 Rules:
 - You may give at most one section extra visual weight by wrapping it in the design-system's \`PopupColor\` component (Step 7) instead of a plain \`SectionHeadline\` — pick whichever section is genuinely the most important or eye-catching in this data, or skip this entirely if nothing stands out enough to deserve it. \`PopupColor\`'s own \`headline\` prop is that section's title (e.g. "Finance") — never also add a separate \`SectionHeadline\` above it, that would duplicate the title. \`PopupColor.children\` is that section's body components (Step 2) — never hand-build the colored card out of raw layout, \`PopupColor\` is a real design-system component, not a style to imitate.
-- **Hard rule — \`Note\` and map components (\`MapPreview\`, \`MapPreviewSmall\`) are forbidden inside \`PopupColor\`, with no exceptions.** Before placing any component inside \`PopupColor\`, verify it is not one of these three. If the section you want to highlight happens to contain a \`Note\` or a map, you have two options: (a) pick a different section to highlight instead, or (b) represent that content with a compatible component (\`TableView\`, \`StatsBlock\`, \`FilesAttached\`, etc.). There is no third option — \`Note\` and map components inside \`PopupColor\` are always wrong, even if the content would otherwise suit them.
+- **Hard rule — \`Note\`, \`MapPreview\`, and \`MapPreviewSmall\` are completely forbidden inside \`PopupColor\`, with no exceptions and no workarounds.** Before writing the JSON for any \`PopupColor\` block, explicitly answer: "Does this section contain a \`Note\` or a map component?" If the answer is yes, you have exactly two options — you must pick one before continuing: (a) wrap a *different* section in \`PopupColor\` and render this section normally with \`SectionHeadline\` + \`Note\`, or (b) keep this section as the highlighted one but replace the \`Note\` with a \`TableView\` whose rows carry the same information (checklist items → \`TableViewCell\` rows; note body → leading \`Text\` child). There is no third option. A \`Note\` inside \`PopupColor\` is a hard error regardless of how well it fits the content.
 - Every other (non-highlighted) section is either a \`SectionHeadline\` immediately followed by its body components, or — when no headline is needed (see below) — just the body components directly, with no wrapper around them.
 - A \`Text\` (level "title") may appear as the very first child of the root \`SpaceContainer\`, before any sections — this is the only content allowed outside a section, and it is optional, not a default you fill in every time. Only include it if it genuinely fits the section that immediately follows it — e.g. it previews or characterizes that section's actual content. Never use it as a generic restated trip name or decorative label that has no real connection to what follows (e.g. a bare "Italy Trip 🇮🇹" sitting above a Finance section it says nothing about). If nothing you could write would genuinely fit, skip the title entirely and start directly with the first section's \`SectionHeadline\`/\`PopupColor\`.
 
@@ -157,6 +157,19 @@ The tool input is \`{ initialState?: Record<string, boolean|number|string>, root
 
 ---
 
+## Step 5b — Pre-call validation (run this before calling the tool)
+
+Before calling \`render_ui\`, scan your JSON and verify every item on this checklist. If any check fails, fix the tree first — do not call the tool with a known violation.
+
+1. **PopupColor children** — read every node inside \`PopupColor.children\`. If any node has \`type: "Note"\`, \`type: "MapPreview"\`, or \`type: "MapPreviewSmall"\`, stop. Either (a) move the section out of \`PopupColor\` and highlight a different section, or (b) replace the forbidden component with \`TableView\` / \`StatsBlock\`. Only proceed once zero forbidden types exist inside \`PopupColor\`.
+2. **MapPreview markers** — every \`MapPreview\` and \`MapPreviewSmall\` node must have at least one entry in its \`markers\` array. \`collections\` are chip labels only — they have no coordinates and do not appear on the map. A map with zero markers renders as an empty tile; always include at least one standalone point. If only a general city/region is known, place a representative marker at the city centre or a well-known landmark.
+3. **onClick only on interactive components** — every node that carries \`onClick\` must be in the allowed list from Step 3. No display-only component may have \`onClick\`.
+4. **One row per chat conversation** — no two \`MessageThreadRow\` nodes share the same \`raw_ref.chat\` group name.
+5. **Avatar sentinels** — every participant with a \`sender_avatar\` or \`participants_avatars\` entry uses \`src: "avatar:<filename>"\`, not a placeholder.
+6. **Children shapes** — every \`children\` value is either an array of \`UINode\` objects or a plain string; never a bare object.
+
+---
+
 ## Step 6 — Icons
 
 All Phosphor Icons are available as UINodes anywhere a \`ReactNode\` prop is accepted (e.g. \`leftIcon\`, \`icon\`, \`children\` of a Button). Use the exact PascalCase icon name as \`type\`:
@@ -200,6 +213,33 @@ The following is the complete, binding reference for every design-system compone
 ${PEBBLE_COMPONENT_REFERENCE}
 
 ${PEBBLE_SLOT_RULES}
+
+---
+
+## Step 8 — Screens
+
+A **screen** is a prebuilt full-screen React component that covers the entire device when shown. Screens live as children of the root \`SpaceContainer\` (always at the very end, after all sections) and are gated by a shared \`activeScreen\` state key.
+
+**Navigation pattern:**
+- Declare \`"activeScreen": "none"\` in \`initialState\`.
+- The tappable component's \`onClick\` sets \`{ action: "set", key: "activeScreen", value: "<unique-slug>" }\` — choose a slug that names the specific conversation (e.g. \`"chat_italy_trip"\`, \`"chat_dm_lukas"\`).
+- The screen node sits at the **end of \`SpaceContainer\`'s children** with \`showIf: { key: "activeScreen", equals: "<unique-slug>" }\`.
+- The screen's \`onBack\` resets via \`{ action: "set", key: "activeScreen", value: "none" }\`.
+- Multiple screens share the one \`activeScreen\` key — each has a distinct slug. Do not use separate boolean keys per screen.
+
+**\`ChatScreen\` — use whenever a \`MessageThreadRow\` is tappable:**
+
+Props:
+- \`title\` (string) — \`raw_ref.chat\` for group chats; \`raw_ref.sender\` for direct messages.
+- \`subtitle\` (string, optional) — participant summary for groups (e.g. \`"5 Teilnehmer"\`); omit for DMs.
+- \`onBack\` — \`{ action: "set", key: "activeScreen", value: "none" }\`.
+- \`messages\` (plain data array, not UINode children) — build from \`raw_ref\`:
+  - First entry: \`{ sender: raw_ref.sender, src: "avatar:<sender_avatar filename>", text: raw_ref.message, time: "<HH:MM>" }\`. Omit \`src\` if no filename is present.
+  - Second entry (only if \`raw_ref.reply_from\` + \`raw_ref.reply_message\` exist): \`{ sender: raw_ref.reply_from, text: raw_ref.reply_message }\`.
+  - One or two entries only — never invent messages not present in \`raw_ref\`.
+  - \`isSelf: true\` marks a right-aligned bubble (the user's own message). Use it only for \`reply_message\` entries when context clearly indicates the user is the replier; otherwise omit or leave \`false\`.
+
+**Rule:** every \`MessageThreadRow\` that carries an \`onClick\` MUST have a corresponding \`ChatScreen\` at the end of \`SpaceContainer\`. Never add \`onClick\` to a \`MessageThreadRow\` without providing the matching screen.
 
 ---
 

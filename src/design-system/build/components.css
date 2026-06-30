@@ -599,18 +599,18 @@ em, i, cite, address, dfn, var, q, blockquote {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  height: 56px;
+  height: 100%;
   border-radius: var(--border-radius-m);
   z-index: -1;
 }
 .pebble-files_attached__item--stacked::before {
   width: 92%;
-  top: -6px;
+  top: 6px;
   background: #ebebe8;
 }
 .pebble-files_attached__item--stacked::after {
   width: 84%;
-  top: -11px;
+  top: 10px;
   background: #d9d9d6;
 }
 
@@ -621,10 +621,10 @@ em, i, cite, address, dfn, var, q, blockquote {
   border-radius: var(--border-radius-circle);
   overflow: hidden;
   background: var(--neutral-off-white);
-  box-shadow: 0px 0px 1px rgba(13, 13, 12, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--text-secondary);
 }
 .pebble-files_attached--size-small .pebble-files_attached__icon {
   width: 16px;
@@ -1122,14 +1122,14 @@ em, i, cite, address, dfn, var, q, blockquote {
    Figma: "Prototyping Screens" file, node 39:670 — minimal frosted-glass map card.
    Real interactive Leaflet map, CartoDB Positron tiles (clean/minimal, no API key
    required) instead of the busier default OSM style. Controls float directly on
-   the map (frosted-glass pill + circles) rather than sitting in an opaque bar.
+   the map (frosted-glass pill + orbit circles) rather than sitting in an opaque bar.
    Props: city, area, markers, collections
    ============================================ */
 
 .pebble-mappreview {
   position: relative;
-  width: 100%;
-  height: 224px;
+  width: 400px;
+  height: 400px;
   border-radius: var(--border-radius-xl);
   overflow: hidden;
 }
@@ -1141,58 +1141,90 @@ em, i, cite, address, dfn, var, q, blockquote {
   background: var(--neutral-100);
 }
 
-.pebble-mappreview__collections {
+/* Pin overlay — center point + surrounding orbit ring, all CSS (no Leaflet markers) */
+.pebble-mappreview__pins {
   position: absolute;
   z-index: 2;
-  left: var(--spacing-2);
-  top: var(--spacing-3);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-1);
-  max-width: 60%;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
 }
 
-.pebble-mappreview__chip {
+/* Standalone center point — always present, never part of the ring */
+.pebble-mappreview__center {
+  position: absolute;
   display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-  padding: var(--spacing-1) var(--spacing-4) var(--spacing-1) var(--spacing-1);
-  border-radius: var(--border-radius-m);
-  background: linear-gradient(180deg, #fffefa 0%, #ffffff 100%);
-  box-shadow: 0px 0px 1px rgba(13, 13, 12, 0.25);
-}
-
-.pebble-mappreview__chip-icon {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--border-radius-circle);
-  font-size: 13px;
+  font-size: 16px;
+  margin: -16px 0 0 -16px;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 2px 6px rgba(13, 13, 12, 0.22);
+  pointer-events: auto;
 }
 
-.pebble-mappreview__chip-text {
+/* Orbit points — translate() positions each one in the ring */
+.pebble-mappreview__orbit-pin {
+  position: absolute;
   display: flex;
-  flex-direction: column;
-  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--border-radius-circle);
+  font-size: 13px;
+  margin: -13px 0 0 -13px;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85), 0 1px 4px rgba(13, 13, 12, 0.18);
+  pointer-events: auto;
 }
-.pebble-mappreview__chip-label {
-  font-size: var(--typography-fontsize-caption);
-  line-height: var(--typography-lineheight-caption);
-  font-family: var(--font);
-  color: var(--neutral-black);
-  white-space: nowrap;
+
+/* Circular clipping area for scatter dots — 320×320 centered on the map */
+.pebble-mappreview__scatter-area {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  height: 320px;
+  margin: -160px 0 0 -160px;
+  border-radius: 50%;
   overflow: hidden;
-  text-overflow: ellipsis;
+  pointer-events: none;
 }
-.pebble-mappreview__chip-meta {
-  font-size: 10px;
-  line-height: 12px;
-  font-family: var(--font);
-  color: var(--text-tertiary);
-  white-space: nowrap;
+
+/* Random scatter dots — size/position set inline, left/top relative to scatter-area */
+.pebble-mappreview__scatter-pin {
+  position: absolute;
+  border-radius: var(--border-radius-circle);
+  opacity: 0.72;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.7);
+}
+
+/* Slider control — floating pill at the top of the map */
+.pebble-mappreview__scatter-ctrl {
+  position: absolute;
+  z-index: 3;
+  top: var(--spacing-3);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--border-radius-circle);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.pebble-mappreview__scatter-slider {
+  width: 100px;
+  accent-color: var(--neutral-black);
+  cursor: pointer;
 }
 
 /* Floating frosted-glass pill, bottom-left — mirrors the Figma reference's "search"

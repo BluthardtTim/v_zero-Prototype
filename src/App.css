@@ -74,6 +74,14 @@ body {
   text-align: center;
 }
 
+/* Clip at exactly 2 lines from the top so a model overshoot to 3 lines shows
+   lines 1–2 cleanly rather than centering the overflow and showing partial lines. */
+.space-headline {
+  width: 100%;
+  max-height: calc(var(--typography-lineheight-body) * 2);
+  overflow: hidden;
+}
+
 /* Inline visuals/avatar-groups mid-sentence must match the 24px/32px headline
    line-height to sit on the text baseline instead of looming over the prose. */
 .space-headline .pebble-visual {
