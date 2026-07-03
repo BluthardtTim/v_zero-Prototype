@@ -1128,8 +1128,9 @@ em, i, cite, address, dfn, var, q, blockquote {
 
 .pebble-mappreview {
   position: relative;
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  max-width: 368px;
+  height: 224px;
   border-radius: var(--border-radius-xl);
   overflow: hidden;
 }
