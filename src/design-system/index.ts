@@ -11,6 +11,9 @@ export type { ButtonProps } from './components/Button';
 export { Calendar } from './components/Calendar';
 export type { CalendarProps, CalendarDay, CalendarEvent } from './components/Calendar';
 
+export { CalendarEventCard } from './components/CalendarEventCard';
+export type { CalendarEventCardProps, CalendarEventCardTone } from './components/CalendarEventCard';
+
 export { CalendarInviteCard } from './components/CalendarInviteCard';
 export type { CalendarInviteCardProps, CalendarInviteCardState } from './components/CalendarInviteCard';
 
@@ -29,11 +32,17 @@ export type { DividerProps } from './components/Divider';
 export { DocumentCard } from './components/DocumentCard';
 export type { DocumentCardProps } from './components/DocumentCard';
 
+export { Documents } from './components/Documents';
+export type { DocumentsProps, DocumentItem } from './components/Documents';
+
 export { FilesAttached } from './components/FilesAttached';
 export type { FilesAttachedProps, FilesAttachedSize, FileAttachmentItem } from './components/FilesAttached';
 
 export { FilesAttachedCombo } from './components/FilesAttachedCombo';
 export type { FilesAttachedComboProps } from './components/FilesAttachedCombo';
+
+export { Finance } from './components/Finance';
+export type { FinanceProps, FinanceTransaction } from './components/Finance';
 
 export { Folder, FolderGrid } from './components/Folder';
 export type { FolderProps, FolderGridProps } from './components/Folder';
@@ -65,8 +74,8 @@ export type { LabelProps } from './components/Label';
 export { MapPreview, MapPreviewSmall } from './components/MapPreview';
 export type { MapPreviewProps, MapPreviewSmallProps, MapMarker, MapMarkerCategory, MapCollection } from './components/MapPreview';
 
-export { Note } from './components/Note';
-export type { NoteProps, NoteItem, NoteSize } from './components/Note';
+export { Photos } from './components/Photos';
+export type { PhotosProps, PhotoAlbum, RecentPhoto } from './components/Photos';
 
 export { MessageThreadList } from './components/MessageThreadList';
 export type { MessageThreadListProps } from './components/MessageThreadList';
@@ -79,9 +88,6 @@ export type { ModalSheetProps, ModalSheetOverlayProps } from './components/Modal
 
 export { PageControl } from './components/PageControl';
 export type { PageControlProps } from './components/PageControl';
-
-export { PopupColor } from './components/PopupColor';
-export type { PopupColorProps, PopupColorSurface } from './components/PopupColor';
 
 export { Radio } from './components/Radio';
 export type { RadioProps } from './components/Radio';
@@ -109,6 +115,9 @@ export type { TabBarProps, TabBarItemProps } from './components/TabBar';
 
 export { TableView, TableViewCell, TableViewCellMenu } from './components/TableView';
 export type { TableViewProps, TableViewCellProps, TableViewCellMenuProps } from './components/TableView';
+
+export { Ticket } from './components/Ticket';
+export type { TicketProps } from './components/Ticket';
 
 export { Toggle } from './components/Toggle';
 export type { ToggleProps } from './components/Toggle';

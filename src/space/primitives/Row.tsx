@@ -8,7 +8,7 @@ const style: CSSProperties = {
   width: "100%",
 }
 
-/** Layout row for placing two or more small-variant components side by side (e.g. MapPreviewSmall + Note size='small'). */
+/** Layout row for placing two or more small-variant components side by side (e.g. MapPreviewSmall + another small-variant component). */
 export function Row({ children }: { children?: ReactNode }) {
   return <div style={style}>{children}</div>
 }

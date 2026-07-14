@@ -1,30 +1,31 @@
 /* ═══════════════════════════════════════════════════════════
-   ChatScreen  —  pixel-exact from Figma node 96:597
+   ChatScreen  —  pixel-exact from Figma node 131:3984
    ═══════════════════════════════════════════════════════════ */
 
 .screen-chat {
   position: absolute;
   inset: 0;
   z-index: 9999;
-  background: #ffffff;
+  background: var(--bg-canvas);
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
 /* ── Header ────────────────────────────────────────────────
-   Figma: Toolbar-Top 402×72, pad 12 16 12 16
+   Figma: Header — bg matches the screen body, avatar (48) + name
+   stacked and centered, border-bottom divider
    ─────────────────────────────────────────────────────────── */
 
 .screen-chat__header {
   flex-shrink: 0;
-  height: 72px;
-  padding: 12px 16px;
+  /* Top padding kept uniform with .screen-photos__header. */
+  padding: 48px 16px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 0.5px solid rgba(13, 13, 12, 0.15);
-  background: #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-canvas);
   overflow: hidden;
 }
 
@@ -42,7 +43,7 @@
   flex-shrink: 0;
 }
 
-/* Center: avatar (32×32) + name below (12px/400) */
+/* Center: avatar (48×48) + name below (12px/400) */
 .screen-chat__header-center {
   display: flex;
   flex-direction: column;
@@ -54,10 +55,11 @@
 }
 
 .screen-chat__header-avatar {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   border-radius: 9999px;
-  background: rgba(198, 221, 177, 1); /* #C6DDAF — Figma Avatar bg */
+  background: rgba(198, 221, 177, 1); /* #C6DDAF — Figma Avatar bg, generic placeholder only */
+  box-shadow: 0px 0px 0.5px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,6 +71,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Group chats: a small overlapping AvatarGroup cluster instead of one photo */
+.screen-chat__header-avatar-group {
+  flex-shrink: 0;
 }
 
 .screen-chat__header-name {
@@ -83,20 +90,20 @@
   max-width: 100%;
 }
 
-/* Right: two icon buttons — Figma: 40×40, r=9999, bg #F1F2EC */
+/* Right: two icon buttons — Figma: white circle + subtle border */
 .screen-chat__header-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
 .screen-chat__action-btn {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 9999px;
-  background: rgba(241, 242, 236, 1); /* #F1F2EC */
-  border: none;
+  background: var(--bg-surface-blank);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,8 +204,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  border-top: 0.5px solid rgba(13, 13, 12, 0.15);
-  background: #ffffff;
+  background: transparent;
 }
 
 /* Round + button — Figma: 50×50, r=9999, stroke */
@@ -233,4 +239,117 @@
   font-weight: 400;
   line-height: 24px;
   color: rgba(13, 13, 12, 0.35);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PhotosScreen  —  pixel-exact from Figma node 115:1293
+   ═══════════════════════════════════════════════════════════ */
+
+.screen-photos {
+  position: absolute;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg-canvas);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.screen-photos__header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  /* Top padding kept uniform with .screen-chat__header. */
+  padding: 48px 12px 12px;
+}
+
+.screen-photos__back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.screen-photos__title {
+  font-family: var(--font);
+  font-size: 24px;
+  font-weight: var(--typography-fontweight-medium);
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.screen-photos__tabs {
+  flex-shrink: 0;
+  padding: 0 16px;
+}
+
+.screen-photos__search {
+  flex-shrink: 0;
+  padding: 16px;
+}
+
+.screen-photos__search-placeholder {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  padding: 0 20px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid rgba(13, 13, 12, 0.04);
+  box-sizing: border-box;
+  font-family: var(--font);
+  font-size: 16px;
+  letter-spacing: -0.16px;
+  color: rgba(34, 33, 31, 0.25);
+}
+
+.screen-photos__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 16px calc(24px + env(safe-area-inset-bottom));
+}
+
+.screen-photos__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.screen-photos__tile {
+  aspect-ratio: 1 / 1;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #e5e6e0;
+}
+
+.screen-photos__tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.screen-photos__add {
+  position: absolute;
+  right: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  width: 60px;
+  height: 60px;
+  border-radius: 9999px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #252421 0%, #0c0c0c 100%);
+  box-shadow: 0px 0px 0.5px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 }

@@ -1,5 +1,5 @@
 import { cx } from '../../utils/bem'
-import { TableViewCell } from '../TableView'
+import { CalendarEventCard } from '../CalendarEventCard'
 import type { CalendarProps } from './Calendar.types'
 
 export function Calendar({ days, events = [], className }: CalendarProps) {
@@ -23,11 +23,12 @@ export function Calendar({ days, events = [], className }: CalendarProps) {
         <>
           <div className="pebble-calendar__divider" />
           {events.map((event, i) => (
-            <TableViewCell
+            <CalendarEventCard
               key={i}
               label={event.label}
               nestedLabel={event.nestedLabel}
               nestedContent={event.nestedContent}
+              tone={event.tone}
             />
           ))}
         </>

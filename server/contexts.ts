@@ -34,19 +34,6 @@ export const contexts: ContextBlob[] = [
     },
   },
   {
-    id: "haus-hoffmann",
-    label: "Haus Hoffmann",
-    searchQuery: "Hoffmann Starnberg Klaus Maria Stefan Lisa Einfamilienhaus Architekt Bauplanung Fassade Entwurf Treffen Baustelle",
-    message:
-      "Quick update on the Hoffmann house project — Lisa finished the updated floor plans v3 and Stefan confirmed the foundation depth for the sloped site. Klaus and Maria want to meet Thursday to review the facade options before we submit the building permit on Friday.",
-    entities: {
-      people: ["Lisa", "Stefan", "Klaus", "Maria"],
-      places: ["Starnberg"],
-      dates: ["2026-07-24T14:00", "2026-07-25"],
-      events: ["Client presentation", "Permit submission"],
-    },
-  },
-  {
     id: "team-standup",
     label: "Team Standup",
     searchQuery: "team standup meeting product sprint planning blockers",

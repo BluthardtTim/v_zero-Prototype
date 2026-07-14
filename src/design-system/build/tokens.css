@@ -65,6 +65,9 @@
   --bg-surface-blank: #ffffff;
   --bg-surface-elevated: #ffffffbf;
   --bg-surface-overlay: #00000080;
+  /* Page canvas behind the Space (device-frame) — distinct from --bg-surface-blank,
+     which stays flat white for card surfaces sitting on top of this gradient. */
+  --bg-canvas: linear-gradient(180deg, #F1F2EC 0%, #F9FAF5 100%);
   --border-subtle: #0d0d0c1a;
   --border-selected: #0d0d0c66;
   --border-focus: #0d0d0c33;

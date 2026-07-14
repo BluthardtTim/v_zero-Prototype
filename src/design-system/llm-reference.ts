@@ -23,7 +23,7 @@ CreditCard, Money, Wallet, Receipt, CurrencyEur
 File, FilePdf, FileText, Files, FolderOpen, Folder
 Image, Images, Camera
 Heart, Star, Bookmark, Flag, Bell, BellSimple
-Gear, Sliders, SlidersHorizontal, Faders
+Gear, Sliders, SlidersHorizontal, Faders, Funnel
 Eye, EyeSlash, Lock, LockOpen, Key
 Globe, Airplane, Suitcase, Anchor, Boat
 Fork, Knife, ForkKnife, Coffee, Wine
@@ -38,9 +38,12 @@ AvatarGroup: { size: 24|32|48|64, children: Avatar[] }
 
 Button: { size: 'large'|'small', style: 'primary'|'secondary'|'tertiary'|'destructive'|'link', type?: 'text'|'text-icon'|'icon', state?: 'default'|'disabled'|'loading', label: string, icon?: ReactNode, onClick?: () => void }
 
-Calendar: { days: { label: string, date: number, selected?: boolean, hasAppointment?: boolean }[], events?: { label: string, nestedLabel?: string, nestedContent?: ReactNode }[] }
+Calendar: { days: { label: string, date: number, selected?: boolean, hasAppointment?: boolean }[], events?: { label: string, nestedLabel?: string, nestedContent?: ReactNode, tone?: 'green'|'blue'|'yellow'|'red'|'neutral' }[] }
 // Compact week-strip + event list (Figma node 2383:3906). days = 7 entries (Sun–Sat), one marked selected (today). hasAppointment shows a green dot.
-// events render as TableViewCell rows — restricted to: label (event name), nestedLabel (time range), nestedContent (optional Label badge). No leftIcon, no details, no onClick inside Calendar events.
+// events render as CalendarEventCard rows (Figma node 121:3426) — a tinted, left-bar-accented card, restricted to: label (event name), nestedLabel (time or day — never a relative phrase like "today", the Core principle above still applies), nestedContent (optional Label badge), tone (accent color, defaults to 'green'). No leftIcon, no details, no onClick inside Calendar events.
+
+CalendarEventCard: { label: string, nestedLabel?: string, nestedContent?: ReactNode, tone?: 'green'|'blue'|'yellow'|'red'|'neutral' }
+// Figma node 121:3426/121:3449 — a single tinted calendar-event row (left accent bar + title + optional time subtitle). Normally used only inside Calendar.events (see above); only place one directly in a tree outside Calendar for a genuinely standalone single-event mention.
 
 CalendarInviteCard: { state: 'choice'|'accept'|'join', title: string, datetime: string, icon?: ReactNode, onAccept?: () => void, onDecline?: () => void, onJoin?: () => void }
 
@@ -55,8 +58,17 @@ Divider: {}
 
 DocumentCard: { variant?: 'image', image?: ReactNode, description?: string }
 
+Documents: { documents: { title: string, subtitle: string, date: string, fileType?: string, visibility?: 'shared'|'private' }[], visibleCount?: number, seeAllLabel?: string }
+// Figma node 119:1892 — the canonical files-bucket section: a Shared/Private tab header (built internally from SegmentedPicker, not a separate node you add), a row per document (placeholder file-type icon, title, subtitle, absolute date), then a "See all" link once there are more than visibleCount (default 3) rows in the selected tab.
+// documents is a plain data array, not UINode children. subtitle = "By <uploader name>". date must be an absolute date (e.g. "6 Apr 2025"), never relative. visibility defaults to 'shared' when omitted.
+// Self-contained: the Shared/Private tab switch and the "See all" expansion are managed internally by the component — do NOT wire onClick/toggle/showIf/initialState for them, Documents needs none of that.
+
 FilesAttached: { files: { name: string, size?: string, icon?: ReactNode }[], size?: 'big'|'small' }
 FilesAttachedCombo: { headline: string, files: { name: string, size?: string, icon?: ReactNode }[] }
+
+Finance: { period: string, headline: string, transactions: { icon?: ReactNode, title: string, subtitle: string, amount: string, tone: 'owed'|'settled' }[], buttonLabel: string, buttonIcon?: ReactNode, onButtonClick?: () => void }
+// Figma node 117:1444 — the canonical finance-bucket card: period/headline header, a divider, one row per expense, then a full-width CTA button. See the finance bullet in Step 2 for how to compute period/headline/tone from raw_ref.
+// tone drives the trailing amount's color: 'owed' = red, 'settled' = green. transactions is a plain data array, not UINode children — icon defaults to a generic payment icon when omitted.
 
 Folder: { size: 'small'|'big', name: string, description?: string, starred?: boolean, icon?: ReactNode, onClick?: () => void }
 FolderGrid: { type: 'small-list'|'big-list', children: Folder[] }
@@ -76,11 +88,13 @@ Input: { state: 'active'|'filled'|'placeholder'|'disrubted', showIcon?: boolean,
 
 Label: { size: 'big'|'small', tinted: 'white'|'green'|'blue', disabled?: boolean, children: string }
 
-MapPreview: { city: string, area?: string, markers: { lat: number, lng: number, category?: 'default'|'restaurant'|'beach'|'accommodation'|'favorite', label?: string }[], collections?: { label: string, category?: 'default'|'restaurant'|'beach'|'accommodation'|'favorite', meta?: string }[] }
+MapPreview: { city: string, area?: string, markers: { lat: number, lng: number, category?: 'default'|'restaurant'|'beach'|'accommodation'|'favorite', label?: string }[], collections?: { label: string, category?: 'default'|'restaurant'|'beach'|'accommodation'|'favorite', meta?: string, icon?: ReactNode }[] }
+// collections = the "saved places" chips (top-left, Figma node 117:1420): each is a category of saved/bookmarked places, e.g. label "Restaurants", meta "8 Places", icon a fitting Phosphor icon (e.g. { type: "ForkKnife", size: 16 }). The bottom-right pill always shows the current city/area — no extra prop needed, it's built from city/area directly.
 MapPreviewSmall: { city: string, area?: string, markers: { lat: number, lng: number, category?: 'default'|'restaurant'|'beach'|'accommodation'|'favorite', label?: string }[] } // compact 169x169 square map tile with city/area label — use instead of MapPreview when only one or two places need to be shown without collections
 
 MessageThreadList: { children: MessageThreadRow[] }
 MessageThreadRow: { name: string, time: string, preview: string, group?: boolean, participants?: { initials?: string, tint?: 'red'|'yellow'|'green'|'blue' }[], avatar?: ReactNode, subtitle?: string, unread?: boolean, reaction?: ReactNode, attachment?: ReactNode, style?: 'activity'|'list', onClick?: () => void }
+// unread should be a live state binding ({ key: "read_<slug>", equals: false }), not a fixed boolean, whenever the row is tappable — see Step 8's mark-as-read pattern — so the dot actually clears once the chat is opened instead of staying on forever.
 // group=true: renders a 3-avatar circular cluster — pass participants array (up to 3 entries, each with initials + tint) to show real participant avatars; omit avatar when group=true
 // participants is a plain data array, not UINode children
 
@@ -88,19 +102,22 @@ ModalSheet: { children: ReactNode }
 ModalSheetOverlay: { children: ModalSheet, onDismiss?: () => void }
 ModalSheetOverlayFull: { children: ModalSheet, onDismiss?: () => void }
 
-Note: { size: 'large'|'small', body: string, headline?: string, items?: { text: string, checked?: boolean }[] }
-// size='large': 346px wide card — headline (bold, single line), body text, optional checklist items array
-// size='small': 177×177px square — body text only, no headline or items
-
 PageControl: { amount: number, selection: number }
 
-PopupColor: { surface: 'blue'|'green'|'yellow', headline: string, onDismiss?: () => void, children?: ReactNode }
+Photos: { albums: { title: string, count: number, src: string, onClick?: () => void }[], recentPhotos: { src: string }[], recentTotal: number, sharedBy: string }
+// Figma node 116:1376 — the photo-library summary: "All" + "Shared Albums" cover cards, then a "Recently added" thumbnail row.
+// albums = EXACTLY 2 entries: [0] title "All", [1] title "Shared Albums" — see the images bullet in Step 2 for how to compute count/src.
+// recentPhotos = up to 5 entries, most-recent-first; the first 4 render as plain tiles, a 5th becomes the "+N" overflow tile.
+// recentTotal = total size of the recently-added pool (equal to albums[0].count) — drives the "+N" badge (recentTotal minus the 4 shown tiles).
+// sharedBy = first name only of whoever added the most recent photo.
+// albums[].onClick is optional — a per-entry action (e.g. { action: "set", key: "activeScreen", value: "photos_all" }) to open that album in PhotosScreen (Step 8). Omit it to leave a card non-interactive.
 
 Radio: { selected: boolean, label?: string, onChange?: (selected: boolean) => void }
 
 Reaction: { emojis?: string[], onClick?: () => void }
 
-SegmentedPicker: { children: SegmentedPickerOption[] }
+SegmentedPicker: { children: SegmentedPickerOption[], trailingIcon?: ReactNode, onTrailingIconClick?: () => void }
+// Figma node 119:2049 — underline tabs (e.g. "Shared"/"Private") with a full-width bottom divider, plus an optional trailing filter icon (e.g. { type: "Funnel", size: 24 }) right-aligned opposite the tabs. Use for filtering a list/section into 2-3 views, never as a generic pill toggle.
 SegmentedPickerOption: { selected: boolean, label: string, icon?: ReactNode, onClick?: () => void }
 
 SelectionButton: { label: string, discriptor?: string, checked: boolean, state?: 'default'|'disabled', onClick?: () => void }
@@ -112,11 +129,16 @@ Slider: { value: number, icon?: ReactNode, label?: string, onChange?: (value: nu
 StatsBlock: { stats: string, discriptor?: string, variant?: 'top' }
 
 TabBar: { children: TabBarItem[] }
+// Figma node 121:3457 — fixed to the bottom of the viewport, full width, not a floating pill. label is normally a single icon (e.g. { type: "House", size: 24 }), not text.
 TabBarItem: { selected: boolean, label: ReactNode, onClick?: () => void }
+// TabBarItem clones its own label icon to set weight: selected ? 'fill' : 'regular' and color: selected ? black : grey automatically — never pass weight or color on the icon yourself.
 
 TableView: { description?: string, children: (TableViewCell|TableViewCellMenu)[] }
 TableViewCell: { label: string, leftIcon?: ReactNode, nestedLabel?: string, details?: string, nestedContent?: ReactNode, onClick?: () => void } // nestedLabel and nestedContent are mutually exclusive — use at most one
 TableViewCellMenu: { label: string, state?: 'label', onClick?: () => void }
+
+Ticket: { label?: string, date: string, departureStation: string, departureTime: string, arrivalStation: string, arrivalTime: string, duration: string, status: string, statusTone?: 'onTime'|'delayed'|'cancelled', passengerName: string, seat?: string, coach?: string }
+// Figma node 119:2113 — a boarding-pass-style card for one upcoming trip segment, interpreted from a files-bucket ticket booking (raw_ref.type === "ticket"). label is a durable category (defaults to "Day-Trip") — never phrase it as a countdown ("in 3 days"), the segment's own date already carries the timing. date must be absolute (e.g. "Thu, 17 Jul 2026"). statusTone drives the status text color: 'onTime' green, 'delayed'/'cancelled' red.
 
 Toggle: { active: boolean, label?: string, onChange?: (active: boolean) => void }
 
@@ -136,7 +158,7 @@ Visual: { variant: 'emoji'|'folder', children?: string } // variant='emoji': pas
 export const PEBBLE_SLOT_RULES = `
 VERSCHACHTELUNGS-REGELN
 
-Calendar.events sind reine Datenobjekte (label, nestedLabel, nestedContent) — sie werden intern als TableViewCell gerendert. Erlaubte Felder: label (Eventname), nestedLabel (Uhrzeit), nestedContent (Label-Badge). Kein leftIcon, kein details, kein onClick innerhalb von Calendar.events.
+Calendar.events sind reine Datenobjekte (label, nestedLabel, nestedContent, tone) — sie werden intern als CalendarEventCard gerendert. Erlaubte Felder: label (Eventname), nestedLabel (Uhrzeit oder Wochentag, niemals eine relative Phrase wie "today"/"heute"), nestedContent (Label-Badge), tone (Akzentfarbe, Default 'green'). Kein leftIcon, kein details, kein onClick innerhalb von Calendar.events.
 
 AvatarGroup darf nur Avatar als direkte Kinder enthalten (2-4 Stueck).
 CategoryChipList darf nur CategoryChip als direkte Kinder enthalten.
@@ -150,8 +172,6 @@ TableView darf nur TableViewCell oder TableViewCellMenu als direkte Kinder entha
 ToggleList darf nur ToggleButton als direkte Kinder enthalten. Immer nur ein ToggleButton
 gleichzeitig mit selected=true.
 ModalSheetOverlay und ModalSheetOverlayFull duerfen nur genau ein ModalSheet als Kind enthalten.
-
-Note.items ist ein reines Datenarray (Objekte mit text: string und optionalem checked: boolean), keine UINode-Kinder — niemals mit type/children-Feldern schreiben. headline und items sind nur bei size='large' sinnvoll; bei size='small' werden sie ignoriert.
 
 TableViewCell.nestedLabel und TableViewCell.nestedContent schliessen sich gegenseitig aus — niemals beide gleichzeitig setzen. Ein Cell hat hoechstens einen Trailing-Slot. details (Discriptor-Subline) kann zusaetzlich verwendet werden, aber zusammen mit nestedLabel oder nestedContent bleibt der Trailing-Bereich auf genau einen Wert beschraenkt.
 
@@ -167,6 +187,17 @@ repraesentativen Marker auf den Stadtzentrum oder das bekannteste Wahrzeichen de
 
 FilesAttached.files und FilesAttachedCombo.files sind reine Datenarrays (Objekte mit name/size/icon),
 keine UINode-Kinder - niemals mit type/children-Feldern schreiben.
+
+Finance.transactions ist ein reines Datenarray (Objekte mit icon/title/subtitle/amount/tone),
+keine UINode-Kinder — niemals mit type/children-Feldern schreiben, niemals als "children" Prop uebergeben.
+
+Photos.albums und Photos.recentPhotos sind reine Datenarrays (Objekte mit title/count/src bzw. nur src),
+keine UINode-Kinder — niemals mit type/children-Feldern schreiben, niemals als "children" Prop uebergeben.
+
+Hard rule — Photos.albums hat immer genau 2 Eintraege in dieser Reihenfolge: zuerst title="All"
+(alle Bilder des images-Buckets), danach title="Shared Albums" (nur Bilder mit gesetztem
+raw_ref.album). Niemals ein drittes Album, niemals andere Titel, niemals ein Album pro
+einzelnem Albumnamen.
 
 MessageThreadRow.avatar, .reaction und .attachment sind freie ReactNode-Slots fuer je eine verschachtelte
 UINode (z.B. Avatar, Reaction, CalendarInviteCard, FilesAttached oder FilesAttachedCombo) - kein Datenarray.

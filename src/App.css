@@ -17,7 +17,7 @@ body {
   position: relative;
   width: 402px;
   height: 750px;
-  background: var(--bg-surface-blank);
+  background: var(--bg-canvas);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -33,26 +33,53 @@ body {
 
 .header-frame {
   width: 100%;
-  background: var(--bg-surface-blank);
+  /* Transparent so device-frame's --bg-canvas gradient reads as one continuous
+     wash across the header and the scrollable content below it. */
+  background: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-4);
+  gap: 24px;
 }
 
-/* Figma reference node 87:593 — header frame is 402×143px total. 66px is
-   solved against this app's own box model (header-slot's 64px + this header's own
-   12px bottom padding + 1px border) to land the generated header at 143px total:
-   66 + 64 + 12 + 1 = 143. */
+/* Figma reference node 114:638 — header frame is 402px wide, pt-48. The icon
+   row (40px) + 24px gap put header-slot's content at y=112, matching the
+   Figma reference's headline block (node 114:651, y=112) exactly. */
 .header--compact {
-  padding-top: 66px;
+  padding-top: 48px;
 }
 
 /* Suppresses pebble-header's own border-bottom while no header has been generated
    yet, so the reserved (empty) slot stays fully invisible. */
 .header--no-border {
   border-bottom: none;
+}
+
+/* Figma node 114:639/114:640 — icon row is 90px wide (2×40px + 10px gap),
+   right-aligned 26px from the 402px frame's right edge. */
+.header-icons {
+  width: 323px;
+  max-width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Figma node 114:641/114:646 — matches .pebble-visual's chip styling exactly
+   (same 40px circle, background, and shadow) for visual consistency. */
+.header-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: var(--border-radius-circle);
+  background: var(--bg-surface-blank);
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.25), 0px 0px 1px 0px #e7eff5, inset 0px 1px 4px 0px rgba(255, 255, 255, 0.15);
+  cursor: pointer;
 }
 
 .header-slot {
@@ -94,14 +121,116 @@ body {
   vertical-align: middle;
 }
 
-.button-stack {
+/* ── Desktop stage (Figma node 119:2182) ─────────────────────────────
+   Console/log panel top-left + a phone-chrome mockup holding the real,
+   fully interactive .device-frame. Both .console-panel and .phone-mockup
+   are position:fixed directly to the viewport (see their own rules below),
+   so .desktop-stage itself does no layout work on desktop — it's purely a
+   DOM grouping node with no CSS rule of its own. On mobile it's repurposed
+   as the real (in-flow) container so .device-frame goes back to filling
+   the viewport like before this layout existed. */
+
+.console-panel {
+  /* Pinned to the left edge of the true viewport with a small margin
+     (matches the source Figma's own 24px inset) instead of sitting in the
+     centered flex row with the phone — position:fixed anchors to the
+     viewport directly, sidestepping .desktop-stage's own width (which
+     shrink-wraps to .phone-mockup now that this panel is out of its flow). */
   position: fixed;
-  top: var(--spacing-5);
-  left: var(--spacing-5);
-  z-index: 10;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40vw;
+  aspect-ratio: 608 / 768;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3);
+  background: #F1F2EC;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.console-panel__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--spacing-5);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.console-panel__placeholder,
+.console-panel__line {
+  margin: 0 0 var(--spacing-2);
+}
+
+.console-panel__placeholder {
+  color: var(--text-tertiary);
+}
+
+.phone-mockup {
+  /* Fixed to the viewport, centered on the right half specifically (75vw,
+     not 50vw) — independent of .console-panel and .desktop-stage's own
+     (now-unused for this) flex centering, so it holds this exact spot
+     regardless of window size or what's happening on the left side. */
+  position: fixed;
+  left: 75%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /* Sized so the device-frame content area (89.65% of this width, per the
+     left/right insets below) comes out to exactly 402px — the same width
+     mobile uses — so every component renders at its normal, designed
+     size instead of being squeezed by a viewport-height-driven mockup. */
+  width: calc(402px / 0.8965);
+  aspect-ratio: 1804 / 3653;
+}
+
+.phone-mockup__chrome {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+}
+
+/* Positions the real, interactive app inside the PNG's transparent screen
+   cutout — measured from the source image's alpha channel (screen hole is
+   x:96-1703, y:88-3563 of a 1804x3653 canvas). */
+.phone-mockup .device-frame {
+  position: absolute;
+  top: 2.41%;
+  /* Measured inset is 5.60%, but the browser's own sub-pixel rounding of
+     the div vs. the <img> chrome left a hairline (<1px) seam of page
+     background between content and bezel on the right edge, only visible
+     on high-DPI screenshots. Biased in slightly further than measured —
+     the bezel (z-index 2, on top) safely covers the extra sliver of
+     content this exposes. */
+  right: 5.25%;
+  bottom: 2.46%;
+  /* Same hairline sub-pixel seam as the right edge, biased in for the
+     same reason. */
+  left: 5.10%;
+  width: auto;
+  height: auto;
+  /* The hole's corner is a true circle (~190px radius measured from the
+     alpha channel), not an ellipse — a single-percentage border-radius
+     would scale it per-axis (width% / height%) and, on this much-taller-
+     than-wide box, wildly over-round vertically, opening a gap at the top
+     and bottom corners where the page background showed through past the
+     bezel. The two percentages below are chosen so that each resolves to
+     the same pixel radius (percentage × axis length cancels out the
+     width/height difference), keeping the corner circular — and slightly
+     smaller than measured so any leftover sliver is hidden behind the
+     bezel image on top rather than exposing a gap. */
+  border-radius: 11.8% / 5.5%;
+  z-index: 1;
 }
 
 @media (max-width: 500px) {
@@ -112,11 +241,36 @@ body {
     min-height: 100dvh;
   }
 
-  .button-stack {
+  .desktop-stage {
+    display: block;
+    min-height: auto;
+    width: 100%;
+    height: 100%;
+  }
+
+  .console-panel {
     display: none;
   }
 
+  .phone-mockup {
+    position: static;
+    /* left/top have no effect once position is static, but transform still
+       applies regardless of positioning scheme — must be explicitly reset
+       or the -50%/-50% translate from the desktop rule keeps shifting it. */
+    transform: none;
+    height: auto;
+    aspect-ratio: auto;
+    width: 100%;
+  }
+
+  .phone-mockup__chrome {
+    display: none;
+  }
+
+  .phone-mockup .device-frame,
   .device-frame {
+    position: static;
+    inset: auto;
     width: 100vw;
     height: 100dvh;
     border-radius: 0;
@@ -136,6 +290,17 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  /* No real phone shows a desktop-style scrollbar — on setups where the
+     browser reserves track width for it (Windows, or macOS with "always
+     show scrollbars"), it consumed layout width and its light track sat
+     flush against the bezel, reading as a thin white sliver on the right
+     edge of the screen. Content stays scrollable via touch/wheel/trackpad
+     without it. */
+  scrollbar-width: none;
+}
+
+.space-slot::-webkit-scrollbar {
+  display: none;
 }
 
 /* ── Home screen ─────────────────────────────────────────────────── */
@@ -143,102 +308,38 @@ body {
 .home-screen {
   position: absolute;
   inset: 0;
-  background: linear-gradient(163.32deg, #2c2b27 1.77%, #191917 98.35%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  background: #252321;
 }
 
-
-.home-screen__title {
-  position: absolute;
-  top: calc(108px + env(safe-area-inset-top));
-  left: 0;
-  width: 100%;
-  text-align: center;
-}
-
-.home-screen__title-main {
-  margin: 0;
+.home-screen__generate {
   font-family: var(--font);
   font-size: var(--typography-fontsize-h3);
   font-weight: var(--typography-fontweight-regular);
   line-height: var(--typography-lineheight-h3);
   color: #ffffff;
-  white-space: nowrap;
-}
-
-.home-screen__title-sub {
-  margin: 0;
-  font-family: var(--font);
-  font-size: var(--typography-fontsize-h3);
-  font-weight: var(--typography-fontweight-regular);
-  line-height: var(--typography-lineheight-h3);
-  color: rgba(255, 255, 255, 0.4);
-  white-space: nowrap;
-}
-
-/* Shared blob base — both clusters use the same position/size from Figma */
-.home-screen__blob {
-  position: absolute;
-  left: calc(25% + 10.5px);
-  width: 180px;
-  height: 173px;
-  padding: 0;
   background: none;
   border: none;
-}
-
-.home-screen__blob img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-/* Top blob — Figma node 88:646, top: 270px */
-.home-screen__blob--top {
-  top: calc(270px + env(safe-area-inset-top));
   cursor: pointer;
   transition: opacity 0.15s ease;
 }
 
-.home-screen__blob--top:active {
+.home-screen__generate:active {
   opacity: 0.7;
-}
-
-/* Bottom blob — Figma node 88:686, top: 541px — Haus Hoffmann Space */
-.home-screen__blob--bottom {
-  top: calc(541px + env(safe-area-inset-top));
-  cursor: pointer;
-  transition: opacity 0.15s ease;
-}
-
-.home-screen__blob--bottom:active {
-  opacity: 0.7;
-}
-
-.home-screen__blob--loading {
-  animation: home-blob-pulse 1.4s ease-in-out infinite;
-}
-
-@keyframes home-blob-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
 }
 
 .home-screen__loading {
-  position: absolute;
-  top: calc(460px + env(safe-area-inset-top));
-  left: 0;
-  width: 100%;
-  margin: 0;
-  text-align: center;
-  font-family: var(--font);
-  font-size: var(--typography-fontsize-caption);
-  font-weight: var(--typography-fontweight-regular);
-  line-height: var(--typography-lineheight-caption);
-  color: rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-screen__loading-animation {
+  width: 160px;
+  height: 90px;
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
@@ -254,12 +355,27 @@ body {
   text-align: center;
 }
 
+/* This caption sits after every TabScreen in document flow, but the TabBar
+   itself is position:absolute (out of flow) — so its own presence doesn't
+   push the caption down. Without this, scrolling to the very end lands the
+   caption right underneath the fixed bar. Same clearance formula TabScreen
+   uses for its own bottom padding, so the two always match. */
+.space-slot:has(.pebble-tabbar) .space-ai-caption {
+  padding-bottom: calc(94px + env(safe-area-inset-bottom) + 24px);
+}
+
 .space-section-headline {
   font-family: var(--font);
   font-size: var(--fontsize-6);
   font-weight: var(--typography-fontweight-regular);
   line-height: normal;
   color: var(--text-primary);
+  /* SpaceContainer/TabScreen space every child apart with a uniform
+     --spacing-8 gap — fine between separate sections, but too loose between
+     a headline and the content it's labeling. A negative bottom margin pulls
+     just that one relationship in to --spacing-4, without touching the gap
+     anywhere else (between sections, or between non-headline siblings). */
+  margin-bottom: calc(var(--spacing-4) - var(--spacing-8));
 }
 
 .space-generate {

@@ -16,6 +16,8 @@ const RENDER_HEADER_TOOL = "render_header"
 function buildSystemPrompt(): string {
   return `You are a Header Compiler for this design system. Given a context blob describing an incoming message and its extracted entities, you generate a single dynamic visual header — an iOS-style large title — as a JSON UI tree (via the ${RENDER_HEADER_TOOL} tool). Follow every step below, in order.
 
+**Output language: always English.** The context blob's message text and entities are frequently in German or another language — that is irrelevant to your output. The entire headline sentence must be natural English, even when the source material is not. Translate or paraphrase rather than copying foreign-language words into the sentence. Real proper nouns (person names, place names) stay as-is regardless of language.
+
 ---
 
 ## Core principle — Long-term context

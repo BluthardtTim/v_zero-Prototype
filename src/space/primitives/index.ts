@@ -1,6 +1,9 @@
 export { SpaceContainer } from "./SpaceContainer"
 export type { SpaceContainerProps } from "./SpaceContainer"
 
+export { TabScreen } from "./TabScreen"
+export type { TabScreenProps } from "./TabScreen"
+
 export { SectionHeadline } from "./SectionHeadline"
 export type { SectionHeadlineProps } from "./SectionHeadline"
 

@@ -105,6 +105,92 @@ export const events: ContextEvent[] = [
   },
 
   // ── IMAGES — photo metadata ───────────────────────────────────────
+  // album: shared-album membership (absent = personal, not added to the group album)
+  // added_by / added_at: uploader + timestamp, drives Photos.recentPhotos / sharedBy
+
+  {
+    id: "images_arrival_apartment",
+    type: "images",
+    content: "Foto Ankunft Babbo Apartments Positano Balkon Blick Zimmerverteilung",
+    entities: {
+      people: ["Mia Schulz", "Lukas Brenner", "Nina Berger", "Felix Wagner", "Ben Richter"],
+      places: ["Babbo Apartments", "Positano"],
+      dates: ["2026-07-14"]
+    },
+    raw_ref: {
+      type: "photo",
+      title: "Ankunft Babbo Apartments",
+      date: "2026-07-14",
+      location: "Babbo Apartments, Positano",
+      participants: ["Mia Schulz", "Lukas Brenner", "Nina Berger", "Felix Wagner", "Ben Richter"],
+      album: "Italy Trip 🇮🇹",
+      added_by: "Ben Richter",
+      added_at: "2026-07-14T15:00:00"
+    }
+  },
+
+  {
+    id: "images_amalfi_coast_drive",
+    type: "images",
+    content: "Foto Fahrt Amalfikueste kurvige Strasse Ausblick Meer Klippen",
+    entities: {
+      people: ["Mia Schulz", "Lukas Brenner", "Nina Berger", "Felix Wagner", "Ben Richter"],
+      places: ["Amalfiküste"],
+      dates: ["2026-07-14"]
+    },
+    raw_ref: {
+      type: "photo",
+      title: "Fahrt entlang der Amalfiküste",
+      date: "2026-07-14",
+      location: "Amalfiküste",
+      participants: ["Mia Schulz", "Lukas Brenner", "Nina Berger", "Felix Wagner", "Ben Richter"],
+      album: "Italy Trip 🇮🇹",
+      added_by: "Nina Berger",
+      added_at: "2026-07-14T17:30:00"
+    }
+  },
+
+  {
+    id: "images_gelato_evening",
+    type: "images",
+    content: "Foto Abendspaziergang Gelato Positano Gruppe nach dem Essen",
+    entities: {
+      people: ["Mia Schulz", "Lukas Brenner", "Nina Berger", "Felix Wagner", "Ben Richter"],
+      places: ["Positano"],
+      dates: ["2026-07-14"]
+    },
+    raw_ref: {
+      type: "photo",
+      title: "Gelato-Spaziergang",
+      date: "2026-07-14",
+      location: "Positano",
+      participants: ["Mia Schulz", "Lukas Brenner", "Nina Berger", "Felix Wagner", "Ben Richter"],
+      album: "Italy Trip 🇮🇹",
+      added_by: "Ben Richter",
+      added_at: "2026-07-14T21:00:00"
+    }
+  },
+
+  {
+    id: "images_lukas_private_walk",
+    type: "images",
+    content: "Foto frueher Morgenspaziergang Lukas allein Kueste Sonnenaufgang privat",
+    entities: {
+      people: ["Lukas Brenner"],
+      places: ["Positano"],
+      dates: ["2026-07-14"]
+    },
+    raw_ref: {
+      type: "photo",
+      title: "Morgenspaziergang",
+      date: "2026-07-14",
+      location: "Positano",
+      participants: ["Lukas Brenner"],
+      // no album — personal photo, never added to the shared group album
+      added_by: "Lukas Brenner",
+      added_at: "2026-07-14T08:00:00"
+    }
+  },
 
   {
     id: "images_sunset_positano",
@@ -121,7 +207,10 @@ export const events: ContextEvent[] = [
       date: "2026-07-15",
       location: "Positano, Amalfiküste",
       participants: ["Mia Schulz", "Lukas Brenner", "Nina Berger", "Felix Wagner", "Ben Richter"],
-      thumbnail: "positano_sunset.png"
+      thumbnail: "positano_sunset.png",
+      album: "Italy Trip 🇮🇹",
+      added_by: "Mia Schulz",
+      added_at: "2026-07-15T19:30:00"
     }
   },
 
@@ -140,26 +229,10 @@ export const events: ContextEvent[] = [
       date: "2026-07-15",
       location: "Trattoria da Vincenzo, Positano",
       participants: ["Mia Schulz", "Lukas Brenner", "Nina Berger", "Felix Wagner", "Ben Richter"],
-      thumbnail: "trattoria_dinner.png"
-    }
-  },
-
-  {
-    id: "images_capri_grotto",
-    type: "images",
-    content: "Foto Bootstour Capri Blue Grotto Felix und Ben im Boot",
-    entities: {
-      people: ["Felix Wagner", "Ben Richter"],
-      places: ["Capri", "Blue Grotto"],
-      dates: ["2026-07-17"]
-    },
-    raw_ref: {
-      type: "photo",
-      title: "Blue Grotto Bootstour",
-      date: "2026-07-17",
-      location: "Capri",
-      participants: ["Felix Wagner", "Ben Richter"],
-      thumbnail: "capri_grotto.png"
+      thumbnail: "trattoria_dinner.png",
+      album: "Italy Trip 🇮🇹",
+      added_by: "Lukas Brenner",
+      added_at: "2026-07-15T20:50:00"
     }
   },
 
@@ -178,7 +251,98 @@ export const events: ContextEvent[] = [
       date: "2026-07-16",
       location: "Pompeji",
       participants: ["Mia Schulz", "Nina Berger"],
-      thumbnail: "pompeii_ruins.png"
+      thumbnail: "pompeii_ruins.png",
+      album: "Italy Trip 🇮🇹",
+      added_by: "Nina Berger",
+      added_at: "2026-07-16T11:20:00"
+    }
+  },
+
+  {
+    id: "images_capri_grotto",
+    type: "images",
+    content: "Foto Bootstour Capri Blue Grotto Felix und Ben im Boot",
+    entities: {
+      people: ["Felix Wagner", "Ben Richter"],
+      places: ["Capri", "Blue Grotto"],
+      dates: ["2026-07-17"]
+    },
+    raw_ref: {
+      type: "photo",
+      title: "Blue Grotto Bootstour",
+      date: "2026-07-17",
+      location: "Capri",
+      participants: ["Felix Wagner", "Ben Richter"],
+      thumbnail: "capri_grotto.png",
+      album: "Italy Trip 🇮🇹",
+      added_by: "Felix Wagner",
+      added_at: "2026-07-17T10:30:00"
+    }
+  },
+
+  {
+    id: "images_rome_colosseum",
+    type: "images",
+    content: "Foto Kolosseum Rom Zwischenstopp vor Abflug Gruppe Sightseeing",
+    entities: {
+      people: ["Mia Schulz", "Lukas Brenner", "Nina Berger", "Felix Wagner", "Ben Richter"],
+      places: ["Rom", "Kolosseum"],
+      dates: ["2026-07-18"]
+    },
+    raw_ref: {
+      type: "photo",
+      title: "Kolosseum",
+      date: "2026-07-18",
+      location: "Rom",
+      participants: ["Mia Schulz", "Lukas Brenner", "Nina Berger", "Felix Wagner", "Ben Richter"],
+      thumbnail: "jorgen-hendriksen-RNkEeWhRT7k-unsplash.jpg",
+      album: "Italy Trip 🇮🇹",
+      added_by: "Nina Berger",
+      added_at: "2026-07-18T14:15:00"
+    }
+  },
+
+  {
+    id: "images_rome_vespa_alley",
+    type: "images",
+    content: "Foto enge Gasse Rom Vespas Roller Efeu bewachsene Haeuser Spaziergang",
+    entities: {
+      people: ["Mia Schulz", "Lukas Brenner"],
+      places: ["Rom"],
+      dates: ["2026-07-18"]
+    },
+    raw_ref: {
+      type: "photo",
+      title: "Gasse mit Vespas",
+      date: "2026-07-18",
+      location: "Rom",
+      participants: ["Mia Schulz", "Lukas Brenner"],
+      thumbnail: "andrei-mike-LLRENtzIo34-unsplash.jpg",
+      album: "Italy Trip 🇮🇹",
+      added_by: "Mia Schulz",
+      added_at: "2026-07-18T15:00:00"
+    }
+  },
+
+  {
+    id: "images_rome_colorful_street",
+    type: "images",
+    content: "Foto bunte Altstadtgasse Rom Roller Blumen Spaziergang vor Abflug",
+    entities: {
+      people: ["Felix Wagner", "Ben Richter"],
+      places: ["Rom"],
+      dates: ["2026-07-18"]
+    },
+    raw_ref: {
+      type: "photo",
+      title: "Bunte Gasse",
+      date: "2026-07-18",
+      location: "Rom",
+      participants: ["Felix Wagner", "Ben Richter"],
+      thumbnail: "la-so-vk4vjTNVrTg-unsplash.jpg",
+      album: "Italy Trip 🇮🇹",
+      added_by: "Felix Wagner",
+      added_at: "2026-07-18T15:20:00"
     }
   },
 
@@ -437,6 +601,33 @@ export const events: ContextEvent[] = [
       filename: "Hertz_Naples_RentalAgreement.pdf",
       pickup: "2026-07-14",
       dropoff: "2026-07-18"
+    }
+  },
+
+  {
+    id: "files_capri_ferry_ticket",
+    type: "files",
+    content: "Faehrticket Positano Capri Bootstour Blue Grotto Tagesausflug Felix Ben Abfahrt Ankunft",
+    entities: {
+      people: ["Felix Wagner", "Ben Richter"],
+      places: ["Positano", "Capri"],
+      dates: ["2026-07-17"]
+    },
+    raw_ref: {
+      type: "ticket",
+      title: "Ferry to Capri",
+      source: "Capri Ferries",
+      document_type: "ticket",
+      filename: "Capri_Ferry_Ticket.pdf",
+      date: "2026-07-17",
+      departure_station: "Positano Marina",
+      departure_time: "09:00",
+      arrival_station: "Capri Marina Grande",
+      arrival_time: "09:45",
+      duration: "45min",
+      status: "on time",
+      passenger: "Felix Wagner",
+      seat: "Upper Deck"
     }
   },
 
@@ -768,7 +959,10 @@ export const events: ContextEvent[] = [
     raw_ref: {
       type: "sketch",
       title: "Grundriss EG — Konzeptskizze",
-      thumbnail: "project_sketch_grundriss.jpg"
+      thumbnail: "project_sketch_grundriss.jpg",
+      album: "Hoffmann Entwurf",
+      added_by: "Lisa Kraft",
+      added_at: "2026-07-20T10:00:00"
     }
   },
   {
@@ -778,7 +972,10 @@ export const events: ContextEvent[] = [
     entities: {},
     raw_ref: {
       type: "sketch",
-      title: "Südansicht — Fassadenskizze"
+      title: "Südansicht — Fassadenskizze",
+      album: "Hoffmann Entwurf",
+      added_by: "Lisa Kraft",
+      added_at: "2026-07-21T14:00:00"
     }
   },
   {
@@ -788,7 +985,10 @@ export const events: ContextEvent[] = [
     entities: {},
     raw_ref: {
       type: "sketch",
-      title: "Schnitt A-A — Querschnitt"
+      title: "Schnitt A-A — Querschnitt",
+      album: "Hoffmann Entwurf",
+      added_by: "Stefan Berger",
+      added_at: "2026-07-22T09:30:00"
     }
   },
 

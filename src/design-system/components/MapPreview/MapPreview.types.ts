@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export type MapMarkerCategory = 'default' | 'restaurant' | 'beach' | 'accommodation' | 'favorite';
 
 export interface MapMarker {
@@ -11,6 +13,8 @@ export interface MapCollection {
   label: string;
   category?: MapMarkerCategory;
   meta?: string;
+  /** Icon shown inside the chip's light-blue circle (Figma node 117:1420) — a Phosphor icon UINode. */
+  icon?: ReactNode;
 }
 
 export interface MapPreviewProps {

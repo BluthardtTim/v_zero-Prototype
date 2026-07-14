@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { CalendarEventCardTone } from '../CalendarEventCard'
 
 export interface CalendarDay {
   label: string
@@ -11,6 +12,8 @@ export interface CalendarEvent {
   label: string
   nestedLabel?: string
   nestedContent?: ReactNode
+  /** Rendered as a CalendarEventCard — accent color of the left bar and tinted background. Defaults to 'green'. */
+  tone?: CalendarEventCardTone
 }
 
 export interface CalendarProps {

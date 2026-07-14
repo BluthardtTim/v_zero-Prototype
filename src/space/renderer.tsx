@@ -1,9 +1,9 @@
 import { useReducer, type ComponentType } from "react"
 import * as DS from "../design-system"
 import * as PhosphorIcons from "@phosphor-icons/react"
-import { SpaceContainer, SectionHeadline, Row, Text, Headline } from "./primitives"
-import { ChatScreen } from "../screens"
-import { isUIAction, isUINode, type UIAction, type UINode, type UIState } from "./types"
+import { SpaceContainer, TabScreen, SectionHeadline, Row, Text, Headline } from "./primitives"
+import { ChatScreen, PhotosScreen } from "../screens"
+import { isUIAction, isUIActionList, isStateBinding, isUINode, type UIAction, type UINode, type UIState } from "./types"
 
 export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
   // Phosphor Icons — every icon available as { type: "House", size: 24, weight: "regular" }
@@ -16,6 +16,7 @@ export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
   ),
   // local Space-layout primitives — not part of the design system package
   SpaceContainer,
+  TabScreen,
   SectionHeadline,
   Row,
   Text,
@@ -27,6 +28,7 @@ export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
   Calendar: DS.Calendar,
   AvatarGroup: DS.AvatarGroup,
   Button: DS.Button,
+  CalendarEventCard: DS.CalendarEventCard,
   CalendarInviteCard: DS.CalendarInviteCard,
   CategoryChip: DS.CategoryChip,
   CategoryChipList: DS.CategoryChipList,
@@ -34,8 +36,10 @@ export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
   ContextMenu: DS.ContextMenu,
   Divider: DS.Divider,
   DocumentCard: DS.DocumentCard,
+  Documents: DS.Documents,
   FilesAttached: DS.FilesAttached,
   FilesAttachedCombo: DS.FilesAttachedCombo,
+  Finance: DS.Finance,
   Folder: DS.Folder,
   FolderGrid: DS.FolderGrid,
   GrabberSheet: DS.GrabberSheet,
@@ -48,14 +52,13 @@ export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
   Label: DS.Label,
   MapPreview: DS.MapPreview,
   MapPreviewSmall: DS.MapPreviewSmall,
-  Note: DS.Note,
+  Photos: DS.Photos,
   MessageThreadList: DS.MessageThreadList,
   MessageThreadRow: DS.MessageThreadRow,
   ModalSheet: DS.ModalSheet,
   ModalSheetOverlay: DS.ModalSheetOverlay,
   ModalSheetOverlayFull: DS.ModalSheetOverlayFull,
   PageControl: DS.PageControl,
-  PopupColor: DS.PopupColor,
   Radio: DS.Radio,
   Reaction: DS.Reaction,
   SegmentedPicker: DS.SegmentedPicker,
@@ -69,6 +72,7 @@ export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
   TableView: DS.TableView,
   TableViewCell: DS.TableViewCell,
   TableViewCellMenu: DS.TableViewCellMenu,
+  Ticket: DS.Ticket,
   Toggle: DS.Toggle,
   ToggleButton: DS.ToggleButton,
   ToggleList: DS.ToggleList,
@@ -77,6 +81,7 @@ export const COMPONENT_REGISTRY: Record<string, ComponentType<any>> = {
 
   // prebuilt screens
   ChatScreen,
+  PhotosScreen,
 }
 
 type Dispatch = (action: UIAction) => void
@@ -111,9 +116,19 @@ function resolveValue(value: unknown, state: UIState, dispatch: Dispatch, keyHin
   if (isUIAction(value)) {
     return () => dispatch(value)
   }
+  // More than one state change from a single tap (e.g. open a ChatScreen AND mark
+  // that chat read) — dispatched in order against the accumulated state.
+  if (isUIActionList(value)) {
+    return () => value.forEach(dispatch)
+  }
   if (EVENT_PROP_NAMES.has(keyHint) && typeof value !== "function") {
     // An event prop with no recognised action shape — never call an unknown value as a function.
     return undefined
+  }
+  // A read-only state binding on a non-event prop (e.g. MessageThreadRow.unread
+  // reading a "has this been opened" flag) — resolved fresh on every render.
+  if (isStateBinding(value)) {
+    return state[value.key] === value.equals
   }
   if (keyHint === "src" && typeof value === "string" && value.startsWith("placeholder")) {
     return placeholderImage(value.split(":")[1])
@@ -142,8 +157,20 @@ function resolveValue(value: unknown, state: UIState, dispatch: Dispatch, keyHin
           if (k === "src" && typeof v === "string") {
             resolved[k] = resolveValue(v, state, dispatch, "src")
             changed = true
+          } else if (isUIAction(v)) {
+            // A per-item action inside a data array (e.g. Photos.albums[].onClick)
+            resolved[k] = (() => dispatch(v))
+            changed = true
+          } else if (isUIActionList(v)) {
+            resolved[k] = (() => v.forEach(dispatch))
+            changed = true
           } else if (isUINode(v)) {
             resolved[k] = <RenderNode key={k} node={v as UINode} state={state} dispatch={dispatch} />
+            changed = true
+          } else if (Array.isArray(v)) {
+            // Recurse into nested arrays (e.g. PhotosScreen.groups[].photos[].src) —
+            // one level of array-of-objects is not always the whole shape.
+            resolved[k] = resolveValue(v, state, dispatch, k)
             changed = true
           } else {
             resolved[k] = v
@@ -174,7 +201,12 @@ function resolveChildren(children: UINode[] | string | undefined, state: UIState
   return children.map((child, index) => <RenderNode key={index} node={child} state={state} dispatch={dispatch} />)
 }
 
-export function RenderNode({ node, state, dispatch }: { node: UINode; state: UIState; dispatch: Dispatch }) {
+export function RenderNode({
+  node,
+  state,
+  dispatch,
+  ...overrideProps
+}: { node: UINode; state: UIState; dispatch: Dispatch } & Record<string, unknown>) {
   if (node.showIf && state[node.showIf.key] !== node.showIf.equals) {
     return null
   }
@@ -185,7 +217,13 @@ export function RenderNode({ node, state, dispatch }: { node: UINode; state: UIS
     return null
   }
 
-  const props = resolveProps(node, state, dispatch)
+  // A UINode resolved into a prop value (e.g. TabBarItem's `label` icon) renders
+  // as a <RenderNode> element, not the underlying component directly — so a
+  // parent doing cloneElement(label, { weight, color }) targets this wrapper.
+  // Forwarding any such extra props onto the resolved component (after its own
+  // resolved props, so overrides win) is what makes that cloneElement pattern
+  // actually reach the real icon/component instead of being silently dropped.
+  const props = { ...resolveProps(node, state, dispatch), ...overrideProps }
   const children = resolveChildren(node.children, state, dispatch)
 
   return <Component {...props}>{children}</Component>

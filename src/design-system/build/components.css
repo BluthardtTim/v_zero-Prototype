@@ -247,6 +247,7 @@ em, i, cite, address, dfn, var, q, blockquote {
   padding: var(--spacing-4);
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-4);
   width: 100%;
   box-sizing: border-box;
 }
@@ -318,6 +319,90 @@ em, i, cite, address, dfn, var, q, blockquote {
   border-top: 1px solid var(--border-subtle);
   width: 100%;
 }
+
+/* ============================================
+   CalendarEventCard
+   Figma: Calender Event | pebble-calendar_event_card (node 121:3426/121:3449)
+   Props: label, nestedLabel, nestedContent, tone
+   Inhalt: tinted card mit farbigem linken Balken — ersetzt die vorherige
+   TableViewCell-Darstellung fuer Calendar.events.
+   ============================================ */
+
+.pebble-calendar_event_card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  border-radius: var(--border-radius-m);
+  box-sizing: border-box;
+}
+
+.pebble-calendar_event_card__bar {
+  flex-shrink: 0;
+  width: 2px;
+  height: 26px;
+  border-radius: var(--border-radius-circle);
+}
+
+.pebble-calendar_event_card__text {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pebble-calendar_event_card__label {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  line-height: 1.2;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pebble-calendar_event_card__nested-label {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-secondary);
+  line-height: 1.2;
+  color: var(--text-tertiary);
+}
+
+.pebble-calendar_event_card__nested-content {
+  flex-shrink: 0;
+}
+
+.pebble-calendar_event_card--tone-green {
+  background: rgba(95, 194, 123, 0.15);
+  border: 1px solid rgba(95, 194, 123, 0.08);
+}
+.pebble-calendar_event_card--tone-green .pebble-calendar_event_card__bar { background: #5fc27b; }
+
+.pebble-calendar_event_card--tone-blue {
+  background: rgba(98, 166, 255, 0.15);
+  border: 1px solid rgba(98, 166, 255, 0.08);
+}
+.pebble-calendar_event_card--tone-blue .pebble-calendar_event_card__bar { background: var(--color-blue-vivid); }
+
+.pebble-calendar_event_card--tone-yellow {
+  background: rgba(247, 200, 60, 0.15);
+  border: 1px solid rgba(247, 200, 60, 0.08);
+}
+.pebble-calendar_event_card--tone-yellow .pebble-calendar_event_card__bar { background: #f7c83c; }
+
+.pebble-calendar_event_card--tone-red {
+  background: rgba(224, 93, 81, 0.15);
+  border: 1px solid rgba(224, 93, 81, 0.08);
+}
+.pebble-calendar_event_card--tone-red .pebble-calendar_event_card__bar { background: var(--color-red-vivid); }
+
+.pebble-calendar_event_card--tone-neutral {
+  background: rgba(13, 13, 12, 0.05);
+  border: 1px solid rgba(13, 13, 12, 0.05);
+}
+.pebble-calendar_event_card--tone-neutral .pebble-calendar_event_card__bar { background: rgba(13, 13, 12, 0.3); }
 
 /* ============================================
    Calendar Invite Card
@@ -555,6 +640,117 @@ em, i, cite, address, dfn, var, q, blockquote {
 .pebble-document_card--discription-false { }
 
 /* ============================================
+   Documents
+   Figma: Documents | pebble-documents (node 119:1892)
+   Props: documents, visibleCount, seeAllLabel
+   Inhalt: SegmentedPicker-Header (Shared/Private + Funnel), darunter eine
+   Dokumentenliste, darunter ein "See all" Link. Tab- und Expand-Zustand
+   werden intern verwaltet, nicht ueber initialState/showIf.
+   ============================================ */
+
+.pebble-documents {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+}
+
+.pebble-documents__list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pebble-documents__empty {
+  width: 100%;
+  padding: var(--spacing-4) 0;
+  margin: 0;
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+.pebble-documents__row {
+  width: 100%;
+  height: 64px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  box-sizing: border-box;
+}
+
+.pebble-documents__row-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--border-radius-m);
+  background: #e5e6e0;
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.15);
+  font-family: var(--font);
+  font-size: var(--fontsize-5);
+  line-height: 1.2;
+  color: rgba(13, 13, 12, 0.15);
+}
+
+.pebble-documents__row-text {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pebble-documents__row-title {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  line-height: var(--typography-lineheight-body);
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pebble-documents__row-subtitle {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  line-height: 1.4;
+  color: var(--text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pebble-documents__row-date {
+  flex-shrink: 0;
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  color: var(--text-tertiary);
+  text-align: right;
+}
+
+.pebble-documents__see-all {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-2);
+  padding: var(--spacing-4) 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  letter-spacing: -0.16px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+/* ============================================
    Files-Attached
    Figma: Files-Attached | pebble-files_attached
    Props: files (Datenarray: name/size/icon), size
@@ -681,6 +877,121 @@ em, i, cite, address, dfn, var, q, blockquote {
 }
 
 /* ============================================
+   Finance
+   Figma: Finance | pebble-finance (node 117:1444)
+   Props: period, headline, transactions, buttonLabel, buttonIcon, onButtonClick
+   ============================================ */
+
+.pebble-finance {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  background: var(--bg-surface-blank);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-m);
+  box-sizing: border-box;
+}
+
+.pebble-finance__header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.pebble-finance__period {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-secondary);
+  line-height: 12px;
+  letter-spacing: 0.28px;
+  color: var(--text-tertiary);
+}
+
+.pebble-finance__headline {
+  font-family: var(--font);
+  font-size: var(--fontsize-5);
+  font-weight: var(--typography-fontweight-medium);
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.pebble-finance__transactions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.pebble-finance__row {
+  width: 100%;
+  height: 64px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  box-sizing: border-box;
+}
+
+.pebble-finance__row-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius-circle);
+  background: var(--neutral-100);
+  color: var(--text-primary);
+}
+
+.pebble-finance__row-text {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.pebble-finance__row-title {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  line-height: var(--typography-lineheight-body);
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pebble-finance__row-subtitle {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  line-height: 1.4;
+  color: var(--text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pebble-finance__row-amount {
+  flex-shrink: 0;
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-secondary);
+  line-height: var(--typography-lineheight-secondary);
+  text-align: right;
+}
+
+.pebble-finance__row-amount--owed    { color: var(--color-red-vivid); }
+.pebble-finance__row-amount--settled { color: var(--color-green-vivid); }
+
+.pebble-finance__button {
+  width: 100%;
+}
+
+/* ============================================
    Folder-Grid
    Figma: Folder-Grid | pebble-folder-grid
    Props: type
@@ -790,7 +1101,7 @@ em, i, cite, address, dfn, var, q, blockquote {
   align-items: center;
   justify-content: center;
   width: 100%;
-  background: var(--bg-surface-blank);
+  background: transparent;
   border-bottom: 1px solid var(--border-subtle);
   padding: var(--spacing-12) 0 var(--spacing-4);
   gap: var(--spacing-4);
@@ -971,6 +1282,191 @@ em, i, cite, address, dfn, var, q, blockquote {
   border-radius: var(--border-radius-circle);
   background: currentColor;
   flex-shrink: 0;
+}
+
+/* ============================================
+   Photos
+   Figma: Example photos | pebble-photos (node 116:1376)
+   Props: albums, recentPhotos, recentTotal, sharedBy
+   Inhalt: "All" + "Shared Albums" cover cards, then a "Recently added" row of
+   fanned thumbnails with an optional "+N" overflow tile.
+   ============================================ */
+
+.pebble-photos {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.pebble-photos__albums {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.pebble-photos__title {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-h3);
+  font-weight: var(--typography-fontweight-medium);
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* 2 cards × 179px + 12px gap = 370px — exactly SpaceContainer's content width
+   (402px frame − 2×16px padding), so both cards land edge-to-edge with no scroll. */
+.pebble-photos__albums-row {
+  width: 100%;
+  display: flex;
+  gap: var(--spacing-4);
+}
+
+.pebble-photos__album {
+  position: relative;
+  width: 179px;
+  height: 204px;
+  flex-shrink: 0;
+  border-radius: var(--border-radius-m);
+  overflow: hidden;
+  background: var(--bg-surface-blank);
+}
+
+.pebble-photos__album--clickable {
+  cursor: pointer;
+}
+
+.pebble-photos__album-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pebble-photos__album-gradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 87px;
+  /* Matches the card's own corner radius directly rather than relying solely
+     on the parent's overflow:hidden — some WebKit versions let backdrop-filter
+     escape an ancestor's clip, showing square corners under the blur. */
+  border-radius: 0 0 var(--border-radius-m) var(--border-radius-m);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  /* Progressive blur — mask the same element the blur lives on so the blur itself
+     fades out toward the top along with the darkening tint, instead of a flat,
+     uniformly-blurred band with a hard edge. */
+  mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+  pointer-events: none;
+}
+
+.pebble-photos__album-meta {
+  position: absolute;
+  left: var(--spacing-5);
+  bottom: var(--spacing-5);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pebble-photos__album-title {
+  font-family: var(--font);
+  font-size: var(--fontsize-5);
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.pebble-photos__album-count {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-secondary);
+  line-height: 1.2;
+  color: var(--bg-surface-elevated);
+}
+
+.pebble-photos__recent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.pebble-photos__recent-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pebble-photos__recent-label {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.pebble-photos__recent-caption {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-secondary);
+  line-height: 1.2;
+  color: rgba(13, 13, 12, 0.4);
+}
+
+.pebble-photos__recent-row {
+  display: flex;
+  align-items: center;
+}
+
+.pebble-photos__recent-tile {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 2px 0px 2px 0px rgba(0, 0, 0, 0.05), 1px 0px 2px 0px #f4f5f0;
+}
+
+.pebble-photos__recent-tile:not(:first-child) {
+  margin-left: -15px;
+}
+
+/* Stacking order is reversed from paint order: the leftmost tile sits on top,
+   each tile to its right sits further back (max 5: 4 visible + 1 overflow). */
+.pebble-photos__recent-tile:nth-child(1) { z-index: 5; }
+.pebble-photos__recent-tile:nth-child(2) { z-index: 4; }
+.pebble-photos__recent-tile:nth-child(3) { z-index: 3; }
+.pebble-photos__recent-tile:nth-child(4) { z-index: 2; }
+.pebble-photos__recent-tile:nth-child(5) { z-index: 1; }
+
+.pebble-photos__recent-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pebble-photos__recent-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(1.55px);
+}
+
+.pebble-photos__recent-badge {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font);
+  font-weight: var(--typography-fontweight-medium);
+  font-size: var(--fontsize-7);
+  color: #ffffff;
 }
 
 /* ============================================
@@ -1228,19 +1724,87 @@ em, i, cite, address, dfn, var, q, blockquote {
   cursor: pointer;
 }
 
-/* Floating frosted-glass pill, bottom-left — mirrors the Figma reference's "search"
-   pill shape exactly — plain text, no icon or button chrome inside it. The whole
-   pill is the tap target (it's a <button>), like a search bar is, rather than a
-   separate trailing button. No zoom control or other floating chrome on the map. */
-.pebble-mappreview__location {
+/* Saved-places chips, top-left (Figma node 117:1420/117:1429) — a stack of frosted-glass
+   pills, one per saved-place collection: icon in a fixed light-blue circle + label/meta. */
+.pebble-mappreview__collections {
   position: absolute;
   z-index: 2;
   left: var(--spacing-3);
-  bottom: var(--spacing-3);
-  max-width: calc(100% - 2 * var(--spacing-3));
+  top: var(--spacing-3);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 5px;
+  max-width: calc(100% - 2 * var(--spacing-3));
+}
+
+.pebble-mappreview__chip {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  min-width: 0;
+  padding: var(--spacing-2) var(--spacing-5) var(--spacing-2) var(--spacing-2);
+  border-radius: var(--border-radius-circle);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.pebble-mappreview__chip-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--border-radius-circle);
+  background: rgba(98, 166, 255, 0.15);
+  color: var(--text-primary);
+}
+
+.pebble-mappreview__chip-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  min-width: 0;
+}
+
+.pebble-mappreview__chip-label {
+  font-size: var(--typography-fontsize-secondary);
+  line-height: 1;
+  font-family: var(--font);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pebble-mappreview__chip-meta {
+  font-size: var(--fontsize-2);
+  line-height: 1;
+  font-family: var(--font);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Floating frosted-glass pill, bottom-right (Figma node 117:1420/117:1421) — current
+   city. A leading pin icon + text — no other button chrome. The whole pill is the tap
+   target (it's a <button>), like a search bar is, rather than a separate trailing
+   button. No zoom control or other floating chrome on the map. */
+.pebble-mappreview__location {
+  position: absolute;
+  z-index: 2;
+  right: var(--spacing-3);
+  bottom: var(--spacing-3);
+  max-width: calc(100% - 2 * var(--spacing-3));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-2);
   min-width: 0;
   padding: var(--spacing-2) var(--spacing-4);
   border-radius: var(--border-radius-circle);
@@ -1248,11 +1812,21 @@ em, i, cite, address, dfn, var, q, blockquote {
   border: 1px solid rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+  color: var(--text-primary);
   /* Button reset */
   appearance: none;
   -webkit-appearance: none;
   margin: 0;
   cursor: pointer;
+}
+.pebble-mappreview__location svg {
+  flex-shrink: 0;
+}
+.pebble-mappreview__location-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
 }
 .pebble-mappreview__city {
   font-size: var(--typography-fontsize-secondary);
@@ -1610,73 +2184,6 @@ em, i, cite, address, dfn, var, q, blockquote {
 }
 
 /* ============================================
-   Pop-up Color
-   Figma: Pop-up Color | pebble-popup_color
-   Props: surface, headline, onDismiss
-   Inhalt: children sind der weisse Content-Slot, headline ist Textinhalt
-   ============================================ */
-
-.pebble-popup_color {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: var(--spacing-3);
-  border-radius: var(--border-radius-xl);
-}
-
-.pebble-popup_color--surface-blue   { background: var(--surface-accent-blue); }
-.pebble-popup_color--surface-green  { background: var(--surface-accent-green); }
-.pebble-popup_color--surface-yellow { background: var(--surface-accent-yellow); }
-
-.pebble-popup_color__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-3) var(--spacing-5);
-}
-
-.pebble-popup_color__headline {
-  font-size: var(--typography-fontsize-secondary);
-  font-weight: var(--typography-fontweight-regular);
-  line-height: var(--typography-lineheight-secondary);
-  font-family: var(--font);
-  color: var(--text-secondary);
-}
-
-.pebble-popup_color__dismiss {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--border-radius-circle);
-  border: none;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-}
-.pebble-popup_color__dismiss::after {
-  content: "";
-  width: 12px;
-  height: 2px;
-  border-radius: var(--border-radius-circle);
-  background: var(--neutral-black);
-}
-
-.pebble-popup_color__content {
-  flex: 1;
-  min-height: 120px;
-  background: var(--surface-primary);
-  border-radius: var(--border-radius-l);
-  box-shadow: 0px 0px 1px rgba(13, 13, 12, 0.25);
-  padding: var(--spacing-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-3);
-}
-
-/* ============================================
    Radio
    Figma: Radio | pebble-radio
    Props: selected, label
@@ -1775,36 +2282,38 @@ em, i, cite, address, dfn, var, q, blockquote {
 
 /* ============================================
    SegmentedPicker-option
-   Figma: SegmentedPicker-option | pebble-segmentedpicker-option
+   Figma: SegmentedPicker-option | pebble-segmentedpicker-option (node 119:2051/119:2053)
    Props: selected, icon, label
-   Inhalt: label ist Textinhalt
+   Inhalt: label ist Textinhalt. Underline-Tab statt Pill — die selected-Tab traegt
+   eine schwarze Unterkante, die unselected-Tab traegt gedaempfte Textfarbe.
    ============================================ */
 
 .pebble-segmentedpicker-option {
-  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-1);
-  height: var(--spacing-8);
-  border-radius: var(--border-radius-circle);
-  font-size: var(--typography-fontsize-secondary);
-  font-weight: var(--typography-fontweight-medium);
+  padding: var(--spacing-4);
+  font-size: var(--typography-fontsize-body);
   line-height: var(--typography-lineheight-secondary);
+  letter-spacing: -0.16px;
   font-family: var(--font);
-  color: var(--neutral-black);
   cursor: pointer;
   background: transparent;
   border: none;
+  border-bottom: 1px solid transparent;
+  box-sizing: border-box;
 }
 
 /* Selected */
 .pebble-segmentedpicker-option--selected-true {
-  background: var(--neutral-white);
-  box-shadow: 0px 1px 1px rgba(13, 13, 12, 0.05), inset 0px -1px 0px rgba(13, 13, 12, 0.1);
+  font-weight: var(--typography-fontweight-medium);
+  color: var(--text-primary);
+  border-bottom-color: var(--neutral-black);
 }
 .pebble-segmentedpicker-option--selected-false {
-  background: transparent;
+  font-weight: var(--typography-fontweight-regular);
+  color: var(--text-tertiary);
 }
 
 /* Icon: nur Existenz-Marker, Icon selbst kommt als Inhalt (z.B. <svg> vor dem Label) */
@@ -1815,19 +2324,40 @@ em, i, cite, address, dfn, var, q, blockquote {
 
 /* ============================================
    SegmentedPicker
-   Figma: SegmentedPicker | pebble-segmentedpicker
-   Props: icons, options
-   Inhalt: enthaelt mehrere .pebble-segmentedpicker-option Kinder
+   Figma: SegmentedPicker | pebble-segmentedpicker (node 119:2049)
+   Props: children, trailingIcon, onTrailingIconClick
+   Inhalt: enthaelt mehrere .pebble-segmentedpicker-option Kinder links, optional ein
+   Trailing-Icon (z.B. Funnel-Filter) rechts. Volle Breite mit unterer Trennlinie.
    ============================================ */
 
 .pebble-segmentedpicker {
-  background: var(--neutral-off-white);
   width: 100%;
-  height: 36px;
-  padding: var(--spacing-1);
-  border-radius: var(--border-radius-circle);
+  height: 44px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  box-sizing: border-box;
+}
+
+.pebble-segmentedpicker__tabs {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.pebble-segmentedpicker__trailing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
 }
 
 /* ============================================
@@ -2013,49 +2543,65 @@ em, i, cite, address, dfn, var, q, blockquote {
    ============================================ */
 
 .pebble-tab_bar_selected {
+  /* Native <button> reset — without this, browsers apply their own default
+     border/background/font, which showed up as a visible square outline. */
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 50px;
   width: 50px;
   flex-shrink: 0;
-  border-radius: var(--border-radius-circle);
+  border-radius: 0;
 }
 
-/* Selected: nur der aktive Tab bekommt die off-white Flaeche, unselected ist transparent */
-.pebble-tab_bar_selected--selected-true  { background: var(--neutral-off-white); }
+/* Selection reads purely from the icon itself (filled vs regular weight, set by
+   TabBarItem.tsx) — no background treatment on either state. */
+.pebble-tab_bar_selected--selected-true,
 .pebble-tab_bar_selected--selected-false { background: transparent; }
 
 /* ============================================
    Tabbar
-   Figma: Tabbar | pebble-tabbar
+   Figma: Tabbar | pebble-tabbar (node 121:3457)
    Props: amount
-   Inhalt: ein .pebble-tabbar__pill Wrapper mit mehreren .pebble-tab_bar_selected Kindern
+   Inhalt: mehrere .pebble-tab_bar_selected Kinder direkt, kein Pill-Wrapper mehr.
+   Fixiert am unteren Viewport-Rand, volle Breite, nicht floating.
    Scope: chrome
    ============================================ */
 
 .pebble-tabbar {
-  background: linear-gradient(
-    to top,
-    rgba(245, 245, 245, 0.85) 46.334%,
-    rgba(245, 245, 245, 0.75) 77.224%,
-    rgba(255, 255, 255, 0) 101.64%
-  );
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
   width: 100%;
+  background: var(--bg-surface-blank);
+  border-top: 1px solid var(--border-subtle);
+  border-radius: 0;
   display: flex;
   align-items: center;
+  /* Spread from the center with a fixed gap (not space-between) so the bar looks
+     consistent whether it holds 2 or 3 items, instead of stretching to the edges. */
   justify-content: center;
-  padding: var(--spacing-8) var(--spacing-7);
+  gap: 46px;
+  padding: var(--spacing-4) 60px calc(var(--spacing-8) + env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
 
-.pebble-tabbar__pill {
-  background: var(--bg-surface-blank);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--border-radius-circle);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-  padding: var(--spacing-3);
+/* This prototype renders everything inside a fixed-size device-frame mock, not a
+   real full-viewport app — scope position:fixed down to that mock (same reasoning
+   as .device-frame .pebble-modal_sheet-overlay-full in App.css) so the bar stays
+   pinned to the mock's own bottom edge instead of the browser viewport. */
+.device-frame .pebble-tabbar {
+  position: absolute;
 }
 
 /* ============================================
@@ -2208,6 +2754,148 @@ em, i, cite, address, dfn, var, q, blockquote {
 .pebble-tableview--cell-amount-three,
 .pebble-tableview--cell-amount-more-then-3 {
   height: auto;
+}
+
+/* ============================================
+   Ticket
+   Figma: Upcoming Section | pebble-ticket (node 119:2113)
+   Props: label, date, departureStation, departureTime, arrivalStation, arrivalTime,
+   duration, status, statusTone, passengerName, seat, coach
+   Inhalt: eine Boarding-Pass-artige Karte fuer einen bevorstehenden Trip-Abschnitt,
+   aus einer Ticket-Buchung interpretiert.
+   ============================================ */
+
+.pebble-ticket {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--spacing-2);
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius-xl);
+  box-sizing: border-box;
+}
+
+.pebble-ticket__label {
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-4);
+  box-sizing: border-box;
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  letter-spacing: 0.24px;
+  color: rgba(34, 33, 31, 0.4);
+}
+
+.pebble-ticket__card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--spacing-4);
+  background: var(--bg-surface-blank);
+  border: 1px solid var(--border-subtle);
+  border-radius: 21px;
+  box-sizing: border-box;
+}
+
+.pebble-ticket__date {
+  width: 100%;
+  margin: 0 0 var(--spacing-3);
+  font-family: var(--font);
+  font-size: var(--fontsize-6);
+  font-weight: var(--typography-fontweight-medium);
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.pebble-ticket__journey {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-3) var(--spacing-1);
+  box-sizing: border-box;
+}
+
+.pebble-ticket__stop {
+  display: flex;
+  flex-direction: column;
+}
+.pebble-ticket__stop--end {
+  align-items: flex-end;
+}
+
+.pebble-ticket__station {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  line-height: 1.4;
+  color: var(--text-tertiary);
+}
+
+.pebble-ticket__time {
+  font-family: var(--font);
+  font-size: var(--fontsize-6);
+  font-weight: var(--typography-fontweight-medium);
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.pebble-ticket__duration {
+  flex-shrink: 0;
+  padding: var(--spacing-2) var(--spacing-3);
+  background: #e5e6e0;
+  border-radius: var(--border-radius-circle);
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-caption);
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+.pebble-ticket__status {
+  display: block;
+  width: 100%;
+  margin-top: calc(-1 * var(--spacing-2));
+  margin-bottom: var(--spacing-2);
+  text-align: center;
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-secondary);
+  font-weight: var(--typography-fontweight-medium);
+  line-height: 1.4;
+}
+.pebble-ticket__status--onTime    { color: #49b16e; }
+.pebble-ticket__status--delayed   { color: var(--color-red-vivid); }
+.pebble-ticket__status--cancelled { color: var(--color-red-vivid); }
+
+.pebble-ticket__details {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-3) var(--spacing-1);
+  box-sizing: border-box;
+}
+
+.pebble-ticket__detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.pebble-ticket__detail-label {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  line-height: 1.2;
+  color: var(--text-tertiary);
+}
+
+.pebble-ticket__detail-value {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-body);
+  line-height: 1.2;
+  color: var(--text-primary);
 }
 
 /* ============================================
@@ -2509,178 +3197,3 @@ em, i, cite, address, dfn, var, q, blockquote {
   line-height: 1;
 }
 
-/* ============================================
-   Note
-   Figma: Notes | pebble-note
-   Props: size, headline, body, items
-   ============================================ */
-
-.pebble-note {
-  background: var(--surface-accent-yellow);
-  padding: var(--spacing-2);
-  border-radius: var(--border-radius-l);
-  display: inline-flex;
-  align-items: stretch;
-}
-
-.pebble-note--size-large {
-  width: 346px;
-}
-
-.pebble-note--size-small {
-  width: 177px;
-  height: 177px;
-}
-
-.pebble-note__card {
-  flex: 1 0 0;
-  min-width: 0;
-  overflow: hidden;
-  border-radius: 16px;
-  box-shadow: 0px 0px 0.777px 0px rgba(0, 0, 0, 0.25);
-  background: linear-gradient(154.95deg, #fdfdfd 5.69%, #f8f8f1 99.17%);
-  position: relative;
-}
-
-.pebble-note--size-large .pebble-note__card {
-  height: 196px;
-}
-
-.pebble-note--size-small .pebble-note__card {
-  height: 100%;
-}
-
-.pebble-note__header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 32px;
-  background: #ffffff;
-  border-bottom: 1px dashed var(--border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-3) var(--spacing-2);
-}
-
-.pebble-note__label {
-  font-family: var(--font);
-  font-size: var(--typography-fontsize-caption);
-  line-height: var(--typography-lineheight-caption);
-  letter-spacing: 0.24px;
-  color: var(--neutral-black);
-  white-space: nowrap;
-}
-
-.pebble-note__content {
-  position: absolute;
-  top: 32px;
-  left: 0;
-  right: 0;
-  padding: var(--spacing-4);
-  display: flex;
-}
-
-.pebble-note--size-large .pebble-note__content {
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.pebble-note--size-small .pebble-note__content {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.pebble-note__text-block {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2);
-  width: 100%;
-}
-
-.pebble-note__headline {
-  font-family: var(--font);
-  font-size: var(--typography-fontsize-secondary);
-  line-height: var(--typography-lineheight-secondary);
-  font-weight: var(--typography-fontweight-medium);
-  color: var(--neutral-black);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-  margin: 0;
-}
-
-.pebble-note__body {
-  font-family: var(--font);
-  font-size: var(--typography-fontsize-secondary);
-  line-height: var(--typography-lineheight-secondary);
-  font-weight: var(--typography-fontweight-regular);
-  color: var(--neutral-black);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0;
-  width: 100%;
-}
-
-.pebble-note--size-small .pebble-note__body {
-  height: 140px;
-}
-
-.pebble-note__item {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  width: 100%;
-  flex-shrink: 0;
-}
-
-.pebble-note__item-checkbox {
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  background: var(--bg-surface-blank);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--border-radius-xs);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pebble-note__item-checkbox--checked::after {
-  content: '✓';
-  font-size: 10px;
-  line-height: 1;
-  color: var(--neutral-black);
-}
-
-.pebble-note__item-text {
-  font-family: var(--font);
-  font-size: var(--typography-fontsize-body);
-  line-height: var(--typography-lineheight-body);
-  color: var(--text-primary);
-  flex: 1 0 0;
-  min-width: 0;
-  word-break: break-word;
-}
-
-.pebble-note__fade {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  pointer-events: none;
-}
-
-.pebble-note--size-large .pebble-note__fade {
-  height: 46px;
-  background: linear-gradient(to top, #fbfcfa 0%, rgba(251, 252, 250, 0.8) 65%, rgba(251, 252, 250, 0) 100%);
-}
-
-.pebble-note--size-small .pebble-note__fade {
-  height: 62px;
-  background: linear-gradient(to top, #fbfcfa 0%, rgba(251, 252, 250, 0.8) 65%, rgba(251, 252, 250, 0) 100%);
-}

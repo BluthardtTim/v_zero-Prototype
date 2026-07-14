@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { MapPinSimpleArea } from '@phosphor-icons/react';
 import { bem, cx } from '../../utils/bem';
 import type { MapMarkerCategory, MapPreviewProps } from './MapPreview.types';
 
@@ -94,31 +95,32 @@ export function MapPreview({ city, area, markers, collections, className }: MapP
     <div className={cx(bem('mappreview'), className)}>
       <div className="pebble-mappreview__canvas" ref={containerRef} />
 
+      {/* Saved-places chips, top-left (Figma node 117:1420/117:1429) — one chip per
+          saved-place collection, icon in a fixed light-blue circle (not category-tinted;
+          markers on the map itself still use CATEGORY_STYLE's per-category colors). */}
       {collections && collections.length > 0 && (
         <div className="pebble-mappreview__collections">
-          {collections.map((collection, index) => {
-            const style = CATEGORY_STYLE[collection.category ?? 'favorite'];
-            return (
-              <div className="pebble-mappreview__chip" key={index}>
-                <span className="pebble-mappreview__chip-icon" style={{ background: style.bg }}>
-                  {style.glyph}
-                </span>
-                <div className="pebble-mappreview__chip-text">
-                  <span className="pebble-mappreview__chip-label">{collection.label}</span>
-                  {collection.meta && <span className="pebble-mappreview__chip-meta">{collection.meta}</span>}
-                </div>
+          {collections.map((collection, index) => (
+            <div className="pebble-mappreview__chip" key={index}>
+              <span className="pebble-mappreview__chip-icon">{collection.icon}</span>
+              <div className="pebble-mappreview__chip-text">
+                <span className="pebble-mappreview__chip-label">{collection.label}</span>
+                {collection.meta && <span className="pebble-mappreview__chip-meta">{collection.meta}</span>}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Floating frosted-glass pill, bottom-left — matches the Figma reference's plain
-          "search" pill exactly (just text, no icon/button chrome inside it). The whole
-          pill is the tap target, like a search bar is, rather than a separate button. */}
+      {/* Floating frosted-glass pill, bottom-right (Figma node 117:1420/117:1421) —
+          current city. The whole pill is the tap target, like a search bar is, rather
+          than a separate button. */}
       <button type="button" className="pebble-mappreview__location" onClick={handleNavigate}>
-        <span className="pebble-mappreview__city">{city}</span>
-        {area && <span className="pebble-mappreview__area">{area}</span>}
+        <MapPinSimpleArea size={16} weight="regular" />
+        <span className="pebble-mappreview__location-text">
+          <span className="pebble-mappreview__city">{city}</span>
+          {area && <span className="pebble-mappreview__area">{area}</span>}
+        </span>
       </button>
     </div>
   );
