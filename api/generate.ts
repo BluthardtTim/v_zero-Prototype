@@ -3,6 +3,7 @@ import { assembleContext } from "../server/assemble"
 import { classifyContext } from "../server/classify"
 import { generateUI } from "../server/genui"
 import { contexts } from "../server/contexts"
+import { captureLogs } from "../server/captureLogs"
 
 function sendJson(res: ServerResponse, status: number, payload: unknown): void {
   const body = JSON.stringify(payload)
@@ -32,13 +33,16 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     const spaceId = typeof body.spaceId === "string" ? body.spaceId : "italy-trip"
     const ctx = contexts.find(c => c.id === spaceId) ?? contexts[0]
 
-    const blob = await assembleContext(ctx.searchQuery)
-    const classified = classifyContext(blob)
-    const result = await generateUI(classified)
+    const captured = await captureLogs(async () => {
+      const blob = await assembleContext(ctx.searchQuery)
+      const classified = classifyContext(blob)
+      return generateUI(classified)
+    })
 
     sendJson(res, 200, {
-      space_tree: result.space_tree,
-      raw_response: result.raw_response
+      space_tree: captured.result.space_tree,
+      raw_response: captured.result.raw_response,
+      logs: captured.output
     })
   } catch (error) {
     console.error("Generate error", error)

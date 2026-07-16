@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "http"
 import { contexts } from "../server/contexts"
 import { generateHeader } from "../server/genheader"
+import { captureLogs } from "../server/captureLogs"
 
 function sendJson(res: ServerResponse, status: number, payload: unknown): void {
   const body = JSON.stringify(payload)
@@ -34,10 +35,11 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       return sendJson(res, 500, { error: `Unknown header context: ${spaceId}` })
     }
 
-    const result = await generateHeader(headerContext)
+    const captured = await captureLogs(async () => generateHeader(headerContext))
     sendJson(res, 200, {
-      header_tree: result.header_tree,
-      raw_response: result.raw_response
+      header_tree: captured.result.header_tree,
+      raw_response: captured.result.raw_response,
+      logs: captured.output
     })
   } catch (error) {
     console.error("Generate header error", error)

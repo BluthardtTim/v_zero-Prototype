@@ -82,7 +82,8 @@ export function App() {
     if (meta) meta.setAttribute("content", showHome ? "#191917" : "#ffffff")
   }, [showHome])
 
-  function appendLogs(raw: string) {
+  function appendLogs(raw: string | undefined) {
+    if (!raw) return
     const parsed = raw.split("\n").filter(line => line.length > 0)
     if (parsed.length > 0) setLogs(prev => [...prev, ...parsed])
   }
