@@ -1,10 +1,8 @@
 import { useRef, useState, useEffect } from "react"
-import Lottie from "lottie-react"
 import { LineSegments, Faders } from "@phosphor-icons/react"
 import { Header } from "./design-system"
 import { RenderNode, useUITree } from "./space/renderer"
 import type { GenResult } from "./space/types"
-import spaceLoadingAnimation from "./assets/animations/space-loading.json"
 import "./App.css"
 import "./screens/screens.css"
 
@@ -29,7 +27,7 @@ function HomeScreen({
     <div className="home-screen">
       {loading ? (
         <div className="home-screen__loading">
-          <Lottie animationData={spaceLoadingAnimation} loop autoplay className="home-screen__loading-animation" />
+          <div className="home-screen__spinner" />
         </div>
       ) : (
         <button className="home-screen__generate" onClick={onGenerate}>

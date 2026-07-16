@@ -337,9 +337,19 @@ body {
   justify-content: center;
 }
 
-.home-screen__loading-animation {
-  width: 160px;
-  height: 90px;
+.home-screen__spinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #ffffff;
+  animation: home-screen-spin 0.8s linear infinite;
+}
+
+@keyframes home-screen-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
