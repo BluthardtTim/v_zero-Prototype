@@ -93,6 +93,28 @@ export function App() {
     if (parsed.length > 0) setLogs(prev => [...prev, ...parsed])
   }
 
+  // Mobile connections (cellular signal drops, WiFi/cellular handover) fail
+  // multi-second requests with a bare "Load failed"/"Failed to fetch" more
+  // often than desktop WiFi does. That's transient, not a real server error,
+  // so one silent retry clears most of them without bothering the user.
+  async function postJson(url: string, body: unknown): Promise<any> {
+    for (let attempt = 1; ; attempt++) {
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        })
+        if (!response.ok) throw new Error("Generation failed")
+        return await response.json()
+      } catch (err) {
+        const isNetworkError = err instanceof TypeError
+        if (!isNetworkError || attempt >= 2) throw err
+        console.warn(`${url} failed (${err.message}), retrying…`)
+      }
+    }
+  }
+
   async function generateSpace() {
     // Already generated — just navigate to it
     if (space.spaceTree) {
@@ -105,12 +127,7 @@ export function App() {
     setLogs([])
 
     // Fire header generation in parallel — failure is non-fatal
-    fetch("/api/generate-header", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ spaceId: SPACE_ID }),
-    })
-      .then(r => (r.ok ? r.json() : Promise.reject()))
+    postJson("/api/generate-header", { spaceId: SPACE_ID })
       .then(data => {
         appendLogs(data.logs)
         setSpace(s => ({ ...s, headerTree: data.header_tree, generation: s.generation + 1 }))
@@ -118,13 +135,7 @@ export function App() {
       .catch(() => console.error("Header generation failed"))
 
     try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ spaceId: SPACE_ID }),
-      })
-      if (!response.ok) throw new Error("Generation failed")
-      const data = await response.json()
+      const data = await postJson("/api/generate", { spaceId: SPACE_ID })
       appendLogs(data.logs)
       setSpace(s => ({ ...s, spaceTree: data.space_tree, generation: s.generation + 1, loading: false }))
       setShowHome(false)
