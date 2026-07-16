@@ -19,9 +19,11 @@ function HeaderView({ tree }: { tree: GenResult }) {
 function HomeScreen({
   onGenerate,
   loading,
+  error,
 }: {
   onGenerate: () => void
   loading: boolean
+  error: string | null
 }) {
   return (
     <div className="home-screen">
@@ -30,9 +32,12 @@ function HomeScreen({
           <div className="home-screen__spinner" />
         </div>
       ) : (
-        <button className="home-screen__generate" onClick={onGenerate}>
-          Generate
-        </button>
+        <>
+          <button className="home-screen__generate" onClick={onGenerate}>
+            Generate
+          </button>
+          {error && <div className="home-screen__error">{error}</div>}
+        </>
       )}
     </div>
   )
@@ -124,8 +129,9 @@ export function App() {
       setSpace(s => ({ ...s, spaceTree: data.space_tree, generation: s.generation + 1, loading: false }))
       setShowHome(false)
     } catch (err) {
+      const detail = err instanceof Error ? err.message : String(err)
       console.error("Space generation failed", err)
-      setError("Space could not be generated.")
+      setError(`Space could not be generated. (${detail})`)
       setSpace(s => ({ ...s, loading: false }))
     }
   }
@@ -145,7 +151,7 @@ export function App() {
 
           <div className="device-frame">
             {showHome ? (
-              <HomeScreen onGenerate={generateSpace} loading={space.loading} />
+              <HomeScreen onGenerate={generateSpace} loading={space.loading} error={error} />
             ) : (
               <div className="space-slot">
                 <Header className={`header--compact${space.headerTree ? "" : " header--no-border"}`}>

@@ -309,10 +309,22 @@ body {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--spacing-4);
   overflow: hidden;
   background: #252321;
+  padding: var(--spacing-5);
+  box-sizing: border-box;
+}
+
+.home-screen__error {
+  font-family: var(--font);
+  font-size: var(--typography-fontsize-caption);
+  line-height: var(--typography-lineheight-caption);
+  color: var(--color-red-vivid, #ff6b6b);
+  text-align: center;
 }
 
 .home-screen__generate {
